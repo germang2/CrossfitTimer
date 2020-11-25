@@ -9,7 +9,7 @@ class Category(db.Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(20), nullable=False)
-    persons = relationship('Athlete', backref='people')
+    #persons = relationship('Athlete', backref='people')
 
     def __repr__(self) -> str:
         return f'Category({self.name})'
