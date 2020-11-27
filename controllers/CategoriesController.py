@@ -1,11 +1,11 @@
 from engine import db
 from PyQt5 import QtWidgets
 from models.Category import Category
-from app import MainWindow
+from app import CategoriesWindow
 
 
-class CategoryController():
-    def __init__(self, main_window: MainWindow, *args, **kwargs):
+class CategoryController:
+    def __init__(self, main_window: CategoriesWindow, *args, **kwargs):
         self.window = main_window
         self.window.categories_table.setFixedWidth(700)
         self.window.categories_table.setColumnWidth(0, 400)

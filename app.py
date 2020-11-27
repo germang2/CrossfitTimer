@@ -1,5 +1,6 @@
 from qt.MainWindow import Ui_MainWindow
 from qt.CategoriesView import Ui_CategoriesView
+from qt.AthletesView import Ui_AthletesView
 from PyQt5 import QtWidgets
 
 
@@ -14,3 +15,8 @@ class CategoriesWindow(QtWidgets.QMainWindow, Ui_CategoriesView):
         QtWidgets.QMainWindow.__init__(self, *args, **kwargs)
         self.setupUi(self)
 
+
+class AthletesWindow(QtWidgets.QMainWindow, Ui_AthletesView):
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QMainWindow.__init__(self, *args, **kwargs)
+        self.setupUi(self)
