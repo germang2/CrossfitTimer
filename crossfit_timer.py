@@ -2,7 +2,7 @@ import sys
 from engine import db
 from PyQt5 import QtWidgets
 from app import MainWindow
-from controllers.Categories import CategoryController
+from controllers.MainController import MainController
 
 
 if __name__ == '__main__':
@@ -11,6 +11,7 @@ if __name__ == '__main__':
 
     app = QtWidgets.QApplication(sys.argv)
     main_window = MainWindow()
-    category_controller = CategoryController(main_window)
+    main_controller = MainController(main_window)
+    #category_controller = CategoryController(main_window)
     main_window.show()
     sys.exit(app.exec_())
