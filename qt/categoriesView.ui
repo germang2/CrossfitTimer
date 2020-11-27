@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>763</width>
+    <width>803</width>
     <height>563</height>
    </rect>
   </property>
@@ -29,9 +29,9 @@
   <widget class="QTableWidget" name="categories_table">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>240</y>
-     <width>721</width>
+     <x>50</x>
+     <y>250</y>
+     <width>700</width>
      <height>241</height>
     </rect>
    </property>
@@ -40,11 +40,21 @@
      <string>Nombre</string>
     </property>
    </column>
+   <column>
+    <property name="text">
+     <string>Modificar</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Eliminar</string>
+    </property>
+   </column>
   </widget>
   <widget class="QPushButton" name="btn_get_all_categories">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>80</x>
      <y>200</y>
      <width>161</width>
      <height>28</height>
@@ -57,9 +67,9 @@
   <widget class="QLineEdit" name="ed_category">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>370</x>
      <y>190</y>
-     <width>301</width>
+     <width>231</width>
      <height>41</height>
     </rect>
    </property>
