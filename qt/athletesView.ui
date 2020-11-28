@@ -109,7 +109,7 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>580</x>
      <y>310</y>
      <width>101</width>
      <height>41</height>
@@ -127,7 +127,7 @@
   <widget class="QComboBox" name="cb_categories">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>580</x>
      <y>360</y>
      <width>211</width>
      <height>31</height>
@@ -190,9 +190,9 @@
   <widget class="QPushButton" name="btn_add_atlete">
    <property name="geometry">
     <rect>
-     <x>580</x>
-     <y>350</y>
-     <width>201</width>
+     <x>440</x>
+     <y>410</y>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>
@@ -203,8 +203,8 @@
   <widget class="QLineEdit" name="ed_filter">
    <property name="geometry">
     <rect>
-     <x>570</x>
-     <y>480</y>
+     <x>660</x>
+     <y>490</y>
      <width>181</width>
      <height>41</height>
     </rect>
@@ -213,8 +213,8 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>760</x>
-     <y>480</y>
+     <x>850</x>
+     <y>490</y>
      <width>91</width>
      <height>31</height>
     </rect>
@@ -471,6 +471,87 @@
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="ed_nit">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>350</y>
+     <width>201</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_nit_error">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>390</y>
+     <width>201</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="palette">
+    <palette>
+     <active>
+      <colorrole role="WindowText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>255</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </active>
+     <inactive>
+      <colorrole role="WindowText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>255</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </inactive>
+     <disabled>
+      <colorrole role="WindowText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>120</red>
+         <green>120</green>
+         <blue>120</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </disabled>
+    </palette>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>310</y>
+     <width>101</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Cedula</string>
    </property>
   </widget>
  </widget>
