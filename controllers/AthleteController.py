@@ -53,7 +53,8 @@ class AthletesController:
             if filter_text:
                 filter_text.strip()
                 athletes = db.session.query(Athlete).filter(
-                    or_(Athlete.name.ilike(f'%{filter_text}%'), Athlete.last_name.ilike(f'%{filter_text}%'))).order_by('name').all()
+                    or_(Athlete.name.ilike(f'%{filter_text}%'), Athlete.last_name.ilike(f'%{filter_text}%')))\
+                    .order_by('name').all()
             else:
                 athletes = db.session.query(Athlete).order_by('name').all()
             categories = db.session.query(Category).order_by('name').all()

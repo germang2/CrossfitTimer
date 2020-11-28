@@ -28,4 +28,4 @@ class Competence(db.Base):
         return f'Competence({self.name}, {self.place}, {self.time})'
 
     def __str__(self) -> str:
-        return f'{self.name} -> {self.place} -> {self.date}'
+        return f'{self.name}'

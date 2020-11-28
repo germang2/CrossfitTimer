@@ -1,7 +1,7 @@
 from qt.MainWindow import Ui_MainWindow
 from qt.CategoriesView import Ui_CategoriesView
 from qt.AthletesView import Ui_AthletesView
-from qt.CompetenciasView import Ui_CompetenciasView
+from qt.CompetenciasView import Ui_CompetencesView
 from PyQt5 import QtWidgets
 
 
@@ -23,7 +23,7 @@ class AthletesWindow(QtWidgets.QMainWindow, Ui_AthletesView):
         self.setupUi(self)
 
 
-class CompetencesWindow(QtWidgets.QMainWindow, Ui_CompetenciasView):
+class CompetencesWindow(QtWidgets.QMainWindow, Ui_CompetencesView):
     def __init__(self, *args, **kwargs):
         QtWidgets.QMainWindow.__init__(self, *args, **kwargs)
         self.setupUi(self)

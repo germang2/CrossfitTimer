@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CompetenciasView</class>
- <widget class="QDialog" name="CompetenciasView">
+ <class>CompetencesView</class>
+ <widget class="QDialog" name="CompetencesView">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1129</width>
+    <width>1516</width>
     <height>814</height>
    </rect>
   </property>
@@ -341,6 +341,201 @@
    </property>
    <property name="text">
     <string>CONSULTAR</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>1150</x>
+     <y>130</y>
+     <width>311</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>MS Sans Serif</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>GRUPOS/OLEADAS</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_competence_selected">
+   <property name="geometry">
+    <rect>
+     <x>1140</x>
+     <y>190</y>
+     <width>331</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>COMPETENCIA:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>1180</x>
+     <y>240</y>
+     <width>81</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Nombre</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_group_name_error">
+   <property name="geometry">
+    <rect>
+     <x>1110</x>
+     <y>310</y>
+     <width>191</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:rgb(255, 0, 0)</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="ed_group_name">
+   <property name="geometry">
+    <rect>
+     <x>1110</x>
+     <y>280</y>
+     <width>191</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="ed_group_order">
+   <property name="geometry">
+    <rect>
+     <x>1340</x>
+     <y>280</y>
+     <width>121</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_group_order_error">
+   <property name="geometry">
+    <rect>
+     <x>1310</x>
+     <y>310</y>
+     <width>151</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:rgb(255, 0, 0)</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>1380</x>
+     <y>240</y>
+     <width>81</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Orden</string>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="groups_table">
+   <property name="geometry">
+    <rect>
+     <x>1110</x>
+     <y>370</y>
+     <width>351</width>
+     <height>391</height>
+    </rect>
+   </property>
+   <column>
+    <property name="text">
+     <string>Nombre</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Orden</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Modificar</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Eliminar</string>
+    </property>
+   </column>
+  </widget>
+  <widget class="QPushButton" name="btn_create_group">
+   <property name="geometry">
+    <rect>
+     <x>1340</x>
+     <y>330</y>
+     <width>101</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Agregar</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_see_all_groups">
+   <property name="geometry">
+    <rect>
+     <x>1120</x>
+     <y>330</y>
+     <width>93</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Recargar</string>
    </property>
   </widget>
  </widget>

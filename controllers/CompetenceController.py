@@ -1,4 +1,5 @@
 from app import CompetencesWindow
+from controllers.GroupsController import GroupController
 from engine import db
 from models.Competence import Competence
 from utils.Validations import *
@@ -10,8 +11,11 @@ class CompetenceController:
         self.window = window
         self.window.btn_create_competition.clicked.connect(self.create_competence)
         self.window.btn_get_all_competitions.clicked.connect(self.get_all_competences)
+        self.window.competences_table.clicked.connect(self.handle_competences_table)
+        self.groups_controller = None
 
     def get_all_competences(self):
+        """ shows in a table all the competences created """
         try:
             competences = db.session.query(Competence).order_by('date').all()
             if competences:
@@ -33,7 +37,7 @@ class CompetenceController:
 
                     btn_see = QtWidgets.QPushButton()
                     btn_see.setText('Ver')
-                    btn_see.setProperty('id', competence.id)
+                    btn_see.setProperty('competence', competence)
                     btn_see.clicked.connect(self.see_competence)
                     self.window.competences_table.setCellWidget(i, 5, btn_see)
 
@@ -51,7 +55,10 @@ class CompetenceController:
         pass
 
     def see_competence(self):
-        pass
+        index_row = self.window.competences_table.currentRow()
+        index_column = self.window.competences_table.currentColumn()
+        competence = self.window.competences_table.cellWidget(index_row, index_column).property('competence')
+        self.groups_controller = GroupController(self.window, competence)
 
     def create_competence(self):
         """ Creates a new competence object """
