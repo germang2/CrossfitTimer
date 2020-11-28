@@ -3,6 +3,7 @@ from engine import db
 from models.Athlete import Athlete
 from models.Category import Category
 from utils.Validations import *
+from PyQt5 import QtWidgets
 import traceback
 
 
@@ -10,11 +11,13 @@ class AthletesController:
     def __init__(self, window:AthletesWindow, *args, **kwargs):
         self.window = window
         self.window.btn_add_atlete.clicked.connect(self.create_athlete)
-        self.window.btn_add_atlete.clicked.connect(self.get_all_athletes)
+        self.window.btn_get_all_athletes.clicked.connect(self.get_all_athletes)
         self.category_id_create = {}
+        self.category_id_modify = {}
         self.load_categories()
 
     def create_athlete(self):
+        """ Creates a new athlete with all fields """
         try:
             name = self.window.ed_name.text()
             last_name = self.window.ed_lastname.text()
@@ -35,12 +38,96 @@ class AthletesController:
                 self.clear_fields()
                 self.clear_fields_errors()
         except Exception as e:
-            traceback.print_exc()
+            print(e)
 
     def get_all_athletes(self):
-        pass
+        """ loads in a table all the existing athletes """
+        try:
+            athletes = db.session.query(Athlete).order_by('name').all()
+            categories = db.session.query(Category).order_by('name').all()
+            if athletes:
+                self.window.athletes_table.clearContents()
+                for i in range(self.window.athletes_table.rowCount()):
+                    self.window.athletes_table.removeRow(i)
+                for i, athlete in enumerate(athletes):
+                    self.window.athletes_table.insertRow(i)
+                    name = QtWidgets.QTableWidgetItem(athlete.name)
+                    self.window.athletes_table.setItem(i, 0, name)
+                    lastname = QtWidgets.QTableWidgetItem(athlete.last_name)
+                    self.window.athletes_table.setItem(i, 1, lastname)
+                    nit = QtWidgets.QTableWidgetItem(athlete.nit)
+                    self.window.athletes_table.setItem(i, 2, nit)
+                    age = QtWidgets.QTableWidgetItem(str(athlete.age))
+                    self.window.athletes_table.setItem(i, 3, age)
+                    club = QtWidgets.QTableWidgetItem(athlete.club)
+                    self.window.athletes_table.setItem(i, 4, club)
+                    """ creates a comboBox for categories, set as default the current one of the athlete """
+                    cb_categories = QtWidgets.QComboBox()
+                    for j, category in enumerate(categories):
+                        cb_categories.addItem(category.name)
+                        self.category_id_modify[j] = category.id
+                        if category.id == athlete.category_id:
+                            cb_categories.setCurrentIndex(j)
+                    self.window.athletes_table.setCellWidget(i, 5, cb_categories)
+                    modify = QtWidgets.QPushButton()
+                    modify.setText('Modificar')
+                    modify.setProperty('id', athlete.id)
+                    modify.setProperty('operation', 'modify')
+                    modify.clicked.connect(self.handle_athletes_table)
+                    self.window.athletes_table.setCellWidget(i, 6, modify)
+                    delete = QtWidgets.QPushButton()
+                    delete.setText('Eliminar')
+                    delete.setProperty('id', athlete.id)
+                    delete.setProperty('operation', 'delete')
+                    delete.clicked.connect(self.handle_athletes_table)
+                    self.window.athletes_table.setCellWidget(i, 7, delete)
+
+            while True:
+                row_count = self.window.athletes_table.rowCount()
+                if row_count <= len(athletes):
+                    break
+                else:
+                    self.window.athletes_table.removeRow(row_count - 1)
+
+        except Exception as e:
+            print(e)
+            print('Could not load all the athletes')
+
+    def handle_athletes_table(self):
+        """ handles the clicks over the buttons modify and delete on the table for athletes """
+        index_row = self.window.athletes_table.currentRow()
+        index_column = self.window.athletes_table.currentColumn()
+        if index_row >= 0 and index_column >= 0:
+            athlete_id = int(self.window.athletes_table.cellWidget(index_row, index_column).property('id'))
+            athlete = db.session.query(Athlete).filter_by(id=athlete_id).first()
+            operation = self.window.athletes_table.cellWidget(index_row, index_column).property('operation')
+            try:
+                if operation == 'modify' and athlete:
+                    name = self.window.athletes_table.item(index_row, 0).text()
+                    lastname = self.window.athletes_table.item(index_row, 1).text()
+                    nit = self.window.athletes_table.item(index_row, 2).text()
+                    age = self.window.athletes_table.item(index_row, 3).text()
+                    club = self.window.athletes_table.item(index_row, 4).text()
+                    index_category = self.window.athletes_table.cellWidget(index_row, 5).currentIndex()
+                    category_id = self.category_id_create[index_category]
+                    athlete.name = name
+                    athlete.last_name = lastname
+                    athlete.age = int(age)
+                    athlete.club = club
+                    athlete.category_id = int(category_id)
+                    db.session.add(athlete)
+                    db.session.commit()
+
+                elif operation == 'delete' and athlete:
+                    db.session.delete(athlete)
+                    db.session.commit()
+                self.get_all_athletes()
+
+            except Exception as e:
+                print(e)
 
     def load_categories(self):
+        """ loads in a comboBox all the existing categories """
         try:
             self.window.cb_categories.clear()
             categories = db.session.query(Category).order_by('name').all()
@@ -54,6 +141,7 @@ class AthletesController:
             traceback.print_exc()
 
     def show_errors(self, errors):
+        """ shows the errors gotten from the validations """
         if 'name' in errors:
             self.window.lb_name_error.setText(errors['name'])
         else:
@@ -76,6 +164,7 @@ class AthletesController:
             self.window.lb_nit_error.setText('')
 
     def clear_fields(self):
+        """ clear all editText fields for the user """
         self.window.ed_name.setText('')
         self.window.ed_lastname.setText('')
         self.window.ed_age.setText('')
@@ -83,6 +172,7 @@ class AthletesController:
         self.window.ed_nit.setText('')
 
     def clear_fields_errors(self):
+        """ clear all the label fields where errors are show """
         self.window.lb_name_error.setText('')
         self.window.lb_lastname_error.setText('')
         self.window.lb_age_error.setText('')
@@ -91,6 +181,7 @@ class AthletesController:
 
 
 def validate_data(name, last_name, age, club, nit):
+    """ validate each field for an athlete """
     errors = {}
     # validations for field 'name'
     field = 'name'
