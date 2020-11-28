@@ -205,7 +205,7 @@
     <rect>
      <x>660</x>
      <y>490</y>
-     <width>181</width>
+     <width>191</width>
      <height>41</height>
     </rect>
    </property>
@@ -213,8 +213,8 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>850</x>
-     <y>490</y>
+     <x>720</x>
+     <y>460</y>
      <width>91</width>
      <height>31</height>
     </rect>
@@ -557,6 +557,19 @@
    </property>
    <property name="text">
     <string>Cedula</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>530</y>
+     <width>191</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Requiere minimo 3 caracteres</string>
    </property>
   </widget>
  </widget>

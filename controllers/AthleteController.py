@@ -4,6 +4,7 @@ from models.Athlete import Athlete
 from models.Category import Category
 from utils.Validations import *
 from PyQt5 import QtWidgets
+from sqlalchemy import or_
 import traceback
 
 
@@ -12,6 +13,7 @@ class AthletesController:
         self.window = window
         self.window.btn_add_atlete.clicked.connect(self.create_athlete)
         self.window.btn_get_all_athletes.clicked.connect(self.get_all_athletes)
+        self.window.ed_filter.textChanged.connect(self.filter)
         self.category_id_create = {}
         self.category_id_modify = {}
         self.load_categories()
@@ -40,10 +42,20 @@ class AthletesController:
         except Exception as e:
             print(e)
 
-    def get_all_athletes(self):
+    def filter(self):
+        text = self.window.ed_filter.text()
+        if text and len(text) > 3:
+            self.get_all_athletes(filter=text)
+
+    def get_all_athletes(self, filter = None):
         """ loads in a table all the existing athletes """
         try:
-            athletes = db.session.query(Athlete).order_by('name').all()
+            if filter:
+                filter.strip()
+                athletes = db.session.query(Athlete).filter(
+                    or_(Athlete.name.ilike(f'%{filter}%'), Athlete.last_name.ilike(f'%{filter}%'))).order_by('name').all()
+            else:
+                athletes = db.session.query(Athlete).order_by('name').all()
             categories = db.session.query(Category).order_by('name').all()
             if athletes:
                 self.window.athletes_table.clearContents()
