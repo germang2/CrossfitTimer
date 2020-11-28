@@ -249,6 +249,11 @@
    </column>
    <column>
     <property name="text">
+     <string>Cedula</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
      <string>Edad</string>
     </property>
    </column>
