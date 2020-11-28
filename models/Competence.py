@@ -1,8 +1,8 @@
-from sqlalchemy.orm import backref
 from engine import db
 
-from sqlalchemy import Column, Integer, String, Date, Time, Text
+from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy.orm import relationship
+
 
 class Competence(db.Base):
     __tablename__ = 'competences'
@@ -11,18 +11,17 @@ class Competence(db.Base):
     name = Column(String(30), nullable=False)
     place = Column(String(50), nullable=False)
     date = Column(Date, nullable=False)
-    time = Column(Time, nullable=False)
+    time = Column(String(15), nullable=False)
     reward = Column(String(100), nullable=True)
-    details = Column(Text, nullable=True)
-    athletes = relationship('CompetenceAthlete', backref='athletes')
-    groups = relationship('Group', backref='groups')
+    #athletes = relationship('CompetenceAthlete', backref='athletes')
+    #groups = relationship('Group', backref='groups')
 
     def __init__(self, name, place, date, time, reward=None, details=None):
         self.name = name
         self.place = place
         self.date = date
         self.time = time
-        self.reward = reward,
+        self.reward = reward
         self.details = details
 
     def __repr__(self) -> str:

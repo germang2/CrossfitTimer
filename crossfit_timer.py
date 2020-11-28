@@ -12,6 +12,5 @@ if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     main_window = MainWindow()
     main_controller = MainController(main_window)
-    #category_controller = CategoryController(main_window)
     main_window.show()
     sys.exit(app.exec_())

@@ -9,11 +9,11 @@ import traceback
 
 
 class AthletesController:
-    def __init__(self, window:AthletesWindow, *args, **kwargs):
+    def __init__(self, window: AthletesWindow, *args, **kwargs):
         self.window = window
         self.window.btn_add_atlete.clicked.connect(self.create_athlete)
         self.window.btn_get_all_athletes.clicked.connect(self.get_all_athletes)
-        self.window.ed_filter.textChanged.connect(self.filter)
+        self.window.ed_filter.textChanged.connect(self.filter_athletes)
         self.category_id_create = {}
         self.category_id_modify = {}
         self.load_categories()
@@ -30,7 +30,7 @@ class AthletesController:
             if errors:
                 self.show_errors(errors)
             else:
-                # if there is not error, the athlete is create
+                # if there are not error, the athlete is create
                 index_category = self.window.cb_categories.currentIndex()
                 category_id = self.category_id_create[index_category]
                 athlete = Athlete(name=name, last_name=last_name, age=int(age), club=club, category_id=category_id,
@@ -42,18 +42,18 @@ class AthletesController:
         except Exception as e:
             print(e)
 
-    def filter(self):
+    def filter_athletes(self):
         text = self.window.ed_filter.text()
         if text and len(text) > 3:
-            self.get_all_athletes(filter=text)
+            self.get_all_athletes(filter_text=text)
 
-    def get_all_athletes(self, filter = None):
+    def get_all_athletes(self, filter_text=None):
         """ loads in a table all the existing athletes """
         try:
-            if filter:
-                filter.strip()
+            if filter_text:
+                filter_text.strip()
                 athletes = db.session.query(Athlete).filter(
-                    or_(Athlete.name.ilike(f'%{filter}%'), Athlete.last_name.ilike(f'%{filter}%'))).order_by('name').all()
+                    or_(Athlete.name.ilike(f'%{filter_text}%'), Athlete.last_name.ilike(f'%{filter_text}%'))).order_by('name').all()
             else:
                 athletes = db.session.query(Athlete).order_by('name').all()
             categories = db.session.query(Category).order_by('name').all()
@@ -225,6 +225,7 @@ def validate_data(name, last_name, age, club, nit):
         if athlete:
             errors['nit'] = 'Ya existe esta cedula'
     except Exception as e:
-        print('Error validando cedula' + e)
+        print('Error validando cedula')
+        print(e)
 
     return errors
