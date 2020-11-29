@@ -17,6 +17,7 @@ class AthletesGroupsController:
         self.window.ed_filter_athlete.textChanged.connect(self.filter_athletes)
         self.window.btn_load_athletes.clicked.connect(self.load_all_athletes)
         self.window.btn_reload_assigned_athletes.clicked.connect(self.load_athletes_assigned)
+        self.clear_tables()
 
     def load_info(self):
         """ loads the information about the competence and group """
@@ -28,12 +29,11 @@ class AthletesGroupsController:
     def load_athletes_assigned(self):
         """ loads all athletes for the current group """
         try:
+            for i in range(self.window.table_athletes_assigned.rowCount()):
+                self.window.table_athletes_assigned.removeRow(i)
             groups_athletes = db.session.query(GroupAthlete).filter_by(group_id=self.group.id).order_by('dorsal').all()
             if groups_athletes:
                 self.window.lb_error_add_athlete.setText('')
-                self.window.table_athletes_assigned.clearContents()
-                for i in range(self.window.table_athletes_assigned.rowCount()):
-                    self.window.table_athletes_assigned.removeRow(i)
                 for i, item in enumerate(groups_athletes):
                     self.window.table_athletes_assigned.insertRow(i)
                     name = QtWidgets.QTableWidgetItem(item.athlete.name)
@@ -164,3 +164,16 @@ class AthletesGroupsController:
                 db.session.add(group_athlete)
                 db.session.commit()
                 self.load_athletes_assigned()
+
+    def clear_tables(self):
+        self.clear_table_athletes_assigned()
+        self.clear_table_athletes()
+
+    def clear_table_athletes_assigned(self):
+        for i in range(self.window.table_athletes_assigned.rowCount()):
+            self.window.table_athletes_assigned.removeRow(i)
+
+    def clear_table_athletes(self):
+        for i in range(self.window.athletes_table.rowCount()):
+            self.window.athletes_table.removeRow(i)
+

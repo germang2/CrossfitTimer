@@ -64,11 +64,10 @@ class GroupController:
 
     def load_groups_competence(self):
         try:
+            for i in range(self.window.groups_table.rowCount()):
+                self.window.groups_table.removeRow(i)
             groups = db.session.query(Group).order_by('order').all()
             if groups:
-                self.window.groups_table.clearContents()
-                for i in range(self.window.groups_table.rowCount()):
-                    self.window.groups_table.removeRow(i)
                 for i, group in enumerate(groups):
                     self.window.groups_table.insertRow(i)
                     name = QtWidgets.QTableWidgetItem(group.name)

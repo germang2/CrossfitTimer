@@ -44,6 +44,12 @@ class Ui_CategoriesView(object):
         font.setWeight(75)
         self.label_3.setFont(font)
         self.label_3.setObjectName("label_3")
+        self.lb_error_delete = QtWidgets.QLabel(CategoriesView)
+        self.lb_error_delete.setGeometry(QtCore.QRect(50, 490, 701, 20))
+        self.lb_error_delete.setStyleSheet("color:red;")
+        self.lb_error_delete.setText("")
+        self.lb_error_delete.setAlignment(QtCore.Qt.AlignCenter)
+        self.lb_error_delete.setObjectName("lb_error_delete")
 
         self.retranslateUi(CategoriesView)
         QtCore.QMetaObject.connectSlotsByName(CategoriesView)

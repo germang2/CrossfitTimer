@@ -19,5 +19,3 @@ class GroupAthlete(db.Base):
     observations = Column(Text, nullable=True)
     athlete = relationship(Athlete, backref='athletes')
     group = relationship(Group, backref='groups')
-
-

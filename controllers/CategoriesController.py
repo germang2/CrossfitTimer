@@ -1,6 +1,7 @@
 from engine import db
 from PyQt5 import QtWidgets
 from models.Category import Category
+from models.Athlete import Athlete
 from app import CategoriesWindow
 
 
@@ -13,6 +14,7 @@ class CategoryController:
         self.window.categories_table.setColumnWidth(2, 150)
         self.window.btn_create_category.clicked.connect(self.create_category)
         self.window.btn_get_all_categories.clicked.connect(self.get_all_categories)
+        self.clear_table()
 
     def create_category(self):
         text = self.window.ed_category.text()
@@ -24,11 +26,10 @@ class CategoryController:
             self.get_all_categories()
 
     def get_all_categories(self):
+        self.window.lb_error_delete.setText('')
+        self.clear_table()
         categories = db.session.query(Category).order_by('name').all()
         if categories:
-            self.window.categories_table.clearContents()
-            for i in range(self.window.categories_table.rowCount()):
-                self.window.categories_table.removeRow(i)
             for i, category in enumerate(categories):
                 self.window.categories_table.insertRow(i)
                 name = QtWidgets.QTableWidgetItem(category.name)
@@ -60,8 +61,8 @@ class CategoryController:
             if operation == 'modify':
                 try:
                     category_id = int(self.window.categories_table.cellWidget(index_row, index_column).property('id'))
-                    new_name = self.window.categories_table.item(index_row, 0).text()
                     category = db.session.query(Category).filter_by(id=category_id).first()
+                    new_name = self.window.categories_table.item(index_row, 0).text()
                     category.name = new_name
                     db.session.add(category)
                     db.session.commit()
@@ -74,9 +75,18 @@ class CategoryController:
                 try:
                     category_id = int(self.window.categories_table.cellWidget(index_row, index_column).property('id'))
                     category = db.session.query(Category).filter_by(id=category_id).first()
-                    db.session.delete(category)
-                    db.session.commit()
-
-                    self.get_all_categories()
+                    # checks if the category is assigned to at least on athlete
+                    athlete = db.session.query(Athlete).filter_by(category_id=category_id).first()
+                    if athlete:
+                        self.window.lb_error_delete.setText(
+                            f'No se puede borrar {category.name}, hay atletas que la tienen asignada')
+                    else:
+                        db.session.delete(category)
+                        db.session.commit()
+                        self.get_all_categories()
                 except Exception as e:
                     print(e)
+
+    def clear_table(self):
+        for i in range(self.window.categories_table.rowCount()):
+            self.window.categories_table.removeRow(i)

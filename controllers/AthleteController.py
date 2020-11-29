@@ -2,14 +2,14 @@ from app import AthletesWindow
 from engine import db
 from models.Athlete import Athlete
 from models.Category import Category
+from models.GroupAthlete import GroupAthlete
 from utils.Validations import *
 from PyQt5 import QtWidgets
 from sqlalchemy import or_
-import traceback
 
 
 class AthletesController:
-    def __init__(self, window: AthletesWindow, *args, **kwargs):
+    def __init__(self, window: AthletesWindow):
         self.window = window
         self.window.btn_add_atlete.clicked.connect(self.create_athlete)
         self.window.btn_get_all_athletes.clicked.connect(self.get_all_athletes)
@@ -17,6 +17,7 @@ class AthletesController:
         self.category_id_create = {}
         self.category_id_modify = {}
         self.load_categories()
+        self.clear_table()
 
     def create_athlete(self):
         """ Creates a new athlete with all fields """
@@ -50,6 +51,7 @@ class AthletesController:
     def get_all_athletes(self, filter_text=None):
         """ loads in a table all the existing athletes """
         try:
+            self.clear_table()
             if filter_text:
                 filter_text.strip()
                 athletes = db.session.query(Athlete).filter(
@@ -59,9 +61,7 @@ class AthletesController:
                 athletes = db.session.query(Athlete).order_by('name').all()
             categories = db.session.query(Category).order_by('name').all()
             if athletes:
-                self.window.athletes_table.clearContents()
-                for i in range(self.window.athletes_table.rowCount()):
-                    self.window.athletes_table.removeRow(i)
+                self.window.lb_error_delete.setText('')
                 for i, athlete in enumerate(athletes):
                     self.window.athletes_table.insertRow(i)
                     name = QtWidgets.QTableWidgetItem(athlete.name)
@@ -128,14 +128,21 @@ class AthletesController:
                     athlete.age = int(age)
                     athlete.club = club
                     athlete.category_id = int(category_id)
+                    athlete.nit = nit
                     db.session.add(athlete)
                     db.session.commit()
+                    self.get_all_athletes()
 
                 elif operation == 'delete' and athlete:
-                    db.session.delete(athlete)
-                    db.session.commit()
-                self.get_all_athletes()
-
+                    # checks if the athlete is assign to a group_athlete, that is the same as competition
+                    group_athlete = db.session.query(GroupAthlete).filter_by(athlete_id=athlete.id).first()
+                    if group_athlete:
+                        self.window.lb_error_delete.setText(
+                            f'No se puede borrar a {athlete.name} mientras pertenezca a una competencia')
+                    else:
+                        db.session.delete(athlete)
+                        db.session.commit()
+                        self.get_all_athletes()
             except Exception as e:
                 print(e)
 
@@ -151,7 +158,7 @@ class AthletesController:
                     # it adds a relation between the index of the comboBox and the category.id
                     self.category_id_create[i] = category.id
         except Exception as e:
-            traceback.print_exc()
+            print(e)
 
     def show_errors(self, errors):
         """ shows the errors gotten from the validations """
@@ -191,6 +198,10 @@ class AthletesController:
         self.window.lb_age_error.setText('')
         self.window.lb_club_error.setText('')
         self.window.lb_nit_error.setText('')
+
+    def clear_table(self):
+        for i in range(self.window.athletes_table.rowCount()):
+            self.window.athletes_table.removeRow(i)
 
 
 def validate_data(name, last_name, age, club, nit):

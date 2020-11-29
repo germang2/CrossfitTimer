@@ -13,16 +13,14 @@ class CompetenceController:
         self.window.btn_get_all_competitions.clicked.connect(self.get_all_competences)
         self.window.competences_table.clicked.connect(self.handle_competences_table)
         self.groups_controller = None
-
+        self.clear_tables()
 
     def get_all_competences(self):
         """ shows in a table all the competences created """
         try:
+            self.clear_competences_table()
             competences = db.session.query(Competence).order_by('date').all()
             if competences:
-                self.window.competences_table.clearContents()
-                for i in range(self.window.competences_table.rowCount()):
-                    self.window.competences_table.removeRow(i)
                 for i, competence in enumerate(competences):
                     self.window.competences_table.insertRow(i)
                     name = QtWidgets.QTableWidgetItem(competence.name)
@@ -37,7 +35,7 @@ class CompetenceController:
                     self.window.competences_table.setItem(i, 4, reward)
 
                     btn_see = QtWidgets.QPushButton()
-                    btn_see.setText('Ver')
+                    btn_see.setText('Grupos')
                     btn_see.setProperty('competence', competence)
                     btn_see.clicked.connect(self.see_competence)
                     self.window.competences_table.setCellWidget(i, 5, btn_see)
@@ -53,6 +51,7 @@ class CompetenceController:
             print(e)
 
     def handle_competences_table(self):
+        # TODO: Modify competences
         pass
 
     def see_competence(self):
@@ -116,6 +115,20 @@ class CompetenceController:
         self.window.lb_date_error.setText('')
         self.window.lb_time_error.setText('')
         self.window.lb_reward_error.setText('')
+
+    def clear_tables(self):
+        self.clear_competences_table()
+        self.clear_groups_table()
+
+    def clear_competences_table(self):
+        self.window.competences_table.clearContents()
+        for i in range(self.window.competences_table.rowCount()):
+            self.window.competences_table.removeRow(i)
+
+    def clear_groups_table(self):
+        self.window.groups_table.clearContents()
+        for i in range(self.window.groups_table.rowCount()):
+            self.window.groups_table.removeRow(i)
 
 
 def validate_data(name, place, date_competence, time, reward):

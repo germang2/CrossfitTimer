@@ -321,7 +321,7 @@
    </column>
    <column>
     <property name="text">
-     <string>Ver</string>
+     <string>Grupos</string>
     </property>
    </column>
    <column>
@@ -541,6 +541,22 @@
    </property>
    <property name="text">
     <string>Recargar</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_error_delete">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>760</y>
+     <width>891</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:red;</string>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>
