@@ -7,8 +7,8 @@ from app import CategoriesWindow
 class CategoryController:
     def __init__(self, main_window: CategoriesWindow, *args, **kwargs):
         self.window = main_window
-        self.window.categories_table.setFixedWidth(700)
-        self.window.categories_table.setColumnWidth(0, 400)
+        self.window.categories_table.setFixedWidth(720)
+        self.window.categories_table.setColumnWidth(0, 380)
         self.window.categories_table.setColumnWidth(1, 150)
         self.window.categories_table.setColumnWidth(2, 150)
         self.window.btn_create_category.clicked.connect(self.create_category)

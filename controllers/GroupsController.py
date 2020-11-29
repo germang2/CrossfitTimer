@@ -1,9 +1,11 @@
 from engine import db
 from app import CompetencesWindow
+from app import AthletesGroupsWindow
 from models.Competence import Competence
 from models.Group import Group
 from utils.Validations import *
 from PyQt5 import QtWidgets
+from controllers.AthletesGroupsController import AthletesGroupsController
 
 
 class GroupController:
@@ -17,6 +19,9 @@ class GroupController:
         self.window.lb_competence_selected.setText(f'COMPETENCIA: {self.competence.name}')
         self.show_group_items()
         self.load_groups_competence()
+
+        self.athletes_groups_window = AthletesGroupsWindow()
+        self.athletes_groups_controller = None
 
     def create_group(self):
         """ validate data and creates a new Group """
@@ -71,17 +76,24 @@ class GroupController:
                     order = QtWidgets.QTableWidgetItem(str(group.order))
                     self.window.groups_table.setItem(i, 1, order)
 
+                    btn_see = QtWidgets.QPushButton()
+                    btn_see.setText('Ver')
+                    btn_see.clicked.connect(self.open_assign_athlete)
+                    btn_see.setProperty('competence', self.competence)
+                    btn_see.setProperty('group', group)
+                    self.window.groups_table.setCellWidget(i, 2, btn_see)
+
                     modify = QtWidgets.QPushButton()
                     modify.setText('Modificar')
                     modify.clicked.connect(self.modify_group)
                     modify.setProperty('id', group.id)
-                    self.window.groups_table.setCellWidget(i, 2, modify)
+                    self.window.groups_table.setCellWidget(i, 3, modify)
 
                     delete = QtWidgets.QPushButton()
                     delete.setText('Eliminar')
                     delete.clicked.connect(self.delete_group)
                     delete.setProperty('id', group.id)
-                    self.window.groups_table.setCellWidget(i, 3, delete)
+                    self.window.groups_table.setCellWidget(i, 4, delete)
                 while True:
                     row_count = self.window.groups_table.rowCount()
                     if row_count <= len(groups):
@@ -117,6 +129,19 @@ class GroupController:
             db.session.delete(group)
             db.session.commit()
         self.load_groups_competence()
+
+    def open_assign_athlete(self):
+        """ opens the view that allows assign athletes to the selected group """
+        index_row = self.window.groups_table.currentRow()
+        index_column = self.window.groups_table.currentColumn()
+        item = self.window.groups_table.cellWidget(index_row, index_column)
+        competence = item.property('competence')
+        group = item.property('group')
+        self.athletes_groups_controller = AthletesGroupsController(window=self.athletes_groups_window,
+                                                                   competence=competence,
+                                                                   group=group)
+        self.athletes_groups_window.show()
+
 
 def validate_data(name, order):
     """ validate each field of a Group """

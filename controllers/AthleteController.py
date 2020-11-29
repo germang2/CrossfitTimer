@@ -44,7 +44,7 @@ class AthletesController:
 
     def filter_athletes(self):
         text = self.window.ed_filter.text()
-        if text and len(text) > 3:
+        if text and len(text) >= 3:
             self.get_all_athletes(filter_text=text)
 
     def get_all_athletes(self, filter_text=None):

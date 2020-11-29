@@ -14,6 +14,7 @@ class CompetenceController:
         self.window.competences_table.clicked.connect(self.handle_competences_table)
         self.groups_controller = None
 
+
     def get_all_competences(self):
         """ shows in a table all the competences created """
         try:

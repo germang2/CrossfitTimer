@@ -3,6 +3,7 @@ from engine import db
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
+
 class Group(db.Base):
     __tablename__ = 'groups'
 
