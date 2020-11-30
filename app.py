@@ -3,6 +3,7 @@ from qt.CategoriesView import Ui_CategoriesView
 from qt.AthletesView import Ui_AthletesView
 from qt.CompetenciasView import Ui_CompetencesView
 from qt.AthletesGroupsView import Ui_AthletesGroups
+from qt.TakeTimeView import Ui_TakeTime
 from PyQt5 import QtWidgets
 
 
@@ -31,6 +32,12 @@ class CompetencesWindow(QtWidgets.QMainWindow, Ui_CompetencesView):
 
 
 class AthletesGroupsWindow(QtWidgets.QMainWindow, Ui_AthletesGroups):
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QMainWindow.__init__(self, *args, **kwargs)
+        self.setupUi(self)
+
+
+class TakeTimeWindow(QtWidgets.QMainWindow, Ui_TakeTime):
     def __init__(self, *args, **kwargs):
         QtWidgets.QMainWindow.__init__(self, *args, **kwargs)
         self.setupUi(self)

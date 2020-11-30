@@ -1,6 +1,8 @@
-from app import CompetencesWindow
-from controllers.GroupsController import GroupController
 from engine import db
+from app import CompetencesWindow
+from app import TakeTimeWindow
+from controllers.GroupsController import GroupController
+from controllers.TakeTimeController import TakeTimeController
 from models.Competence import Competence
 from utils.Validations import *
 from PyQt5 import QtWidgets
@@ -13,6 +15,8 @@ class CompetenceController:
         self.window.btn_get_all_competitions.clicked.connect(self.get_all_competences)
         self.window.competences_table.clicked.connect(self.handle_competences_table)
         self.groups_controller = None
+        self.take_time_window = TakeTimeWindow()
+        self.take_time_controller = None
         self.clear_tables()
 
     def get_all_competences(self):
@@ -34,18 +38,24 @@ class CompetenceController:
                     reward = QtWidgets.QTableWidgetItem(competence.reward)
                     self.window.competences_table.setItem(i, 4, reward)
 
+                    btn_group = QtWidgets.QPushButton()
+                    btn_group.setText('Grupos')
+                    btn_group.setProperty('competence', competence)
+                    btn_group.clicked.connect(self.see_groups)
+                    self.window.competences_table.setCellWidget(i, 5, btn_group)
+
                     btn_see = QtWidgets.QPushButton()
-                    btn_see.setText('Grupos')
+                    btn_see.setText('Ver')
                     btn_see.setProperty('competence', competence)
                     btn_see.clicked.connect(self.see_competence)
-                    self.window.competences_table.setCellWidget(i, 5, btn_see)
+                    self.window.competences_table.setCellWidget(i, 6, btn_see)
 
                     modify = QtWidgets.QPushButton()
                     modify.setText('Modificar')
                     modify.setProperty('id', competence.id)
                     modify.setProperty('operation', 'modify')
                     modify.clicked.connect(self.handle_competences_table)
-                    self.window.competences_table.setCellWidget(i, 6, modify)
+                    self.window.competences_table.setCellWidget(i, 7, modify)
         except Exception as e:
             print('Error loading all competences')
             print(e)
@@ -54,11 +64,20 @@ class CompetenceController:
         # TODO: Modify competences
         pass
 
-    def see_competence(self):
+    def see_groups(self):
+        """ select a competence and shows the groups """
         index_row = self.window.competences_table.currentRow()
         index_column = self.window.competences_table.currentColumn()
         competence = self.window.competences_table.cellWidget(index_row, index_column).property('competence')
         self.groups_controller = GroupController(self.window, competence)
+
+    def see_competence(self):
+        """ opens a window for take the times of the athletes """
+        index_row = self.window.competences_table.currentRow()
+        index_column = self.window.competences_table.currentColumn()
+        competence = self.window.competences_table.cellWidget(index_row, index_column).property('competence')
+        self.take_time_controller = TakeTimeController(self.take_time_window, competence)
+        self.take_time_window.show()
 
     def create_competence(self):
         """ Creates a new competence object """

@@ -326,6 +326,11 @@
    </column>
    <column>
     <property name="text">
+     <string>Ver</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
      <string>Modificar</string>
     </property>
    </column>
