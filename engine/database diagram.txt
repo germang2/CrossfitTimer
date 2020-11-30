@@ -1,0 +1,44 @@
+https://dbdiagram.io/d
+-------------------------------------------
+
+Table athletes as athlete {
+  id int [pk, increment] // auto-increment
+  name varchar
+  last_name varchar
+  age integer
+  club varchar
+  category_id int [ref:> category.id]
+}
+
+Table competence as competence {
+  id int [pk, increment]
+  name varchar
+  place varchar
+  date date
+  time time
+  reward varchar
+  details text
+}
+
+Table competence_athletes as competence_athletes {
+  id int [pk, increment]
+  athelte_id int [ref:> athlete.id]
+  competence_id int [ref:> competence.id]
+  dorsal varchar
+  initial_time time
+  final_time time
+  total_time time
+  observations varchar
+}
+
+Table groups as group {
+  id int [pk, increment]
+  name varchar
+  competence_id int [ref:> competence.id]
+  order int
+}
+
+Table categories as category {
+  id int [pk, increment]
+  name varchar
+}
