@@ -13,22 +13,24 @@ class AthletesGroupsController:
         self.window = window
         self.competence = competence
         self.group = group
+        self.clear_tables()
         self.load_info()
         self.window.ed_filter_athlete.textChanged.connect(self.filter_athletes)
         self.window.btn_load_athletes.clicked.connect(self.load_all_athletes)
         self.window.btn_reload_assigned_athletes.clicked.connect(self.load_athletes_assigned)
-        self.clear_tables()
 
     def load_info(self):
         """ loads the information about the competence and group """
         self.window.lb_competence_name.setText(self.competence.name)
         self.window.lb_competence_date.setText(str(self.competence.date))
         self.window.lb_group_name.setText(self.group.name)
+        self.window.lb_group_name_2.setText(self.group.name)
         self.load_athletes_assigned()
 
     def load_athletes_assigned(self):
         """ loads all athletes for the current group """
         try:
+            alert_without_dorsal_flag = False
             for i in range(self.window.table_athletes_assigned.rowCount()):
                 self.window.table_athletes_assigned.removeRow(i)
             groups_athletes = db.session.query(GroupAthlete).filter_by(group_id=self.group.id).order_by('dorsal').all()
@@ -49,6 +51,9 @@ class AthletesGroupsController:
                     dorsal = QtWidgets.QTableWidgetItem(item.dorsal)
                     self.window.table_athletes_assigned.setItem(i, 3, dorsal)
 
+                    if item.dorsal is None:
+                        alert_without_dorsal_flag = True
+
                     btn_modify = QtWidgets.QPushButton()
                     btn_modify.setText('Modificar')
                     btn_modify.setProperty('group_athlete', item)
@@ -67,6 +72,11 @@ class AthletesGroupsController:
                         break
                     else:
                         self.window.table_athletes_assigned.removeRow(row_count - 1)
+
+                if alert_without_dorsal_flag:
+                    self.window.lb_alert.setText('Hay atletas sin dorsal')
+                else:
+                    self.window.lb_alert.setText('')
 
         except Exception as e:
             print(f'Error loading athletes for group {self.group}')
@@ -170,10 +180,12 @@ class AthletesGroupsController:
         self.clear_table_athletes()
 
     def clear_table_athletes_assigned(self):
+        self.window.table_athletes_assigned.clearContents()
         for i in range(self.window.table_athletes_assigned.rowCount()):
             self.window.table_athletes_assigned.removeRow(i)
 
     def clear_table_athletes(self):
+        self.window.athletes_table.clearContents()
         for i in range(self.window.athletes_table.rowCount()):
             self.window.athletes_table.removeRow(i)
 

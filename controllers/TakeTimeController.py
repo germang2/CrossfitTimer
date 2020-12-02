@@ -1,5 +1,6 @@
 from engine import db
 from app import TakeTimeWindow
+from models.Athlete import Athlete
 from models.Group import Group
 from models.GroupAthlete import GroupAthlete
 from models.Competence import Competence
@@ -13,13 +14,14 @@ class TakeTimeController:
     def __init__(self, window: TakeTimeWindow, competence: Competence):
         self.window = window
         self.competence = competence
-        self.window.lb_competence_name = self.competence.name
-        self.window.lb_competence_date = self.competence.date
+        self.window.lb_competence_name.setText(self.competence.name)
+        self.window.lb_competence_date.setText(self.competence.date.strftime('%H:%M:%S'))
         self.window.ed_filter.textChanged.connect(self.filter_athletes)
         self.window.btn_update_final_time.clicked.connect(self.update_final_time)
         self.load_initial_data()
+        self.window.cb_order_table.currentIndexChanged.connect(self.order_table_filter)
 
-    def load_initial_data(self, order_group='asc'):
+    def load_initial_data(self):
         try:
             groups = db.session.query(Group).filter_by(competence_id=self.competence.id).order_by(Group.order.asc()).all()
             if groups:
@@ -38,11 +40,17 @@ class TakeTimeController:
         try:
             filter_text = self.window.ed_filter.text()
             filter_text.strip()
-            if len(filter_text) >= 3:
-                athletes_groups = db.session.query(GroupAthlete)\
-                    .filter(GroupAthlete.dorsal.ilike(f'{filter_text}%')).order_by('dorsal').all()
-                if athletes_groups:
-                    self.show_athletes_table(athletes_groups)
+            if filter_text and filter_text[-1] == ',':
+                return
+            if len(filter_text) >= 2:
+                filters_list = filter_text.split(',')
+                athletes_list = []
+                for f in filters_list:
+                    athletes_groups = db.session.query(GroupAthlete)\
+                        .filter(GroupAthlete.dorsal.ilike(f'{f}%')).order_by('dorsal').all()
+                    athletes_list += athletes_groups
+                if athletes_list:
+                    self.show_athletes_table(athletes_list)
             elif len(filter_text) == 0:
                 self.load_initial_data()
         except Exception as e:
@@ -53,42 +61,45 @@ class TakeTimeController:
         for i, athlete in enumerate(athletes_groups):
             self.window.table_times.insertRow(i)
 
-            group_item = QtWidgets.QPushButton()
-            group_item.setText(athlete.group.name)
+            group_item = QtWidgets.QTableWidgetItem(athlete.group.name)
+            self.window.table_times.setItem(i, 0, group_item)
+
+            btn_start = QtWidgets.QPushButton()
+            btn_start.setText('INICIAR')
             if athlete.initial_time is not None:
-                group_item.setEnabled(False)
+                btn_start.setEnabled(False)
             else:
-                group_item.clicked.connect(self.update_initial_time)
-                group_item.setProperty('group', athlete.group)
-            self.window.table_times.setCellWidget(i, 0, group_item)
+                btn_start.clicked.connect(self.update_initial_time)
+                btn_start.setProperty('group', athlete.group)
+            self.window.table_times.setCellWidget(i, 1, btn_start)
 
             athlete_full_name = QtWidgets.QTableWidgetItem(
                 f'{athlete.athlete.name} {athlete.athlete.last_name}')
             # disable editing in the cell
             athlete_full_name.setFlags(QtCore.Qt.ItemIsEnabled)
-            self.window.table_times.setItem(i, 1, athlete_full_name)
+            self.window.table_times.setItem(i, 2, athlete_full_name)
 
             dorsal = QtWidgets.QTableWidgetItem(athlete.dorsal)
             dorsal.setFlags(QtCore.Qt.ItemIsEnabled)
-            self.window.table_times.setItem(i, 2, dorsal)
+            self.window.table_times.setItem(i, 3, dorsal)
 
             initial_time_value = '' if athlete.initial_time is None else athlete.initial_time \
-                .strftime('%H:%M:%S')
+                .strftime('%H:%M:%S.%f')[:-3]
             initial_time = QtWidgets.QTableWidgetItem(initial_time_value)
             initial_time.setFlags(QtCore.Qt.ItemIsEnabled)
-            self.window.table_times.setItem(i, 3, initial_time)
+            self.window.table_times.setItem(i, 4, initial_time)
 
             final_time_value = '' if athlete.final_time is None else athlete.final_time.\
-                strftime('%H:%M:%S')
+                strftime('%H:%M:%S.%f')[:-3]
             final_time = QtWidgets.QTableWidgetItem(final_time_value)
             final_time.setFlags(QtCore.Qt.ItemIsEnabled)
-            self.window.table_times.setItem(i, 4, final_time)
+            self.window.table_times.setItem(i, 5, final_time)
 
             total_time_value = '' if athlete.total_time is None else athlete.total_time\
-                .strftime('%H:%M:%S')
+                .strftime('%H:%M:%S.%f')[:-3]
             total_time = QtWidgets.QTableWidgetItem(total_time_value)
             total_time.setFlags(QtCore.Qt.ItemIsEnabled)
-            self.window.table_times.setItem(i, 5, total_time)
+            self.window.table_times.setItem(i, 6, total_time)
         while True:
             row_count = self.window.table_times.rowCount()
             if row_count <= len(athletes_groups):
@@ -119,12 +130,18 @@ class TakeTimeController:
         try:
             filter_text = self.window.ed_filter.text()
             filter_text.strip()
-            athletes_groups = db.session.query(GroupAthlete) \
-                .filter(GroupAthlete.dorsal.ilike(f'{filter_text}%')).all()
-            if athletes_groups:
+            athletes_groups_list = []
+            if filter_text[-1] == ',':
+                filter_text = filter_text[:-1]
+            filter_list = filter_text.split(',')
+            for f in filter_list:
+                athletes_groups = db.session.query(GroupAthlete) \
+                    .filter(GroupAthlete.dorsal.ilike(f'{f}%')).all()
+                athletes_groups_list += athletes_groups
+            if athletes_groups_list:
                 final_time = datetime.now()
-                for athlete in athletes_groups:
-                    if athlete.initial_time is not None:
+                for athlete in athletes_groups_list:
+                    if athlete.initial_time is not None and athlete.final_time is None:
                         initial_time = athlete.initial_time
                         total_seconds = final_time - initial_time
 
@@ -136,6 +153,34 @@ class TakeTimeController:
                 self.window.ed_filter.setText('')
         except Exception as e:
             print('Error updating final time and total time')
+            print(e)
+            self.window.ed_filter.setText('')
+
+    def order_table_filter(self):
+        try:
+            filter_selected = self.window.cb_order_table.currentText()
+            self.window.ed_filter.setText('')
+            if filter_selected:
+                # TODO: filter by groups of competition
+                if filter_selected == 'Dorsal':
+                    athletes_groups = db.session.query(GroupAthlete).order_by(GroupAthlete.dorsal.asc()).all()
+                elif filter_selected == 'Hora inicio':
+                    athletes_groups = db.session.query(GroupAthlete).order_by(GroupAthlete.initial_time.asc()).all()
+                elif filter_selected == 'Hora fin':
+                    athletes_groups = db.session.query(GroupAthlete).order_by(GroupAthlete.final_time.asc()).all()
+                elif filter_selected == 'Tiempo total':
+                    athletes_groups = db.session.query(GroupAthlete).order_by(GroupAthlete.total_time.asc()).all()
+                elif filter_selected == 'Nombre':
+                    athletes_groups = db.session.query(GroupAthlete).join(Athlete).order_by(Athlete.name.asc()).all()
+                elif filter_selected == 'Grupo ascendente':
+                    athletes_groups = db.session.query(GroupAthlete).join(Group).order_by(Group.order.asc()).all()
+                elif filter_selected == 'Grupo descendente':
+                    athletes_groups = db.session.query(GroupAthlete).join(Group).order_by(Group.order.desc()).all()
+                else:
+                    athletes_groups = db.session.query(GroupAthlete).order_by(GroupAthlete.dorsal.asc()).all()
+                self.show_athletes_table(athletes_groups=athletes_groups)
+        except Exception as e:
+            print(f'Error ordering table')
             print(e)
 
     def clear_table(self):

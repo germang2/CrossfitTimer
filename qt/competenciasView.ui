@@ -16,8 +16,8 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>420</x>
-     <y>20</y>
+     <x>400</x>
+     <y>60</y>
      <width>311</width>
      <height>41</height>
     </rect>
@@ -38,7 +38,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>120</y>
+     <y>150</y>
      <width>81</width>
      <height>31</height>
     </rect>
@@ -56,7 +56,7 @@
    <property name="geometry">
     <rect>
      <x>670</x>
-     <y>120</y>
+     <y>150</y>
      <width>81</width>
      <height>31</height>
     </rect>
@@ -74,7 +74,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>160</y>
+     <y>190</y>
      <width>191</width>
      <height>31</height>
     </rect>
@@ -84,7 +84,7 @@
    <property name="geometry">
     <rect>
      <x>600</x>
-     <y>160</y>
+     <y>190</y>
      <width>191</width>
      <height>31</height>
     </rect>
@@ -94,7 +94,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>190</y>
+     <y>220</y>
      <width>191</width>
      <height>20</height>
     </rect>
@@ -113,7 +113,7 @@
    <property name="geometry">
     <rect>
      <x>600</x>
-     <y>190</y>
+     <y>220</y>
      <width>191</width>
      <height>20</height>
     </rect>
@@ -132,7 +132,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>250</y>
+     <y>280</y>
      <width>191</width>
      <height>31</height>
     </rect>
@@ -142,7 +142,7 @@
    <property name="geometry">
     <rect>
      <x>180</x>
-     <y>280</y>
+     <y>310</y>
      <width>351</width>
      <height>20</height>
     </rect>
@@ -161,7 +161,7 @@
    <property name="geometry">
     <rect>
      <x>320</x>
-     <y>210</y>
+     <y>240</y>
      <width>81</width>
      <height>31</height>
     </rect>
@@ -179,7 +179,7 @@
    <property name="geometry">
     <rect>
      <x>670</x>
-     <y>210</y>
+     <y>240</y>
      <width>81</width>
      <height>31</height>
     </rect>
@@ -197,7 +197,7 @@
    <property name="geometry">
     <rect>
      <x>600</x>
-     <y>250</y>
+     <y>280</y>
      <width>191</width>
      <height>31</height>
     </rect>
@@ -207,57 +207,7 @@
    <property name="geometry">
     <rect>
      <x>600</x>
-     <y>280</y>
-     <width>191</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color:rgb(255, 0, 0)</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>300</y>
-     <width>191</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Recompensa</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="ed_reward">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>340</y>
-     <width>191</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lb_reward_error">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>370</y>
+     <y>310</y>
      <width>191</width>
      <height>20</height>
     </rect>
@@ -275,8 +225,8 @@
   <widget class="QPushButton" name="btn_create_competition">
    <property name="geometry">
     <rect>
-     <x>430</x>
-     <y>390</y>
+     <x>400</x>
+     <y>340</y>
      <width>231</width>
      <height>41</height>
     </rect>
@@ -316,17 +266,12 @@
    </column>
    <column>
     <property name="text">
-     <string>Recompensas</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
      <string>Grupos</string>
     </property>
    </column>
    <column>
     <property name="text">
-     <string>Ver</string>
+     <string>Tiempos</string>
     </property>
    </column>
    <column>

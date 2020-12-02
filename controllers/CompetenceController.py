@@ -35,27 +35,25 @@ class CompetenceController:
                     self.window.competences_table.setItem(i, 2, date_competence)
                     time = QtWidgets.QTableWidgetItem(competence.time)
                     self.window.competences_table.setItem(i, 3, time)
-                    reward = QtWidgets.QTableWidgetItem(competence.reward)
-                    self.window.competences_table.setItem(i, 4, reward)
 
                     btn_group = QtWidgets.QPushButton()
                     btn_group.setText('Grupos')
                     btn_group.setProperty('competence', competence)
                     btn_group.clicked.connect(self.see_groups)
-                    self.window.competences_table.setCellWidget(i, 5, btn_group)
+                    self.window.competences_table.setCellWidget(i, 4, btn_group)
 
                     btn_see = QtWidgets.QPushButton()
-                    btn_see.setText('Ver')
+                    btn_see.setText('Tiempos')
                     btn_see.setProperty('competence', competence)
                     btn_see.clicked.connect(self.see_competence)
-                    self.window.competences_table.setCellWidget(i, 6, btn_see)
+                    self.window.competences_table.setCellWidget(i, 5, btn_see)
 
                     modify = QtWidgets.QPushButton()
                     modify.setText('Modificar')
                     modify.setProperty('id', competence.id)
                     modify.setProperty('operation', 'modify')
                     modify.clicked.connect(self.handle_competences_table)
-                    self.window.competences_table.setCellWidget(i, 7, modify)
+                    self.window.competences_table.setCellWidget(i, 6, modify)
         except Exception as e:
             print('Error loading all competences')
             print(e)
@@ -86,15 +84,14 @@ class CompetenceController:
             place = self.window.ed_place.text()
             date_competence = self.window.ed_date.text()
             time = self.window.ed_time.text()
-            reward = self.window.ed_reward.text()
-            errors = validate_data(name=name, place=place, date_competence=date_competence, time=time, reward=reward)
+            errors = validate_data(name=name, place=place, date_competence=date_competence, time=time)
             if errors:
                 self.show_errors(errors)
             else:
                 # if there are not errors, the competence is create
                 date_values = date_competence.split('-')
                 val = date(int(date_values[0]), int(date_values[1]), int(date_values[2]))
-                competence = Competence(name=name, place=place, date=val, time=time, reward=reward)
+                competence = Competence(name=name, place=place, date=val, time=time)
                 db.session.add(competence)
                 db.session.commit()
                 self.clear_fields()
@@ -116,16 +113,12 @@ class CompetenceController:
         msg = errors['time'] if 'time' in errors else ''
         self.window.lb_time_error.setText(msg)
 
-        msg = errors['reward'] if 'reward' in errors else ''
-        self.window.lb_reward_error.setText(msg)
-
     def clear_fields(self):
         """ clear all editText fields for the user """
         self.window.ed_name.setText('')
         self.window.ed_place.setText('')
         self.window.ed_date.setText('')
         self.window.ed_time.setText('')
-        self.window.ed_reward.setText('')
 
     def clear_fields_errors(self):
         """ clear all the label fields where errors are show """
@@ -133,7 +126,6 @@ class CompetenceController:
         self.window.lb_place_error.setText('')
         self.window.lb_date_error.setText('')
         self.window.lb_time_error.setText('')
-        self.window.lb_reward_error.setText('')
 
     def clear_tables(self):
         self.clear_competences_table()
@@ -150,7 +142,7 @@ class CompetenceController:
             self.window.groups_table.removeRow(i)
 
 
-def validate_data(name, place, date_competence, time, reward):
+def validate_data(name, place, date_competence, time):
     """ validate each field of the Competence and returns a dict of errors """
     errors = {}
 
@@ -172,8 +164,4 @@ def validate_data(name, place, date_competence, time, reward):
     field = 'time'
     validate_exists(field, time, errors)
 
-    # validations for field 'reward'
-    field = 'reward'
-    if reward and len(reward) > 0:
-        validate_max(field, reward, 50, errors)
     return errors

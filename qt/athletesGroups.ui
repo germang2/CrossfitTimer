@@ -138,7 +138,7 @@
      <x>40</x>
      <y>330</y>
      <width>521</width>
-     <height>311</height>
+     <height>361</height>
     </rect>
    </property>
    <column>
@@ -212,7 +212,7 @@
      <x>590</x>
      <y>330</y>
      <width>791</width>
-     <height>311</height>
+     <height>361</height>
     </rect>
    </property>
    <column>
@@ -317,6 +317,51 @@
    </property>
    <property name="text">
     <string>FECHA:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>300</y>
+     <width>171</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Atletas asignados al grupo: </string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_group_name_2">
+   <property name="geometry">
+    <rect>
+     <x>900</x>
+     <y>300</y>
+     <width>55</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lb_alert">
+   <property name="geometry">
+    <rect>
+     <x>594</x>
+     <y>690</y>
+     <width>791</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:red;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>
