@@ -4,7 +4,7 @@ from models.Athlete import Athlete
 from models.Group import Group
 from models.GroupAthlete import GroupAthlete
 from models.Competence import Competence
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 from PyQt5 import QtWidgets, QtCore
 from datetime import datetime
 from datetime import time
@@ -14,6 +14,7 @@ class TakeTimeController:
     def __init__(self, window: TakeTimeWindow, competence: Competence):
         self.window = window
         self.competence = competence
+        self.window.ed_filter.setText('')
         self.window.lb_competence_name.setText(self.competence.name)
         self.window.lb_competence_date.setText(self.competence.date.strftime('%H:%M:%S'))
         self.window.ed_filter.textChanged.connect(self.filter_athletes)
@@ -42,12 +43,16 @@ class TakeTimeController:
             filter_text.strip()
             if filter_text and filter_text[-1] == ',':
                 return
-            if len(filter_text) >= 2:
+            groups = db.session.query(Group).filter_by(competence_id=self.competence.id).order_by(
+                Group.order.asc()).all()
+            if len(filter_text) >= 2 and groups:
+                group_list = [g.id for g in groups]
                 filters_list = filter_text.split(',')
                 athletes_list = []
                 for f in filters_list:
-                    athletes_groups = db.session.query(GroupAthlete)\
-                        .filter(GroupAthlete.dorsal.ilike(f'{f}%')).order_by('dorsal').all()
+                    athletes_groups = db.session.query(GroupAthlete).join(Group).filter(
+                        GroupAthlete.dorsal.ilike(f'{f}%'), Group.id.in_(group_list)
+                    ).order_by('dorsal').all()
                     athletes_list += athletes_groups
                 if athletes_list:
                     self.show_athletes_table(athletes_list)
@@ -79,27 +84,30 @@ class TakeTimeController:
             athlete_full_name.setFlags(QtCore.Qt.ItemIsEnabled)
             self.window.table_times.setItem(i, 2, athlete_full_name)
 
+            category_name = QtWidgets.QTableWidgetItem(athlete.athlete.category.name)
+            self.window.table_times.setItem(i, 3, category_name)
+
             dorsal = QtWidgets.QTableWidgetItem(athlete.dorsal)
             dorsal.setFlags(QtCore.Qt.ItemIsEnabled)
-            self.window.table_times.setItem(i, 3, dorsal)
+            self.window.table_times.setItem(i, 4, dorsal)
 
             initial_time_value = '' if athlete.initial_time is None else athlete.initial_time \
                 .strftime('%H:%M:%S.%f')[:-3]
             initial_time = QtWidgets.QTableWidgetItem(initial_time_value)
             initial_time.setFlags(QtCore.Qt.ItemIsEnabled)
-            self.window.table_times.setItem(i, 4, initial_time)
+            self.window.table_times.setItem(i, 5, initial_time)
 
             final_time_value = '' if athlete.final_time is None else athlete.final_time.\
                 strftime('%H:%M:%S.%f')[:-3]
             final_time = QtWidgets.QTableWidgetItem(final_time_value)
             final_time.setFlags(QtCore.Qt.ItemIsEnabled)
-            self.window.table_times.setItem(i, 5, final_time)
+            self.window.table_times.setItem(i, 6, final_time)
 
             total_time_value = '' if athlete.total_time is None else athlete.total_time\
                 .strftime('%H:%M:%S.%f')[:-3]
             total_time = QtWidgets.QTableWidgetItem(total_time_value)
             total_time.setFlags(QtCore.Qt.ItemIsEnabled)
-            self.window.table_times.setItem(i, 6, total_time)
+            self.window.table_times.setItem(i, 7, total_time)
         while True:
             row_count = self.window.table_times.rowCount()
             if row_count <= len(athletes_groups):
@@ -160,22 +168,32 @@ class TakeTimeController:
         try:
             filter_selected = self.window.cb_order_table.currentText()
             self.window.ed_filter.setText('')
-            if filter_selected:
+            groups = db.session.query(Group).filter_by(competence_id=self.competence.id).order_by(
+                Group.order.asc()).all()
+            if filter_selected and groups:
+                groups_list = [g.id for g in groups]
                 # TODO: filter by groups of competition
                 if filter_selected == 'Dorsal':
-                    athletes_groups = db.session.query(GroupAthlete).order_by(GroupAthlete.dorsal.asc()).all()
+                    athletes_groups = db.session.query(GroupAthlete).join(Group).filter(Group.id.in_(groups_list))\
+                        .order_by(GroupAthlete.dorsal.asc()).all()
                 elif filter_selected == 'Hora inicio':
-                    athletes_groups = db.session.query(GroupAthlete).order_by(GroupAthlete.initial_time.asc()).all()
+                    athletes_groups = db.session.query(GroupAthlete).join(Group).filter(Group.id.in_(groups_list))\
+                        .order_by(GroupAthlete.initial_time.asc()).all()
                 elif filter_selected == 'Hora fin':
-                    athletes_groups = db.session.query(GroupAthlete).order_by(GroupAthlete.final_time.asc()).all()
+                    athletes_groups = db.session.query(GroupAthlete).join(Group).filter(Group.id.in_(groups_list))\
+                        .order_by(GroupAthlete.final_time.asc()).all()
                 elif filter_selected == 'Tiempo total':
-                    athletes_groups = db.session.query(GroupAthlete).order_by(GroupAthlete.total_time.asc()).all()
+                    athletes_groups = db.session.query(GroupAthlete).join(Group).filter(Group.id.in_(groups_list))\
+                        .order_by(GroupAthlete.total_time.asc()).all()
                 elif filter_selected == 'Nombre':
-                    athletes_groups = db.session.query(GroupAthlete).join(Athlete).order_by(Athlete.name.asc()).all()
+                    athletes_groups = db.session.query(GroupAthlete).join(Athlete)\
+                        .join(Group).filter(Group.id.in_(groups_list)).order_by(Athlete.name.asc()).all()
                 elif filter_selected == 'Grupo ascendente':
-                    athletes_groups = db.session.query(GroupAthlete).join(Group).order_by(Group.order.asc()).all()
+                    athletes_groups = db.session.query(GroupAthlete).join(Group).filter(Group.id.in_(groups_list))\
+                        .order_by(Group.order.asc()).all()
                 elif filter_selected == 'Grupo descendente':
-                    athletes_groups = db.session.query(GroupAthlete).join(Group).order_by(Group.order.desc()).all()
+                    athletes_groups = db.session.query(GroupAthlete).join(Group).filter(Group.id.in_(groups_list))\
+                        .order_by(Group.order.desc()).all()
                 else:
                     athletes_groups = db.session.query(GroupAthlete).order_by(GroupAthlete.dorsal.asc()).all()
                 self.show_athletes_table(athletes_groups=athletes_groups)

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1068</width>
+    <width>1166</width>
     <height>727</height>
    </rect>
   </property>
@@ -111,7 +111,7 @@
     <rect>
      <x>70</x>
      <y>270</y>
-     <width>921</width>
+     <width>1031</width>
      <height>411</height>
     </rect>
    </property>
@@ -131,6 +131,11 @@
    <column>
     <property name="text">
      <string>Atleta</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Categoria</string>
     </property>
    </column>
    <column>
