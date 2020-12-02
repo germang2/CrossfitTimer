@@ -13,7 +13,6 @@ class CompetenceController:
         self.window = window
         self.window.btn_create_competition.clicked.connect(self.create_competence)
         self.window.btn_get_all_competitions.clicked.connect(self.get_all_competences)
-        self.window.competences_table.clicked.connect(self.handle_competences_table)
         self.groups_controller = None
         self.take_time_window = TakeTimeWindow()
         self.take_time_controller = None
@@ -23,6 +22,7 @@ class CompetenceController:
         """ shows in a table all the competences created """
         try:
             self.clear_competences_table()
+            self.window.lb_error_delete.setText('')
             competences = db.session.query(Competence).order_by('date').all()
             if competences:
                 for i, competence in enumerate(competences):
@@ -59,8 +59,40 @@ class CompetenceController:
             print(e)
 
     def handle_competences_table(self):
-        # TODO: Modify competences
-        pass
+        """ handles the clicks over the buttons modify and delete on the table for athletes """
+        index_row = self.window.competences_table.currentRow()
+        index_column = self.window.competences_table.currentColumn()
+        if index_row >= 0 and index_column >= 0:
+            competence_id = int(self.window.competences_table.cellWidget(index_row, index_column).property('id'))
+            competence = db.session.query(Competence).filter_by(id=competence_id).first()
+            operation = self.window.competences_table.cellWidget(index_row, index_column).property('operation')
+            try:
+                if operation == 'modify' and competence:
+                    name = self.window.competences_table.item(index_row, 0).text()
+                    place = self.window.competences_table.item(index_row, 1).text()
+                    date_competence = self.window.competences_table.item(index_row, 2).text()
+                    time_competence = self.window.competences_table.item(index_row, 3).text()
+                    errors = validate_data(name=name, place=place, date_competence=date_competence, time=time_competence)
+                    if not errors:
+                        competence.name = name
+                        competence.place = place
+                        date_values = date_competence.split('-')
+                        val = date(int(date_values[0]), int(date_values[1]), int(date_values[2]))
+                        competence.date = val
+                        competence.time = time_competence
+                        db.session.add(competence)
+                        db.session.commit()
+                        self.get_all_competences()
+                    else:
+                        self.window.lb_error_delete.setText('Hay errores en los datos modficados, por favor verifique')
+
+                elif operation == 'delete' and competence:
+                    competence = db.session.query(Competence).filter_by(id=competence_id).first()
+                    db.session.delete(competence)
+                    db.session.commit()
+                    self.get_all_competences()
+            except Exception as e:
+                print(e)
 
     def see_groups(self):
         """ select a competence and shows the groups """

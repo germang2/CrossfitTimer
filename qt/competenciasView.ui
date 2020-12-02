@@ -352,6 +352,9 @@
      <pointsize>10</pointsize>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="text">
     <string>Nombre</string>
    </property>
@@ -366,7 +369,7 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">color:rgb(255, 0, 0)</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
@@ -384,6 +387,9 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
   </widget>
   <widget class="QLineEdit" name="ed_group_order">
    <property name="geometry">
@@ -393,6 +399,9 @@
      <width>121</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
   </widget>
   <widget class="QLabel" name="lb_group_order_error">
@@ -405,7 +414,7 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">color:rgb(255, 0, 0)</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
@@ -428,6 +437,9 @@
      <pointsize>10</pointsize>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="text">
     <string>Orden</string>
    </property>
@@ -440,6 +452,9 @@
      <width>481</width>
      <height>391</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
    <column>
     <property name="text">
@@ -476,6 +491,9 @@
      <height>28</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="text">
     <string>Agregar</string>
    </property>
@@ -488,6 +506,9 @@
      <width>93</width>
      <height>28</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
    <property name="text">
     <string>Recargar</string>
