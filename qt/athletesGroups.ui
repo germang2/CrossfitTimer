@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1476</width>
-    <height>757</height>
+    <width>1303</width>
+    <height>684</height>
    </rect>
   </property>
   <property name="font">
@@ -21,7 +21,7 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>430</x>
      <y>40</y>
      <width>501</width>
      <height>41</height>
@@ -45,8 +45,8 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>100</y>
+     <x>240</x>
+     <y>110</y>
      <width>151</width>
      <height>41</height>
     </rect>
@@ -63,8 +63,8 @@
   <widget class="QLabel" name="lb_competence_name">
    <property name="geometry">
     <rect>
-     <x>280</x>
-     <y>100</y>
+     <x>390</x>
+     <y>110</y>
      <width>431</width>
      <height>41</height>
     </rect>
@@ -81,8 +81,8 @@
   <widget class="QLabel" name="lb_competence_date">
    <property name="geometry">
     <rect>
-     <x>280</x>
-     <y>140</y>
+     <x>390</x>
+     <y>150</y>
      <width>151</width>
      <height>41</height>
     </rect>
@@ -99,8 +99,8 @@
   <widget class="QLabel" name="lb_group_name">
    <property name="geometry">
     <rect>
-     <x>280</x>
-     <y>180</y>
+     <x>390</x>
+     <y>190</y>
      <width>431</width>
      <height>41</height>
     </rect>
@@ -117,8 +117,8 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>180</y>
+     <x>240</x>
+     <y>190</y>
      <width>151</width>
      <height>41</height>
     </rect>
@@ -137,8 +137,8 @@
     <rect>
      <x>20</x>
      <y>330</y>
-     <width>521</width>
-     <height>361</height>
+     <width>481</width>
+     <height>291</height>
     </rect>
    </property>
    <column>
@@ -209,10 +209,10 @@
   <widget class="QTableWidget" name="table_athletes_assigned">
    <property name="geometry">
     <rect>
-     <x>556</x>
+     <x>516</x>
      <y>330</y>
-     <width>891</width>
-     <height>361</height>
+     <width>761</width>
+     <height>291</height>
     </rect>
    </property>
    <column>
@@ -254,7 +254,7 @@
   <widget class="QPushButton" name="btn_reload_assigned_athletes">
    <property name="geometry">
     <rect>
-     <x>586</x>
+     <x>546</x>
      <y>290</y>
      <width>93</width>
      <height>28</height>
@@ -272,7 +272,7 @@
   <widget class="QPushButton" name="btn_load_athletes">
    <property name="geometry">
     <rect>
-     <x>420</x>
+     <x>400</x>
      <y>290</y>
      <width>93</width>
      <height>28</height>
@@ -291,8 +291,8 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>700</y>
-     <width>511</width>
+     <y>630</y>
+     <width>471</width>
      <height>20</height>
     </rect>
    </property>
@@ -309,8 +309,8 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>140</y>
+     <x>240</x>
+     <y>150</y>
      <width>151</width>
      <height>41</height>
     </rect>
@@ -327,7 +327,7 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>686</x>
+     <x>646</x>
      <y>300</y>
      <width>211</width>
      <height>21</height>
@@ -345,7 +345,7 @@
   <widget class="QLabel" name="lb_group_name_2">
    <property name="geometry">
     <rect>
-     <x>900</x>
+     <x>860</x>
      <y>300</y>
      <width>55</width>
      <height>21</height>
@@ -358,9 +358,9 @@
   <widget class="QLabel" name="lb_alert">
    <property name="geometry">
     <rect>
-     <x>560</x>
-     <y>690</y>
-     <width>791</width>
+     <x>520</x>
+     <y>630</y>
+     <width>821</width>
      <height>20</height>
     </rect>
    </property>

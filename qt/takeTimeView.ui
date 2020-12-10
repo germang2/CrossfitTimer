@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1166</width>
-    <height>727</height>
+    <height>668</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,7 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>320</x>
+     <x>420</x>
      <y>40</y>
      <width>361</width>
      <height>51</height>
@@ -37,7 +37,7 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>80</x>
+     <x>250</x>
      <y>120</y>
      <width>141</width>
      <height>31</height>
@@ -55,7 +55,7 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>80</x>
+     <x>250</x>
      <y>160</y>
      <width>141</width>
      <height>31</height>
@@ -73,7 +73,7 @@
   <widget class="QLabel" name="lb_competence_name">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>380</x>
      <y>120</y>
      <width>141</width>
      <height>31</height>
@@ -91,7 +91,7 @@
   <widget class="QLabel" name="lb_competence_date">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>380</x>
      <y>160</y>
      <width>141</width>
      <height>31</height>
@@ -112,7 +112,7 @@
      <x>70</x>
      <y>270</y>
      <width>1031</width>
-     <height>411</height>
+     <height>361</height>
     </rect>
    </property>
    <column>

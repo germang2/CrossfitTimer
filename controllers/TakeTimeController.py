@@ -1,3 +1,5 @@
+from future.backports.email.headerregistry import Group
+
 from engine import db
 from app import TakeTimeWindow
 from models.Athlete import Athlete
@@ -49,10 +51,9 @@ class TakeTimeController:
                 group_list = [g.id for g in groups]
                 filters_list = filter_text.split(',')
                 athletes_list = []
-                for f in filters_list:
-                    athletes_groups = db.session.query(GroupAthlete).join(Group).filter(
-                        GroupAthlete.dorsal.ilike(f'{f}%'), Group.id.in_(group_list)
-                    ).order_by('dorsal').all()
+                for f in set(filters_list):
+                    athletes_groups = db.session.query(GroupAthlete).filter(GroupAthlete.dorsal.ilike(f))\
+                        .join(Group).filter(Group.id.in_(group_list)).order_by('dorsal').all()
                     athletes_list += athletes_groups
                 if athletes_list:
                     self.show_athletes_table(athletes_list)
@@ -142,9 +143,12 @@ class TakeTimeController:
             if filter_text[-1] == ',':
                 filter_text = filter_text[:-1]
             filter_list = filter_text.split(',')
-            for f in filter_list:
-                athletes_groups = db.session.query(GroupAthlete) \
-                    .filter(GroupAthlete.dorsal.ilike(f'{f}%')).all()
+            groups = db.session.query(Group).filter_by(competence_id=self.competence.id).order_by(
+                Group.order.asc()).all()
+            group_list = [g.id for g in groups]
+            for f in set(filter_list):
+                athletes_groups = db.session.query(GroupAthlete).filter(GroupAthlete.dorsal.ilike(f)) \
+                    .join(Group).filter(Group.id.in_(group_list)).order_by('dorsal').all()
                 athletes_groups_list += athletes_groups
             if athletes_groups_list:
                 final_time = datetime.now()
