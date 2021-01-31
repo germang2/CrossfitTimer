@@ -14,7 +14,7 @@ class Athlete(db.Base):
     club = Column(String(20), nullable=True)
     nit = Column(String(20), unique=True)
     category_id = Column(Integer, ForeignKey('categories.id'))
-    #competences = relationship('CompetenceAthlete', backref='competences')
+    category = relationship('models.Category.Category', backref='athletes')
 
     def __init__(self, name, last_name, age, club, category_id, nit):
         self.name = name

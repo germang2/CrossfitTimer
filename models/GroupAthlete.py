@@ -19,3 +19,9 @@ class GroupAthlete(db.Base):
     observations = Column(Text, nullable=True)
     athlete = relationship(Athlete, backref='athletes')
     group = relationship(Group, backref='groups')
+
+    def __str__(self):
+        return f'{self.athlete}, {self.dorsal}'
+
+    def __repr__(self):
+        return f'{self.athlete} -> {self.group} -> {self.dorsal}'

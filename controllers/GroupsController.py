@@ -66,7 +66,7 @@ class GroupController:
         try:
             for i in range(self.window.groups_table.rowCount()):
                 self.window.groups_table.removeRow(i)
-            groups = db.session.query(Group).order_by('order').all()
+            groups = db.session.query(Group).filter_by(competence_id=self.competence.id).order_by('order').all()
             if groups:
                 for i, group in enumerate(groups):
                     self.window.groups_table.insertRow(i)
@@ -99,6 +99,14 @@ class GroupController:
                         break
                     else:
                         self.window.groups_table.removeRow(row_count - 1)
+            else:
+                while True:
+                    row_count = self.window.groups_table.rowCount()
+                    if row_count <= len(groups):
+                        break
+                    else:
+                        self.window.groups_table.removeRow(row_count - 1)
+
         except Exception as e:
             print(f'Error loading groups of competence: {self.competence}')
             print(e)

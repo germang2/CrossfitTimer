@@ -13,22 +13,25 @@ class AthletesGroupsController:
         self.window = window
         self.competence = competence
         self.group = group
+        self.clear_tables()
         self.load_info()
         self.window.ed_filter_athlete.textChanged.connect(self.filter_athletes)
         self.window.btn_load_athletes.clicked.connect(self.load_all_athletes)
         self.window.btn_reload_assigned_athletes.clicked.connect(self.load_athletes_assigned)
-        self.clear_tables()
 
     def load_info(self):
         """ loads the information about the competence and group """
         self.window.lb_competence_name.setText(self.competence.name)
         self.window.lb_competence_date.setText(str(self.competence.date))
         self.window.lb_group_name.setText(self.group.name)
+        self.window.lb_group_name_2.setText(self.group.name)
         self.load_athletes_assigned()
 
     def load_athletes_assigned(self):
         """ loads all athletes for the current group """
         try:
+            alert_without_dorsal_flag = False
+            self.window.lb_error_add_athlete.setText('')
             for i in range(self.window.table_athletes_assigned.rowCount()):
                 self.window.table_athletes_assigned.removeRow(i)
             groups_athletes = db.session.query(GroupAthlete).filter_by(group_id=self.group.id).order_by('dorsal').all()
@@ -46,20 +49,25 @@ class AthletesGroupsController:
                     nit = QtWidgets.QTableWidgetItem(item.athlete.nit)
                     nit.setFlags(QtCore.Qt.ItemIsEnabled)
                     self.window.table_athletes_assigned.setItem(i, 2, nit)
+                    category_name = QtWidgets.QTableWidgetItem(item.athlete.category.name)
+                    self.window.table_athletes_assigned.setItem(i, 3, category_name)
                     dorsal = QtWidgets.QTableWidgetItem(item.dorsal)
-                    self.window.table_athletes_assigned.setItem(i, 3, dorsal)
+                    self.window.table_athletes_assigned.setItem(i, 4, dorsal)
+
+                    if item.dorsal is None:
+                        alert_without_dorsal_flag = True
 
                     btn_modify = QtWidgets.QPushButton()
                     btn_modify.setText('Modificar')
                     btn_modify.setProperty('group_athlete', item)
                     btn_modify.clicked.connect(self.modify_dorsal)
-                    self.window.table_athletes_assigned.setCellWidget(i, 4, btn_modify)
+                    self.window.table_athletes_assigned.setCellWidget(i, 5, btn_modify)
 
                     btn_remove = QtWidgets.QPushButton()
                     btn_remove.setText('Quitar')
                     btn_remove.clicked.connect(self.remove_athlete_from_group)
                     btn_remove.setProperty('group_athlete', item)
-                    self.window.table_athletes_assigned.setCellWidget(i, 5, btn_remove)
+                    self.window.table_athletes_assigned.setCellWidget(i, 6, btn_remove)
 
                 while True:
                     row_count = self.window.table_athletes_assigned.rowCount()
@@ -67,6 +75,11 @@ class AthletesGroupsController:
                         break
                     else:
                         self.window.table_athletes_assigned.removeRow(row_count - 1)
+
+                if alert_without_dorsal_flag:
+                    self.window.lb_alert.setText('Hay atletas sin dorsal')
+                else:
+                    self.window.lb_alert.setText('')
 
         except Exception as e:
             print(f'Error loading athletes for group {self.group}')
@@ -77,7 +90,7 @@ class AthletesGroupsController:
         index_row = self.window.table_athletes_assigned.currentRow()
         index_column = self.window.table_athletes_assigned.currentColumn()
         if index_row >= 0 and index_column >= 0:
-            dorsal = self.window.table_athletes_assigned.item(index_row, 3).text()
+            dorsal = self.window.table_athletes_assigned.item(index_row, 4).text()
             if dorsal:
                 group_athlete = self.window.table_athletes_assigned.cellWidget(index_row, index_column) \
                     .property('group_athlete')
@@ -156,9 +169,13 @@ class AthletesGroupsController:
         index_column = self.window.athletes_table.currentColumn()
         if index_row >= 0 and index_column >= 0:
             athlete = self.window.athletes_table.cellWidget(index_row, index_column).property('athlete')
-            check_exists = db.session.query(GroupAthlete).filter_by(athlete_id=athlete.id, group_id=self.group.id).first()
+            # checks if the athlete is in other group already
+            groups = db.session.query(Group).filter_by(competence_id=self.competence.id).all()
+            groups_list = [g.id for g in groups]
+            check_exists = db.session.query(GroupAthlete).filter(GroupAthlete.group_id.in_(groups_list))\
+                .filter_by(athlete_id=athlete.id).first()
             if check_exists:
-                self.window.lb_error_add_athlete.setText(f'{athlete.name} {athlete.last_name} ya fue asignado/a a este grupo')
+                self.window.lb_error_add_athlete.setText(f'{athlete.name} {athlete.last_name} ya pertence a un grupo')
             else:
                 group_athlete = GroupAthlete(athlete_id=athlete.id, group_id=self.group.id)
                 db.session.add(group_athlete)
@@ -170,10 +187,12 @@ class AthletesGroupsController:
         self.clear_table_athletes()
 
     def clear_table_athletes_assigned(self):
+        self.window.table_athletes_assigned.clearContents()
         for i in range(self.window.table_athletes_assigned.rowCount()):
             self.window.table_athletes_assigned.removeRow(i)
 
     def clear_table_athletes(self):
+        self.window.athletes_table.clearContents()
         for i in range(self.window.athletes_table.rowCount()):
             self.window.athletes_table.removeRow(i)
 
