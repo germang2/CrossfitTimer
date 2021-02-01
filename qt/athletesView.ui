@@ -39,7 +39,7 @@
     <rect>
      <x>190</x>
      <y>80</y>
-     <width>101</width>
+     <width>161</width>
      <height>41</height>
     </rect>
    </property>
@@ -49,43 +49,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Nombres</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>460</x>
-     <y>80</y>
-     <width>101</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Apellidos</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>730</x>
-     <y>80</y>
-     <width>101</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Edad</string>
+    <string>Nombres y apellidos</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_5">
@@ -139,27 +103,7 @@
     <rect>
      <x>190</x>
      <y>120</y>
-     <width>201</width>
-     <height>41</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="ed_lastname">
-   <property name="geometry">
-    <rect>
-     <x>460</x>
-     <y>120</y>
-     <width>201</width>
-     <height>41</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="ed_age">
-   <property name="geometry">
-    <rect>
-     <x>730</x>
-     <y>120</y>
-     <width>201</width>
+     <width>771</width>
      <height>41</height>
     </rect>
    </property>
@@ -244,17 +188,7 @@
    </column>
    <column>
     <property name="text">
-     <string>Apellidos</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
      <string>Cedula</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Edad</string>
     </property>
    </column>
    <column>

@@ -22,19 +22,17 @@ class AthletesController:
     def create_athlete(self):
         """ Creates a new athlete with all fields """
         try:
-            name = self.window.ed_name.text()
-            last_name = self.window.ed_lastname.text()
-            age = self.window.ed_age.text()
+            full_name = self.window.ed_name.text()
             club = self.window.ed_club.text()
             nit = self.window.ed_nit.text()
-            errors = validate_data(name=name, last_name=last_name, age=age, club=club, nit=nit)
+            errors = validate_data(full_name=full_name, club=club, nit=nit)
             if errors:
                 self.show_errors(errors)
             else:
                 # if there are not error, the athlete is create
                 index_category = self.window.cb_categories.currentIndex()
                 category_id = self.category_id_create[index_category]
-                athlete = Athlete(name=name, last_name=last_name, age=int(age), club=club, category_id=category_id,
+                athlete = Athlete(full_name=full_name, club=club, category_id=category_id,
                                   nit=nit)
                 db.session.add(athlete)
                 db.session.commit()
@@ -54,26 +52,21 @@ class AthletesController:
             self.clear_table()
             if filter_text:
                 filter_text.strip()
-                athletes = db.session.query(Athlete).filter(
-                    or_(Athlete.name.ilike(f'%{filter_text}%'), Athlete.last_name.ilike(f'%{filter_text}%')))\
-                    .order_by('name').all()
+                athletes = db.session.query(Athlete).filter(Athlete.full_name.ilike(f'%{filter_text}%'))\
+                    .order_by('full_name').all()
             else:
-                athletes = db.session.query(Athlete).order_by('name').all()
+                athletes = db.session.query(Athlete).order_by('full_name').all()
             categories = db.session.query(Category).order_by('name').all()
             if athletes:
                 self.window.lb_error_delete.setText('')
                 for i, athlete in enumerate(athletes):
                     self.window.athletes_table.insertRow(i)
-                    name = QtWidgets.QTableWidgetItem(athlete.name)
+                    name = QtWidgets.QTableWidgetItem(athlete.full_name)
                     self.window.athletes_table.setItem(i, 0, name)
-                    lastname = QtWidgets.QTableWidgetItem(athlete.last_name)
-                    self.window.athletes_table.setItem(i, 1, lastname)
                     nit = QtWidgets.QTableWidgetItem(athlete.nit)
-                    self.window.athletes_table.setItem(i, 2, nit)
-                    age = QtWidgets.QTableWidgetItem(str(athlete.age))
-                    self.window.athletes_table.setItem(i, 3, age)
+                    self.window.athletes_table.setItem(i, 1, nit)
                     club = QtWidgets.QTableWidgetItem(athlete.club)
-                    self.window.athletes_table.setItem(i, 4, club)
+                    self.window.athletes_table.setItem(i, 2, club)
                     """ creates a comboBox for categories, set as default the current one of the athlete """
                     cb_categories = QtWidgets.QComboBox()
                     for j, category in enumerate(categories):
@@ -81,19 +74,19 @@ class AthletesController:
                         self.category_id_modify[j] = category.id
                         if category.id == athlete.category_id:
                             cb_categories.setCurrentIndex(j)
-                    self.window.athletes_table.setCellWidget(i, 5, cb_categories)
+                    self.window.athletes_table.setCellWidget(i, 3, cb_categories)
                     modify = QtWidgets.QPushButton()
                     modify.setText('Modificar')
                     modify.setProperty('id', athlete.id)
                     modify.setProperty('operation', 'modify')
                     modify.clicked.connect(self.handle_athletes_table)
-                    self.window.athletes_table.setCellWidget(i, 6, modify)
+                    self.window.athletes_table.setCellWidget(i, 4, modify)
                     delete = QtWidgets.QPushButton()
                     delete.setText('Eliminar')
                     delete.setProperty('id', athlete.id)
                     delete.setProperty('operation', 'delete')
                     delete.clicked.connect(self.handle_athletes_table)
-                    self.window.athletes_table.setCellWidget(i, 7, delete)
+                    self.window.athletes_table.setCellWidget(i, 5, delete)
 
             while True:
                 row_count = self.window.athletes_table.rowCount()
@@ -116,16 +109,12 @@ class AthletesController:
             operation = self.window.athletes_table.cellWidget(index_row, index_column).property('operation')
             try:
                 if operation == 'modify' and athlete:
-                    name = self.window.athletes_table.item(index_row, 0).text()
-                    lastname = self.window.athletes_table.item(index_row, 1).text()
-                    nit = self.window.athletes_table.item(index_row, 2).text()
-                    age = self.window.athletes_table.item(index_row, 3).text()
-                    club = self.window.athletes_table.item(index_row, 4).text()
-                    index_category = self.window.athletes_table.cellWidget(index_row, 5).currentIndex()
+                    full_name = self.window.athletes_table.item(index_row, 0).text()
+                    nit = self.window.athletes_table.item(index_row, 1).text()
+                    club = self.window.athletes_table.item(index_row, 2).text()
+                    index_category = self.window.athletes_table.cellWidget(index_row, 3).currentIndex()
                     category_id = self.category_id_create[index_category]
-                    athlete.name = name
-                    athlete.last_name = lastname
-                    athlete.age = int(age)
+                    athlete.full_name = full_name
                     athlete.club = club
                     athlete.category_id = int(category_id)
                     athlete.nit = nit
@@ -138,7 +127,7 @@ class AthletesController:
                     group_athlete = db.session.query(GroupAthlete).filter_by(athlete_id=athlete.id).first()
                     if group_athlete:
                         self.window.lb_error_delete.setText(
-                            f'No se puede borrar a {athlete.name} mientras pertenezca a una competencia')
+                            f'No se puede borrar a {athlete.full_name} mientras pertenezca a una competencia')
                     else:
                         db.session.delete(athlete)
                         db.session.commit()
@@ -162,18 +151,10 @@ class AthletesController:
 
     def show_errors(self, errors):
         """ shows the errors gotten from the validations """
-        if 'name' in errors:
+        if 'full_name' in errors:
             self.window.lb_name_error.setText(errors['name'])
         else:
             self.window.lb_name_error.setText('')
-        if 'last_name' in errors:
-            self.window.lb_lastname_error.setText(errors['last_name'])
-        else:
-            self.window.lb_lastname_error.setText('')
-        if 'age' in errors:
-            self.window.lb_age_error.setText(errors['age'])
-        else:
-            self.window.lb_age_error.setText('')
         if 'club' in errors:
             self.window.lb_club_error.setText(errors['club'])
         else:
@@ -186,16 +167,12 @@ class AthletesController:
     def clear_fields(self):
         """ clear all editText fields for the user """
         self.window.ed_name.setText('')
-        self.window.ed_lastname.setText('')
-        self.window.ed_age.setText('')
         self.window.ed_club.setText('')
         self.window.ed_nit.setText('')
 
     def clear_fields_errors(self):
         """ clear all the label fields where errors are show """
         self.window.lb_name_error.setText('')
-        self.window.lb_lastname_error.setText('')
-        self.window.lb_age_error.setText('')
         self.window.lb_club_error.setText('')
         self.window.lb_nit_error.setText('')
 
@@ -204,28 +181,18 @@ class AthletesController:
             self.window.athletes_table.removeRow(i)
 
 
-def validate_data(name, last_name, age, club, nit):
+def validate_data(full_name, club, nit):
     """ validate each field for an athlete """
     errors = {}
     # validations for field 'name'
-    field = 'name'
-    validate_min(field, name, 3, errors)
-    validate_max(field, name, 40, errors)
-
-    # validations for field 'last_name'
-    field = 'last_name'
-    validate_min(field, last_name, 3, errors)
-    validate_max(field, last_name, 40, errors)
+    field = 'full_name'
+    validate_min(field, full_name, 3, errors)
+    validate_max(field, full_name, 100, errors)
 
     # validations for field 'club'
     field = 'club'
     validate_min(field, club, 2, errors)
     validate_max(field, club, 20, errors)
-
-    # validations for field 'age'
-    field = 'age'
-    validate_exists(field, age, errors)
-    validate_int(field, age, errors)
 
     # validations for field 'nit'
     field = 'nit'

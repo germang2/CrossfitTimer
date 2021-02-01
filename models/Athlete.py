@@ -8,24 +8,20 @@ class Athlete(db.Base):
     __tablename__ = 'athletes'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(40), nullable=False)
-    last_name = Column(String(40), nullable=False)
-    age = Column(Integer, nullable=False)
+    full_name = Column(String(40), nullable=False)
     club = Column(String(20), nullable=True)
     nit = Column(String(20), unique=True)
     category_id = Column(Integer, ForeignKey('categories.id'))
     category = relationship('models.Category.Category', backref='athletes')
 
-    def __init__(self, name, last_name, age, club, category_id, nit):
-        self.name = name
-        self.last_name = last_name
-        self.age = age
+    def __init__(self, full_name, club, category_id, nit):
+        self.full_name = full_name
         self.club = club
         self.category_id = category_id
         self.nit = nit
 
     def __repr__(self):
-        return f'Athlete({self.name}, {self.last_name}, {self.age})'
+        return f'Athlete({self.full_name}'
 
     def __str__(self):
-        return f'{self.name} {self.last_name}'
+        return f'{self.full_name}'
