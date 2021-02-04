@@ -10,6 +10,8 @@ from sqlalchemy import or_, and_
 from PyQt5 import QtWidgets, QtCore
 from datetime import datetime
 from datetime import time
+from managers.GroupManager import GroupManager
+from managers.GroupAthleteManager import GroupAthleteManager
 
 
 class TakeTimeController:
@@ -27,13 +29,12 @@ class TakeTimeController:
 
     def load_initial_data(self):
         try:
-            groups = db.session.query(Group).filter_by(competence_id=self.competence.id).order_by(Group.order.asc()).all()
+            groups = GroupManager.get_groups_by_filters({Group.competence_id == self.competence.id}, order=Group.order.asc())
             if groups:
                 self.clear_table()
                 total_list = []
                 for group in groups:
-                    athletes_groups = db.session.query(GroupAthlete).filter_by(
-                        group_id=group.id).all()
+                    athletes_groups = GroupAthleteManager.get_group_athletes_by_filters({GroupAthlete.group_id == group.id})
                     total_list += athletes_groups
                 self.show_athletes_table(total_list)
         except Exception as e:
@@ -46,15 +47,18 @@ class TakeTimeController:
             filter_text.strip()
             if filter_text and filter_text[-1] == ',':
                 return
-            groups = db.session.query(Group).filter_by(competence_id=self.competence.id).order_by(
-                Group.order.asc()).all()
+            groups = GroupManager.get_groups_by_filters(
+                filters={Group.competence_id == self.competence.id},
+                order=Group.order.asc()
+            )
             if len(filter_text) >= 2 and groups:
                 group_list = [g.id for g in groups]
                 filters_list = filter_text.split(',')
                 athletes_list = []
                 for f in set(filters_list):
-                    athletes_groups = db.session.query(GroupAthlete).filter(GroupAthlete.dorsal.ilike(f))\
-                        .join(Group).filter(Group.id.in_(group_list)).order_by('dorsal').all()
+                    athletes_groups = GroupAthleteManager.filter_athletes_by_dorsal(
+                        filters={GroupAthlete.dorsal.ilike(f), Group.id.in_(group_list)},
+                    )
                     athletes_list += athletes_groups
                 if athletes_list:
                     self.show_athletes_table(athletes_list)
@@ -123,7 +127,8 @@ class TakeTimeController:
             index_row = self.window.table_times.currentRow()
             index_column = self.window.table_times.currentColumn()
             group = self.window.table_times.cellWidget(index_row, index_column).property('group')
-            athletes_groups = db.session.query(GroupAthlete).filter_by(group_id=group.id).all()
+            # athletes_groups = db.session.query(GroupAthlete).filter_by(group_id=group.id).all()
+            athletes_groups = GroupAthleteManager.get_group_athletes_by_filters({GroupAthlete.group_id == group.id})
             initial_time = datetime.now()
             for athlete_group in athletes_groups:
                 athlete_group.initial_time = initial_time
@@ -135,13 +140,16 @@ class TakeTimeController:
             print(f'Error updating initial time')
             print(e)
 
-    def update_final_time(self):
-        """ updates the final time to all the objects inside gotten from the filter """
+    def filter_athletes_by_dorsal(self):
+        """
+        Filter athletes using the text inserted by the user, with the field 'dorsal'
+        :return: Array of GroupAthlete
+        """
         try:
             filter_text = self.window.ed_filter.text()
             filter_text.strip()
             athletes_groups_list = []
-            if filter_text[-1] == ',':
+            if filter_text and filter_text[-1] == ',':
                 filter_text = filter_text[:-1]
             filter_list = filter_text.split(',')
             groups = db.session.query(Group).filter_by(competence_id=self.competence.id).order_by(
@@ -151,6 +159,15 @@ class TakeTimeController:
                 athletes_groups = db.session.query(GroupAthlete).filter(GroupAthlete.dorsal.ilike(f)) \
                     .join(Group).filter(Group.id.in_(group_list)).order_by('dorsal').all()
                 athletes_groups_list += athletes_groups
+            return athletes_groups_list
+        except Exception as e:
+            print(e)
+            return []
+
+    def update_final_time(self):
+        """ updates the final time to all the objects inside gotten from the filter """
+        try:
+            athletes_groups_list = self.filter_athletes_by_dorsal()
             if athletes_groups_list:
                 final_time = datetime.now()
                 for athlete in athletes_groups_list:
@@ -212,7 +229,14 @@ class TakeTimeController:
 
     def reset_time(self):
         try:
-            pass
+            athletes_groups_list = self.filter_athletes_by_dorsal()
+            if athletes_groups_list:
+                for athlete in athletes_groups_list:
+                    athlete.final_time = None
+                    athlete.total_time = None
+                    db.session.add(athlete)
+                db.session.commit()
+                self.window.ed_filter.setText('')
         except Exception as e:
             print('Error reseting time')
             print(e)

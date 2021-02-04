@@ -23,8 +23,8 @@ class GroupAthleteManager:
     @staticmethod
     def filter_athletes_by_dorsal(filters):
         try:
-            query = db.session.query(Athlete)\
-                .join(GroupAthlete, Athlete.id == GroupAthlete.athlete_id)\
+            query = db.session.query(GroupAthlete)\
+                .join(Athlete, Athlete.id == GroupAthlete.athlete_id)\
                 .join(Group, Group.id == GroupAthlete.group_id)\
                 .join(Competence, Competence.id == Group.competence_id)
             query = query.filter(*filters)
