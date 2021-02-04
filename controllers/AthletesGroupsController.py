@@ -6,6 +6,9 @@ from models.Group import Group
 from models.GroupAthlete import GroupAthlete
 from sqlalchemy import or_
 from PyQt5 import QtWidgets, QtCore
+from managers.GroupAthleteManager import GroupAthleteManager
+from managers.AthleteManager import AthleteManager
+from managers.GroupManager import GroupManager
 
 
 class AthletesGroupsController:
@@ -34,25 +37,25 @@ class AthletesGroupsController:
             self.window.lb_error_add_athlete.setText('')
             for i in range(self.window.table_athletes_assigned.rowCount()):
                 self.window.table_athletes_assigned.removeRow(i)
-            groups_athletes = db.session.query(GroupAthlete).filter_by(group_id=self.group.id).order_by('dorsal').all()
+        # groups_athletes = db.session.query(GroupAthlete).filter_by(group_id=self.group.id).order_by('dorsal').all()
+            filters = {GroupAthlete.group_id == self.group.id}
+            groups_athletes = GroupAthleteManager.get_group_athletes_by_filters(filters=filters)
+
             if groups_athletes:
                 self.window.lb_error_add_athlete.setText('')
                 for i, item in enumerate(groups_athletes):
                     self.window.table_athletes_assigned.insertRow(i)
-                    name = QtWidgets.QTableWidgetItem(item.athlete.name)
+                    name = QtWidgets.QTableWidgetItem(item.athlete.full_name)
                     # disable editing in the cell
                     name.setFlags(QtCore.Qt.ItemIsEnabled)
                     self.window.table_athletes_assigned.setItem(i, 0, name)
-                    lastname = QtWidgets.QTableWidgetItem(item.athlete.last_name)
-                    lastname.setFlags(QtCore.Qt.ItemIsEnabled)
-                    self.window.table_athletes_assigned.setItem(i, 1, lastname)
                     nit = QtWidgets.QTableWidgetItem(item.athlete.nit)
                     nit.setFlags(QtCore.Qt.ItemIsEnabled)
-                    self.window.table_athletes_assigned.setItem(i, 2, nit)
+                    self.window.table_athletes_assigned.setItem(i, 1, nit)
                     category_name = QtWidgets.QTableWidgetItem(item.athlete.category.name)
-                    self.window.table_athletes_assigned.setItem(i, 3, category_name)
+                    self.window.table_athletes_assigned.setItem(i, 2, category_name)
                     dorsal = QtWidgets.QTableWidgetItem(item.dorsal)
-                    self.window.table_athletes_assigned.setItem(i, 4, dorsal)
+                    self.window.table_athletes_assigned.setItem(i, 3, dorsal)
 
                     if item.dorsal is None:
                         alert_without_dorsal_flag = True
@@ -61,13 +64,13 @@ class AthletesGroupsController:
                     btn_modify.setText('Modificar')
                     btn_modify.setProperty('group_athlete', item)
                     btn_modify.clicked.connect(self.modify_dorsal)
-                    self.window.table_athletes_assigned.setCellWidget(i, 5, btn_modify)
+                    self.window.table_athletes_assigned.setCellWidget(i, 4, btn_modify)
 
                     btn_remove = QtWidgets.QPushButton()
                     btn_remove.setText('Quitar')
                     btn_remove.clicked.connect(self.remove_athlete_from_group)
                     btn_remove.setProperty('group_athlete', item)
-                    self.window.table_athletes_assigned.setCellWidget(i, 6, btn_remove)
+                    self.window.table_athletes_assigned.setCellWidget(i, 5, btn_remove)
 
                 while True:
                     row_count = self.window.table_athletes_assigned.rowCount()
@@ -90,7 +93,7 @@ class AthletesGroupsController:
         index_row = self.window.table_athletes_assigned.currentRow()
         index_column = self.window.table_athletes_assigned.currentColumn()
         if index_row >= 0 and index_column >= 0:
-            dorsal = self.window.table_athletes_assigned.item(index_row, 4).text()
+            dorsal = self.window.table_athletes_assigned.item(index_row, 3).text()
             if dorsal:
                 group_athlete = self.window.table_athletes_assigned.cellWidget(index_row, index_column) \
                     .property('group_athlete')
@@ -115,15 +118,18 @@ class AthletesGroupsController:
         try:
             text = self.window.ed_filter_athlete.text()
             text.strip()
-            athletes = None
-            if text and len(text) >= 3:
+            filters = {Competence.id == self.competence.id}
+            if text and len(text) >= 1:
                 if text.isnumeric():
-                    athletes = db.session.query(Athlete).filter(Athlete.nit.ilike(f'%{text}%')).order_by('name').all()
+                    filters.add(Athlete.nit.ilike(f'%{text}%'))
                 else:
-                    athletes = db.session.query(Athlete).filter(
-                        or_(Athlete.name.ilike(f'%{text}%'), Athlete.last_name.ilike(f'%{text}%'))) \
-                        .order_by('name').all()
-            self.show_athletes_table(athletes)
+                    filters.add(Athlete.full_name.ilike(f'%{text}%'))
+
+                athletes = AthleteManager.get_athletes_by_filters(filters)
+                if athletes:
+                    self.show_athletes_table(athletes)
+            else:
+                self.clear_table_athletes()
 
         except Exception as e:
             print(f'Error filtering athletes')
@@ -131,7 +137,7 @@ class AthletesGroupsController:
 
     def load_all_athletes(self):
         try:
-            athletes = db.session.query(Athlete).order_by('name').all()
+            athletes = AthleteManager.get_athletes_by_filters(filters={}, order='full_name')
             self.show_athletes_table(athletes)
         except Exception as e:
             print(f'Error loading all athletes')
@@ -145,18 +151,15 @@ class AthletesGroupsController:
                 self.window.athletes_table.removeRow(i)
             for i, athlete in enumerate(athletes):
                 self.window.athletes_table.insertRow(i)
-                name = QtWidgets.QTableWidgetItem(athlete.name)
+                name = QtWidgets.QTableWidgetItem(athlete.full_name)
                 self.window.athletes_table.setItem(i, 0, name)
-                lastname = QtWidgets.QTableWidgetItem(athlete.last_name)
-                self.window.athletes_table.setItem(i, 1, lastname)
                 nit = QtWidgets.QTableWidgetItem(athlete.nit)
-                self.window.athletes_table.setItem(i, 2, nit)
-
+                self.window.athletes_table.setItem(i, 1, nit)
                 btn_add = QtWidgets.QPushButton()
                 btn_add.setText('Agregar')
                 btn_add.setProperty('athlete', athlete)
                 btn_add.clicked.connect(self.add_athlete_to_group)
-                self.window.athletes_table.setCellWidget(i, 3, btn_add)
+                self.window.athletes_table.setCellWidget(i, 2, btn_add)
             while True:
                 row_count = self.window.athletes_table.rowCount()
                 if row_count <= len(athletes):
@@ -170,12 +173,12 @@ class AthletesGroupsController:
         if index_row >= 0 and index_column >= 0:
             athlete = self.window.athletes_table.cellWidget(index_row, index_column).property('athlete')
             # checks if the athlete is in other group already
-            groups = db.session.query(Group).filter_by(competence_id=self.competence.id).all()
+            groups = GroupManager.get_groups_by_filters(filters={Group.competence_id == self.competence.id})
             groups_list = [g.id for g in groups]
-            check_exists = db.session.query(GroupAthlete).filter(GroupAthlete.group_id.in_(groups_list))\
-                .filter_by(athlete_id=athlete.id).first()
+            filters = {GroupAthlete.group_id.in_(groups_list), GroupAthlete.athlete_id == athlete.id}
+            check_exists = GroupAthleteManager.get_group_athletes_by_filters(filters)
             if check_exists:
-                self.window.lb_error_add_athlete.setText(f'{athlete.name} {athlete.last_name} ya pertence a un grupo')
+                self.window.lb_error_add_athlete.setText(f'{athlete.full_name} ya pertence a un grupo')
             else:
                 group_athlete = GroupAthlete(athlete_id=athlete.id, group_id=self.group.id)
                 db.session.add(group_athlete)

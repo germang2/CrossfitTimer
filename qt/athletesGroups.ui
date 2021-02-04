@@ -143,12 +143,7 @@
    </property>
    <column>
     <property name="text">
-     <string>Nombres</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Apellidos</string>
+     <string>Nombre</string>
     </property>
    </column>
    <column>
@@ -218,11 +213,6 @@
    <column>
     <property name="text">
      <string>Nombre</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Apellidos</string>
     </property>
    </column>
    <column>

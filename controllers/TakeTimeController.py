@@ -23,6 +23,7 @@ class TakeTimeController:
         self.window.btn_update_final_time.clicked.connect(self.update_final_time)
         self.load_initial_data()
         self.window.cb_order_table.currentIndexChanged.connect(self.order_table_filter)
+        self.window.btn_reset_time.clicked.connect(self.reset_time)
 
     def load_initial_data(self):
         try:
@@ -80,7 +81,7 @@ class TakeTimeController:
             self.window.table_times.setCellWidget(i, 1, btn_start)
 
             athlete_full_name = QtWidgets.QTableWidgetItem(
-                f'{athlete.athlete.name} {athlete.athlete.last_name}')
+                f'{athlete.athlete.full_name}')
             # disable editing in the cell
             athlete_full_name.setFlags(QtCore.Qt.ItemIsEnabled)
             self.window.table_times.setItem(i, 2, athlete_full_name)
@@ -208,3 +209,10 @@ class TakeTimeController:
     def clear_table(self):
         for i in range(self.window.table_times.rowCount()):
             self.window.table_times.removeRow(i)
+
+    def reset_time(self):
+        try:
+            pass
+        except Exception as e:
+            print('Error reseting time')
+            print(e)

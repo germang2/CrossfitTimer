@@ -102,6 +102,12 @@ class Ui_TakeTime(object):
         self.label_7 = QtWidgets.QLabel(TakeTime)
         self.label_7.setGeometry(QtCore.QRect(120, 210, 111, 20))
         self.label_7.setObjectName("label_7")
+        self.btn_reset_time = QtWidgets.QPushButton(TakeTime)
+        self.btn_reset_time.setGeometry(QtCore.QRect(1000, 230, 93, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.btn_reset_time.setFont(font)
+        self.btn_reset_time.setObjectName("btn_reset_time")
 
         self.retranslateUi(TakeTime)
         QtCore.QMetaObject.connectSlotsByName(TakeTime)
@@ -138,3 +144,14 @@ class Ui_TakeTime(object):
         self.label_5.setText(_translate("TakeTime", "Filtrar por dorsal"))
         self.btn_update_final_time.setText(_translate("TakeTime", "Finalizar"))
         self.label_7.setText(_translate("TakeTime", "Ordernar"))
+        self.btn_reset_time.setText(_translate("TakeTime", "Resetear"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    TakeTime = QtWidgets.QDialog()
+    ui = Ui_TakeTime()
+    ui.setupUi(TakeTime)
+    TakeTime.show()
+    sys.exit(app.exec_())
