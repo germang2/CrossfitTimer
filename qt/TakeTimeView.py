@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_TakeTime(object):
     def setupUi(self, TakeTime):
         TakeTime.setObjectName("TakeTime")
-        TakeTime.resize(1166, 668)
+        TakeTime.resize(1166, 697)
         self.label = QtWidgets.QLabel(TakeTime)
         self.label.setGeometry(QtCore.QRect(420, 40, 361, 51))
         font = QtGui.QFont()
@@ -108,6 +108,9 @@ class Ui_TakeTime(object):
         font.setPointSize(10)
         self.btn_reset_time.setFont(font)
         self.btn_reset_time.setObjectName("btn_reset_time")
+        self.btn_pdf = QtWidgets.QPushButton(TakeTime)
+        self.btn_pdf.setGeometry(QtCore.QRect(100, 650, 161, 31))
+        self.btn_pdf.setObjectName("btn_pdf")
 
         self.retranslateUi(TakeTime)
         QtCore.QMetaObject.connectSlotsByName(TakeTime)
@@ -145,6 +148,7 @@ class Ui_TakeTime(object):
         self.btn_update_final_time.setText(_translate("TakeTime", "Finalizar"))
         self.label_7.setText(_translate("TakeTime", "Ordernar"))
         self.btn_reset_time.setText(_translate("TakeTime", "Resetear"))
+        self.btn_pdf.setText(_translate("TakeTime", "Generar PDF"))
 
 
 if __name__ == "__main__":

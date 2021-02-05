@@ -6,12 +6,12 @@ from models.Athlete import Athlete
 from models.Group import Group
 from models.GroupAthlete import GroupAthlete
 from models.Competence import Competence
-from sqlalchemy import or_, and_
 from PyQt5 import QtWidgets, QtCore
 from datetime import datetime
-from datetime import time
 from managers.GroupManager import GroupManager
 from managers.GroupAthleteManager import GroupAthleteManager
+from utils.PDFGenerator import PDFGenerator
+from fpdf import FPDF
 
 
 class TakeTimeController:
@@ -26,6 +26,7 @@ class TakeTimeController:
         self.load_initial_data()
         self.window.cb_order_table.currentIndexChanged.connect(self.order_table_filter)
         self.window.btn_reset_time.clicked.connect(self.reset_time)
+        self.window.btn_pdf.clicked.connect(self.generate_pdf)
 
     def load_initial_data(self):
         try:
@@ -103,8 +104,8 @@ class TakeTimeController:
             initial_time.setFlags(QtCore.Qt.ItemIsEnabled)
             self.window.table_times.setItem(i, 5, initial_time)
 
-            final_time_value = '' if athlete.final_time is None else athlete.final_time.\
-                strftime('%H:%M:%S.%f')[:-3]
+            final_time_value = '' if athlete.final_time is None else athlete.final_time \
+                .strftime('%H:%M:%S.%f')[:-3]
             final_time = QtWidgets.QTableWidgetItem(final_time_value)
             final_time.setFlags(QtCore.Qt.ItemIsEnabled)
             self.window.table_times.setItem(i, 6, final_time)
@@ -239,4 +240,61 @@ class TakeTimeController:
                 self.window.ed_filter.setText('')
         except Exception as e:
             print('Error reseting time')
+            print(e)
+
+    def generate_pdf(self):
+
+        try:
+            groups = GroupManager.get_groups_by_filters({Group.competence_id == self.competence.id},
+                                                        order=Group.order.asc())
+            if groups:
+                for group in groups:
+                    athletes_list = []
+                    athletes_groups = GroupAthleteManager.get_group_athletes_by_filters({GroupAthlete.group_id == group.id})
+                    athletes_list += athletes_groups
+
+                    pdf = FPDF(format='letter', unit='in')
+                    # Effective page width, or just epw
+                    epw = pdf.w - 2 * pdf.l_margin
+                    # Set column width to 1/4 of effective page width to distribute content
+                    # evenly across table and page
+                    col_width = epw / 4
+                    column_widh = {
+                        0: col_width * 0.3,
+                        1: col_width * 1.3,
+                        2: col_width * 0.5,
+                        3: col_width * 0.3,
+                        4: col_width * 0.5,
+                        5: col_width * 0.5,
+                        6: col_width * 0.5
+                    }
+                    pdf.set_font('Arial', 'B', 14)
+                    pdf.add_page()
+                    pdf.cell(epw, 0.0, f'{self.competence.name}', align='C')
+
+                    pdf.set_font('Arial', '', 8.0)
+                    pdf.ln(0.5)
+
+                    # Text height is the same as current font size
+                    th = pdf.font_size
+
+                    for athlete in athletes_list:
+                        data = [
+                            athlete.group.name,
+                            athlete.athlete.full_name,
+                            athlete.athlete.category.name,
+                            athlete.dorsal,
+                            '' if athlete.initial_time is None else athlete.initial_time.strftime('%H:%M:%S.%f')[:-3],
+                            '' if athlete.initial_time is None else athlete.final_time.strftime('%H:%M:%S.%f')[:-3],
+                            '' if athlete.initial_time is None else athlete.total_time.strftime('%H:%M:%S.%f')[:-3]
+
+                        ]
+                        for i, val in enumerate(data):
+                            width = column_widh[i]
+                            pdf.cell(width, 2 * th, str(val), border=1)
+
+                        pdf.ln(2*th)
+
+                    pdf.output(f'{self.competence.name}.pdf', 'F')
+        except Exception as e:
             print(e)

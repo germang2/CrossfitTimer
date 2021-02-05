@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1166</width>
-    <height>668</height>
+    <height>697</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -291,6 +291,19 @@
    </property>
    <property name="text">
     <string>Resetear</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_pdf">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>650</y>
+     <width>161</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Generar PDF</string>
    </property>
   </widget>
  </widget>
