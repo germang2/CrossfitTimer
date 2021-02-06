@@ -253,36 +253,48 @@ class TakeTimeController:
                     athletes_groups = GroupAthleteManager.get_group_athletes_by_filters({GroupAthlete.group_id == group.id})
                     athletes_list += athletes_groups
 
-                    pdf = FPDF(format='letter', unit='in')
+                    pdf = FPDF(format='letter', unit='in', orientation='L')
                     # Effective page width, or just epw
                     epw = pdf.w - 2 * pdf.l_margin
                     # Set column width to 1/4 of effective page width to distribute content
                     # evenly across table and page
+                    headers = ['Grupo', 'Identificacion', 'Nombre', 'Categoria', 'Dorsal', 'Hora Inicial',
+                               'Hora Final', 'Tiempo total']
                     col_width = epw / 4
-                    column_widh = {
+                    column_width = {
                         0: col_width * 0.3,
-                        1: col_width * 1.3,
-                        2: col_width * 0.5,
-                        3: col_width * 0.3,
-                        4: col_width * 0.5,
-                        5: col_width * 0.5,
-                        6: col_width * 0.5
+                        1: col_width * 0.5,
+                        2: col_width * 1.1,
+                        3: col_width * 0.45,
+                        4: col_width * 0.3,
+                        5: col_width * 0.4,
+                        6: col_width * 0.4,
+                        7: col_width * 0.4
                     }
                     pdf.set_font('Arial', 'B', 14)
                     pdf.add_page()
                     pdf.cell(epw, 0.0, f'{self.competence.name}', align='C')
 
-                    pdf.set_font('Arial', '', 8.0)
                     pdf.ln(0.5)
-
                     # Text height is the same as current font size
                     th = pdf.font_size
 
+                    pdf.set_font('Arial', 'B', 9.0)
+                    for i, header in enumerate(headers):
+                        width = column_width[i]
+                        # TODO: cut val in base of column size
+                        pdf.cell(width, 2 * th, header, border=1)
+
+                    pdf.set_font('Arial', '', 9.0)
+                    pdf.ln(2 * th)
+
                     for athlete in athletes_list:
                         data = [
-                            athlete.group.name,
-                            athlete.athlete.full_name,
-                            athlete.athlete.category.name,
+                            athlete.group.name[:10],
+                            athlete.athlete.nit,
+                            athlete.athlete.full_name[:32],
+                            athlete.athlete.category.name[:11],
+
                             athlete.dorsal,
                             '' if athlete.initial_time is None else athlete.initial_time.strftime('%H:%M:%S.%f')[:-3],
                             '' if athlete.initial_time is None else athlete.final_time.strftime('%H:%M:%S.%f')[:-3],
@@ -290,7 +302,8 @@ class TakeTimeController:
 
                         ]
                         for i, val in enumerate(data):
-                            width = column_widh[i]
+                            width = column_width[i]
+                            #TODO: cut val in base of column size
                             pdf.cell(width, 2 * th, str(val), border=1)
 
                         pdf.ln(2*th)
