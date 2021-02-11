@@ -10,7 +10,6 @@ from PyQt5 import QtWidgets, QtCore
 from datetime import datetime
 from managers.GroupManager import GroupManager
 from managers.GroupAthleteManager import GroupAthleteManager
-from utils.PDFGenerator import PDFGenerator
 from fpdf import FPDF
 
 
@@ -68,6 +67,7 @@ class TakeTimeController:
         except Exception as e:
             print(f'Error filtering athletes')
             print(e)
+        self.clear_pdf_label()
 
     def show_athletes_table(self, athletes_groups):
         for i, athlete in enumerate(athletes_groups):
@@ -121,6 +121,7 @@ class TakeTimeController:
                 break
             else:
                 self.window.table_times.removeRow(row_count - 1)
+        self.clear_pdf_label()
 
     def update_initial_time(self):
         """ updates the initial time of a set of athletes, in the same group """
@@ -140,6 +141,7 @@ class TakeTimeController:
         except Exception as e:
             print(f'Error updating initial time')
             print(e)
+        self.clear_pdf_label()
 
     def filter_athletes_by_dorsal(self):
         """
@@ -186,6 +188,7 @@ class TakeTimeController:
             print('Error updating final time and total time')
             print(e)
             self.window.ed_filter.setText('')
+        self.clear_pdf_label()
 
     def order_table_filter(self):
         try:
@@ -223,6 +226,7 @@ class TakeTimeController:
         except Exception as e:
             print(f'Error ordering table')
             print(e)
+        self.clear_pdf_label()
 
     def clear_table(self):
         for i in range(self.window.table_times.rowCount()):
@@ -241,6 +245,10 @@ class TakeTimeController:
         except Exception as e:
             print('Error reseting time')
             print(e)
+        self.clear_pdf_label()
+
+    def clear_pdf_label(self):
+        self.window.lb_pdf.setText('')
 
     def generate_pdf(self):
 
@@ -315,5 +323,6 @@ class TakeTimeController:
                         pdf.ln(2*th)
 
                     pdf.output(f'{self.competence.name}_{category_name}.pdf', 'F')
+                    self.window.lb_pdf.setText('PDF generados con exito')
         except Exception as e:
             print(e)

@@ -306,6 +306,22 @@
     <string>Generar PDF</string>
    </property>
   </widget>
+  <widget class="QLabel" name="lb_pdf">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>650</y>
+     <width>341</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:green</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

@@ -111,6 +111,11 @@ class Ui_TakeTime(object):
         self.btn_pdf = QtWidgets.QPushButton(TakeTime)
         self.btn_pdf.setGeometry(QtCore.QRect(100, 650, 161, 31))
         self.btn_pdf.setObjectName("btn_pdf")
+        self.lb_pdf = QtWidgets.QLabel(TakeTime)
+        self.lb_pdf.setGeometry(QtCore.QRect(420, 650, 341, 31))
+        self.lb_pdf.setStyleSheet("color:green")
+        self.lb_pdf.setText("")
+        self.lb_pdf.setObjectName("lb_pdf")
 
         self.retranslateUi(TakeTime)
         QtCore.QMetaObject.connectSlotsByName(TakeTime)
@@ -149,13 +154,3 @@ class Ui_TakeTime(object):
         self.label_7.setText(_translate("TakeTime", "Ordernar"))
         self.btn_reset_time.setText(_translate("TakeTime", "Resetear"))
         self.btn_pdf.setText(_translate("TakeTime", "Generar PDF"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    TakeTime = QtWidgets.QDialog()
-    ui = Ui_TakeTime()
-    ui.setupUi(TakeTime)
-    TakeTime.show()
-    sys.exit(app.exec_())
