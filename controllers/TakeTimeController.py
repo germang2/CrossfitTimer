@@ -248,11 +248,17 @@ class TakeTimeController:
             groups = GroupManager.get_groups_by_filters({Group.competence_id == self.competence.id},
                                                         order=Group.order.asc())
             if groups:
+                athletes_dict = {}
                 for group in groups:
-                    athletes_list = []
                     athletes_groups = GroupAthleteManager.get_group_athletes_by_filters({GroupAthlete.group_id == group.id})
-                    athletes_list += athletes_groups
+                    for athlete in athletes_groups:
+                        category_name = athlete.athlete.category.name
+                        if category_name in athletes_dict:
+                            athletes_dict[category_name].append(athlete)
+                        else:
+                            athletes_dict[category_name] = [athlete]
 
+                for category_name, athlete_list in athletes_dict.items():
                     pdf = FPDF(format='letter', unit='in', orientation='L')
                     # Effective page width, or just epw
                     epw = pdf.w - 2 * pdf.l_margin
@@ -273,7 +279,7 @@ class TakeTimeController:
                     }
                     pdf.set_font('Arial', 'B', 14)
                     pdf.add_page()
-                    pdf.cell(epw, 0.0, f'{self.competence.name}', align='C')
+                    pdf.cell(epw, 0.0, f'{self.competence.name} - {category_name}', align='C')
 
                     pdf.ln(0.5)
                     # Text height is the same as current font size
@@ -288,7 +294,7 @@ class TakeTimeController:
                     pdf.set_font('Arial', '', 9.0)
                     pdf.ln(2 * th)
 
-                    for athlete in athletes_list:
+                    for athlete in athlete_list:
                         data = [
                             athlete.group.name[:10],
                             athlete.athlete.nit,
@@ -308,6 +314,6 @@ class TakeTimeController:
 
                         pdf.ln(2*th)
 
-                    pdf.output(f'{self.competence.name}.pdf', 'F')
+                    pdf.output(f'{self.competence.name}_{category_name}.pdf', 'F')
         except Exception as e:
             print(e)
