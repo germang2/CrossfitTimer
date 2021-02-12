@@ -19,8 +19,9 @@ class TakeTimeController:
         self.competence = competence
         self.window.ed_filter.setText('')
         self.window.lb_competence_name.setText(self.competence.name)
-        self.window.lb_competence_date.setText(self.competence.date.strftime('%H:%M:%S'))
+        self.window.lb_competence_date.setText(self.competence.date.strftime('%d-%m-%Y'))
         self.window.ed_filter.textChanged.connect(self.filter_athletes)
+        self.window.ed_filter_group.textChanged.connect(self.filter_by_group)
         self.window.btn_update_final_time.clicked.connect(self.update_final_time)
         self.load_initial_data()
         self.window.cb_order_table.currentIndexChanged.connect(self.order_table_filter)
@@ -58,6 +59,34 @@ class TakeTimeController:
                 for f in set(filters_list):
                     athletes_groups = GroupAthleteManager.filter_athletes_by_dorsal(
                         filters={GroupAthlete.dorsal.ilike(f), Group.id.in_(group_list)},
+                    )
+                    athletes_list += athletes_groups
+                if athletes_list:
+                    self.show_athletes_table(athletes_list)
+            elif len(filter_text) == 0:
+                self.load_initial_data()
+        except Exception as e:
+            print(f'Error filtering athletes')
+            print(e)
+        self.clear_pdf_label()
+
+    def filter_by_group(self):
+        try:
+            filter_text = self.window.ed_filter_group.text()
+            filter_text.strip()
+            if filter_text and filter_text[-1] == ',':
+                return
+            groups = GroupManager.get_groups_by_filters(
+                filters={Group.competence_id == self.competence.id},
+                order=Group.order.asc()
+            )
+            if len(filter_text) >= 2 and groups:
+                group_list = [g.id for g in groups]
+                filters_list = filter_text.split(',')
+                athletes_list = []
+                for f in set(filters_list):
+                    athletes_groups = GroupAthleteManager.filter_athletes_by_dorsal(
+                        filters={Group.name.ilike(f), Group.id.in_(group_list)},
                     )
                     athletes_list += athletes_groups
                 if athletes_list:

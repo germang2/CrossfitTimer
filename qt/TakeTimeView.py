@@ -116,6 +116,12 @@ class Ui_TakeTime(object):
         self.lb_pdf.setStyleSheet("color:green")
         self.lb_pdf.setText("")
         self.lb_pdf.setObjectName("lb_pdf")
+        self.ed_filter_group = QtWidgets.QLineEdit(TakeTime)
+        self.ed_filter_group.setGeometry(QtCore.QRect(350, 230, 181, 31))
+        self.ed_filter_group.setObjectName("ed_filter_group")
+        self.label_6 = QtWidgets.QLabel(TakeTime)
+        self.label_6.setGeometry(QtCore.QRect(360, 210, 181, 16))
+        self.label_6.setObjectName("label_6")
 
         self.retranslateUi(TakeTime)
         QtCore.QMetaObject.connectSlotsByName(TakeTime)
@@ -154,3 +160,14 @@ class Ui_TakeTime(object):
         self.label_7.setText(_translate("TakeTime", "Ordernar"))
         self.btn_reset_time.setText(_translate("TakeTime", "Resetear"))
         self.btn_pdf.setText(_translate("TakeTime", "Generar PDF"))
+        self.label_6.setText(_translate("TakeTime", "Filtrar por grupo/oleada"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    TakeTime = QtWidgets.QDialog()
+    ui = Ui_TakeTime()
+    ui.setupUi(TakeTime)
+    TakeTime.show()
+    sys.exit(app.exec_())
