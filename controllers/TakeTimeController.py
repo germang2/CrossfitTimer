@@ -213,7 +213,7 @@ class TakeTimeController:
                         .order_by(GroupAthlete.total_time.asc()).all()
                 elif filter_selected == 'Nombre':
                     athletes_groups = db.session.query(GroupAthlete).join(Athlete)\
-                        .join(Group).filter(Group.id.in_(groups_list)).order_by(Athlete.name.asc()).all()
+                        .join(Group).filter(Group.id.in_(groups_list)).order_by(Athlete.full_name.asc()).all()
                 elif filter_selected == 'Grupo ascendente':
                     athletes_groups = db.session.query(GroupAthlete).join(Group).filter(Group.id.in_(groups_list))\
                         .order_by(Group.order.asc()).all()
@@ -287,7 +287,7 @@ class TakeTimeController:
                     }
                     pdf.set_font('Arial', 'B', 14)
                     pdf.add_page()
-                    pdf.cell(epw, 0.0, f'{self.competence.name} - {category_name}', align='C')
+                    pdf.cell(epw, 0.0, f'{self.competence.name} - Categoria: {category_name}', align='C')
 
                     pdf.ln(0.5)
                     # Text height is the same as current font size
@@ -302,7 +302,7 @@ class TakeTimeController:
                     pdf.set_font('Arial', '', 9.0)
                     pdf.ln(2 * th)
 
-                    for athlete in athlete_list:
+                    for athlete in sorted(athlete_list, key=lambda x: x.total_time):
                         data = [
                             athlete.group.name[:10],
                             athlete.athlete.nit,
