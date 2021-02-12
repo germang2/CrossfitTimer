@@ -189,6 +189,10 @@ class Ui_CompetencesView(object):
         self.lb_error_delete.setStyleSheet("color:red;")
         self.lb_error_delete.setText("")
         self.lb_error_delete.setObjectName("lb_error_delete")
+        self.label_6 = QtWidgets.QLabel(CompetencesView)
+        self.label_6.setGeometry(QtCore.QRect(190, 250, 181, 20))
+        self.label_6.setStyleSheet("text:center")
+        self.label_6.setObjectName("label_6")
 
         self.retranslateUi(CompetencesView)
         QtCore.QMetaObject.connectSlotsByName(CompetencesView)
@@ -233,3 +237,14 @@ class Ui_CompetencesView(object):
         item.setText(_translate("CompetencesView", "Eliminar"))
         self.btn_create_group.setText(_translate("CompetencesView", "Agregar"))
         self.btn_see_all_groups.setText(_translate("CompetencesView", "Recargar"))
+        self.label_6.setText(_translate("CompetencesView", "año-mes-dia"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    CompetencesView = QtWidgets.QDialog()
+    ui = Ui_CompetencesView()
+    ui.setupUi(CompetencesView)
+    CompetencesView.show()
+    sys.exit(app.exec_())
