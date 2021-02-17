@@ -7,6 +7,7 @@ from models.Group import Group
 from models.GroupAthlete import GroupAthlete
 from models.Competence import Competence
 from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QLineEdit
 from datetime import datetime
 from managers.GroupManager import GroupManager
 from managers.GroupAthleteManager import GroupAthleteManager
@@ -20,13 +21,25 @@ class TakeTimeController:
         self.window.ed_filter.setText('')
         self.window.lb_competence_name.setText(self.competence.name)
         self.window.lb_competence_date.setText(self.competence.date.strftime('%d-%m-%Y'))
-        self.window.ed_filter.textChanged.connect(self.filter_athletes)
-        self.window.ed_filter_group.textChanged.connect(self.filter_by_group)
+        self.window.ed_filter.keyPressEvent = self.on_key_ed_filter
+        self.window.ed_filter_group.keyPressEvent = self.on_key_ed_group
         self.window.btn_update_final_time.clicked.connect(self.update_final_time)
         self.load_initial_data()
         self.window.cb_order_table.currentIndexChanged.connect(self.order_table_filter)
         self.window.btn_reset_time.clicked.connect(self.reset_time)
         self.window.btn_pdf.clicked.connect(self.generate_pdf)
+
+    def on_key_ed_filter(self, e):
+        if e.key() == QtCore.Qt.Key_Return:
+            self.filter_athletes()
+        else:
+            QLineEdit.keyPressEvent(self.window.ed_filter, e)
+
+    def on_key_ed_group(self, e):
+        if e.key() == QtCore.Qt.Key_Return:
+            self.filter_by_group()
+        else:
+            QLineEdit.keyPressEvent(self.window.ed_filter_group, e)
 
     def load_initial_data(self):
         try:
