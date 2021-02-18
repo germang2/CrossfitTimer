@@ -333,7 +333,10 @@ class TakeTimeController:
             if groups:
                 athletes_dict = {}
                 for group in groups:
-                    athletes_groups = GroupAthleteManager.get_group_athletes_by_filters({GroupAthlete.group_id == group.id})
+                    athletes_groups = GroupAthleteManager.get_group_athletes_by_filters(
+                        filters={GroupAthlete.group_id == group.id},
+                        order='total_time'
+                    )
                     for athlete in athletes_groups:
                         category_name = athlete.athlete.category.name
                         if category_name in athletes_dict:
@@ -377,7 +380,7 @@ class TakeTimeController:
                     pdf.set_font('Arial', '', 9.0)
                     pdf.ln(2 * th)
 
-                    for athlete in sorted(athlete_list, key=lambda x: x.total_time):
+                    for athlete in athlete_list:
                         data = [
                             athlete.group.name[:10],
                             athlete.athlete.nit,
@@ -386,8 +389,8 @@ class TakeTimeController:
 
                             athlete.dorsal,
                             '' if athlete.initial_time is None else athlete.initial_time.strftime('%H:%M:%S.%f')[:-3],
-                            '' if athlete.initial_time is None else athlete.final_time.strftime('%H:%M:%S.%f')[:-3],
-                            '' if athlete.initial_time is None else athlete.total_time.strftime('%H:%M:%S.%f')[:-3]
+                            '' if athlete.final_time is None else athlete.final_time.strftime('%H:%M:%S.%f')[:-3],
+                            '' if athlete.total_time is None else athlete.total_time.strftime('%H:%M:%S.%f')[:-3]
 
                         ]
                         for i, val in enumerate(data):
