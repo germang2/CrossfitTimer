@@ -22,8 +22,13 @@ class TakeTimeController:
         self.window.lb_competence_name.setText(self.competence.name)
         self.window.lb_competence_date.setText(self.competence.date.strftime('%d-%m-%Y'))
         self.window.ed_filter.keyPressEvent = self.on_key_ed_filter
+        self.window.ed_filter_2.keyPressEvent = self.on_key_ed_filter_2
+        self.window.ed_filter_3.keyPressEvent = self.on_key_ed_filter_3
+        self.window.btn_update_final_time.clicked.connect(self.update_final_time_ed)
+        self.window.btn_update_final_time_2.clicked.connect(self.update_final_time_ed_2)
+        self.window.btn_update_final_time_3.clicked.connect(self.update_final_time_ed_3)
+        self.window.ed_reset.keyPressEvent = self.on_key_reset
         self.window.ed_filter_group.keyPressEvent = self.on_key_ed_group
-        self.window.btn_update_final_time.clicked.connect(self.update_final_time)
         self.load_initial_data()
         self.window.cb_order_table.currentIndexChanged.connect(self.order_table_filter)
         self.window.btn_reset_time.clicked.connect(self.reset_time)
@@ -31,9 +36,27 @@ class TakeTimeController:
 
     def on_key_ed_filter(self, e):
         if e.key() == QtCore.Qt.Key_Return:
-            self.filter_athletes()
+            self.filter_athletes(edit_widget=self.window.ed_filter)
         else:
             QLineEdit.keyPressEvent(self.window.ed_filter, e)
+
+    def on_key_ed_filter_2(self, e):
+        if e.key() == QtCore.Qt.Key_Return:
+            self.filter_athletes(edit_widget=self.window.ed_filter_2)
+        else:
+            QLineEdit.keyPressEvent(self.window.ed_filter_2, e)
+
+    def on_key_ed_filter_3(self, e):
+        if e.key() == QtCore.Qt.Key_Return:
+            self.filter_athletes(edit_widget=self.window.ed_filter_3)
+        else:
+            QLineEdit.keyPressEvent(self.window.ed_filter_3, e)
+
+    def on_key_reset(self, e):
+        if e.key() == QtCore.Qt.Key_Return:
+            self.filter_athletes(edit_widget=self.window.ed_reset)
+        else:
+            QLineEdit.keyPressEvent(self.window.ed_reset, e)
 
     def on_key_ed_group(self, e):
         if e.key() == QtCore.Qt.Key_Return:
@@ -55,9 +78,9 @@ class TakeTimeController:
             print(f'Error loading data of table')
             print(e)
 
-    def filter_athletes(self):
+    def filter_athletes(self, edit_widget):
         try:
-            filter_text = self.window.ed_filter.text()
+            filter_text = edit_widget.text()
             filter_text.strip()
             if filter_text and filter_text[-1] == ',':
                 return
@@ -185,13 +208,14 @@ class TakeTimeController:
             print(e)
         self.clear_pdf_label()
 
-    def filter_athletes_by_dorsal(self):
+    def filter_athletes_by_dorsal(self, edit_widget):
         """
         Filter athletes using the text inserted by the user, with the field 'dorsal'
+        :param edit_widget: Widget, edit text where take text
         :return: Array of GroupAthlete
         """
         try:
-            filter_text = self.window.ed_filter.text()
+            filter_text = edit_widget.text()
             filter_text.strip()
             athletes_groups_list = []
             if filter_text and filter_text[-1] == ',':
@@ -209,10 +233,19 @@ class TakeTimeController:
             print(e)
             return []
 
-    def update_final_time(self):
+    def update_final_time_ed(self):
+        self.update_final_time(edit_widget=self.window.ed_filter)
+
+    def update_final_time_ed_2(self):
+        self.update_final_time(edit_widget=self.window.ed_filter_2)
+
+    def update_final_time_ed_3(self):
+        self.update_final_time(edit_widget=self.window.ed_filter_3)
+
+    def update_final_time(self, edit_widget):
         """ updates the final time to all the objects inside gotten from the filter """
         try:
-            athletes_groups_list = self.filter_athletes_by_dorsal()
+            athletes_groups_list = self.filter_athletes_by_dorsal(edit_widget=edit_widget)
             if athletes_groups_list:
                 final_time = datetime.now()
                 for athlete in athletes_groups_list:
@@ -225,11 +258,10 @@ class TakeTimeController:
                         athlete.total_time = total_time
                         db.session.add(athlete)
                 db.session.commit()
-                self.window.ed_filter.setText('')
+                self.filter_athletes(edit_widget=edit_widget)
         except Exception as e:
             print('Error updating final time and total time')
             print(e)
-            self.window.ed_filter.setText('')
         self.clear_pdf_label()
 
     def order_table_filter(self):
@@ -263,7 +295,8 @@ class TakeTimeController:
                     athletes_groups = db.session.query(GroupAthlete).join(Group).filter(Group.id.in_(groups_list))\
                         .order_by(Group.order.desc()).all()
                 else:
-                    athletes_groups = db.session.query(GroupAthlete).order_by(GroupAthlete.dorsal.asc()).all()
+                    athletes_groups = db.session.query(GroupAthlete).join(Group).filter(Group.id.in_(groups_list))\
+                        .order_by(GroupAthlete.dorsal.asc()).all()
                 self.show_athletes_table(athletes_groups=athletes_groups)
         except Exception as e:
             print(f'Error ordering table')
@@ -276,14 +309,14 @@ class TakeTimeController:
 
     def reset_time(self):
         try:
-            athletes_groups_list = self.filter_athletes_by_dorsal()
+            athletes_groups_list = self.filter_athletes_by_dorsal(edit_widget=self.window.ed_reset)
             if athletes_groups_list:
                 for athlete in athletes_groups_list:
                     athlete.final_time = None
                     athlete.total_time = None
                     db.session.add(athlete)
                 db.session.commit()
-                self.window.ed_filter.setText('')
+                self.filter_athletes(edit_widget=self.window.ed_reset)
         except Exception as e:
             print('Error reseting time')
             print(e)
