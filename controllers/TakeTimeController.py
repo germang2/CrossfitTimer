@@ -259,6 +259,7 @@ class TakeTimeController:
                         db.session.add(athlete)
                 db.session.commit()
                 self.filter_athletes(edit_widget=edit_widget)
+                edit_widget.setText('')
         except Exception as e:
             print('Error updating final time and total time')
             print(e)
@@ -317,6 +318,7 @@ class TakeTimeController:
                     db.session.add(athlete)
                 db.session.commit()
                 self.filter_athletes(edit_widget=self.window.ed_reset)
+                self.window.ed_reset.setText('')
         except Exception as e:
             print('Error reseting time')
             print(e)

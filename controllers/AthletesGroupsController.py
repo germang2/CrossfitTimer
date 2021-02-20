@@ -3,6 +3,7 @@ from app import AthletesGroupsWindow
 from models.Athlete import Athlete
 from models.Competence import Competence
 from models.Group import Group
+from models.Category import Category
 from models.GroupAthlete import GroupAthlete
 from sqlalchemy import or_
 from PyQt5 import QtWidgets, QtCore
@@ -118,14 +119,20 @@ class AthletesGroupsController:
         try:
             text = self.window.ed_filter_athlete.text()
             text.strip()
-            filters = {Competence.id == self.competence.id}
             if text and len(text) >= 1:
+                athletes = []
+                order = 'full_name'
                 if text.isnumeric():
-                    filters.add(Athlete.nit.ilike(f'%{text}%'))
+                    athletes = db.session.query(Athlete).filter(
+                        Athlete.nit.ilike(f'%{text}%')
+                    ).order_by(order).all()
                 else:
-                    filters.add(Athlete.full_name.ilike(f'%{text}%'))
-
-                athletes = AthleteManager.get_athletes_by_filters(filters)
+                    athletes = db.session.query(Athlete).join(Category, Category.id == Athlete.category_id).filter(
+                        or_(
+                            Athlete.full_name.ilike(f'%{text}%'),
+                            Category.name.ilike(f'%{text}%')
+                        )
+                    ).order_by(order).all()
                 if athletes:
                     self.show_athletes_table(athletes)
             else:
@@ -153,13 +160,15 @@ class AthletesGroupsController:
                 self.window.athletes_table.insertRow(i)
                 name = QtWidgets.QTableWidgetItem(athlete.full_name)
                 self.window.athletes_table.setItem(i, 0, name)
+                category = QtWidgets.QTableWidgetItem(athlete.category.name)
+                self.window.athletes_table.setItem(i, 1, category)
                 nit = QtWidgets.QTableWidgetItem(athlete.nit)
-                self.window.athletes_table.setItem(i, 1, nit)
+                self.window.athletes_table.setItem(i, 2, nit)
                 btn_add = QtWidgets.QPushButton()
                 btn_add.setText('Agregar')
                 btn_add.setProperty('athlete', athlete)
                 btn_add.clicked.connect(self.add_athlete_to_group)
-                self.window.athletes_table.setCellWidget(i, 2, btn_add)
+                self.window.athletes_table.setCellWidget(i, 3, btn_add)
             while True:
                 row_count = self.window.athletes_table.rowCount()
                 if row_count <= len(athletes):

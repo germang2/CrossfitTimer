@@ -148,6 +148,11 @@
    </column>
    <column>
     <property name="text">
+     <string>Categoria</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
      <string>Cedula</string>
     </property>
    </column>
@@ -185,7 +190,7 @@
     <rect>
      <x>50</x>
      <y>310</y>
-     <width>281</width>
+     <width>311</width>
      <height>20</height>
     </rect>
    </property>
@@ -195,7 +200,7 @@
     </font>
    </property>
    <property name="text">
-    <string>busqueda por nombres/apellidos o cedula</string>
+    <string>busqueda por nombres/apellidos, categoria o cedula</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
