@@ -47,13 +47,18 @@ class AthletesController:
             self.get_all_athletes(filter_text=text)
 
     def get_all_athletes(self, filter_text=None):
-        """ loads in a table all the existing athletes """
+        """ loads in a table the existing/filtered athletes """
         try:
             self.clear_table()
             if filter_text:
                 filter_text.strip()
-                athletes = db.session.query(Athlete).filter(Athlete.full_name.ilike(f'%{filter_text}%'))\
-                    .order_by('full_name').all()
+                athletes = db.session.query(Athlete).join(Category, Category.id == Athlete.category_id).filter(
+                    or_(
+                        Athlete.full_name.ilike(f'%{filter_text}%'),
+                        Athlete.club.ilike(f'%{filter_text}%'),
+                        Category.name.ilike(f'%{filter_text}%')
+                    )
+                ).order_by('full_name').all()
             else:
                 athletes = db.session.query(Athlete).order_by('full_name').all()
             categories = db.session.query(Category).order_by('name').all()

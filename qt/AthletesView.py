@@ -58,10 +58,10 @@ class Ui_AthletesView(object):
         self.btn_add_atlete.setGeometry(QtCore.QRect(470, 280, 181, 41))
         self.btn_add_atlete.setObjectName("btn_add_atlete")
         self.ed_filter = QtWidgets.QLineEdit(AthletesView)
-        self.ed_filter.setGeometry(QtCore.QRect(660, 350, 191, 41))
+        self.ed_filter.setGeometry(QtCore.QRect(710, 330, 191, 41))
         self.ed_filter.setObjectName("ed_filter")
         self.label_7 = QtWidgets.QLabel(AthletesView)
-        self.label_7.setGeometry(QtCore.QRect(720, 320, 91, 31))
+        self.label_7.setGeometry(QtCore.QRect(770, 300, 91, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.label_7.setFont(font)
@@ -169,7 +169,7 @@ class Ui_AthletesView(object):
         self.label_8.setFont(font)
         self.label_8.setObjectName("label_8")
         self.label_9 = QtWidgets.QLabel(AthletesView)
-        self.label_9.setGeometry(QtCore.QRect(670, 390, 191, 20))
+        self.label_9.setGeometry(QtCore.QRect(720, 370, 191, 20))
         self.label_9.setObjectName("label_9")
         self.lb_error_delete = QtWidgets.QLabel(AthletesView)
         self.lb_error_delete.setGeometry(QtCore.QRect(70, 650, 951, 20))
@@ -177,6 +177,9 @@ class Ui_AthletesView(object):
         self.lb_error_delete.setText("")
         self.lb_error_delete.setAlignment(QtCore.Qt.AlignCenter)
         self.lb_error_delete.setObjectName("lb_error_delete")
+        self.label_10 = QtWidgets.QLabel(AthletesView)
+        self.label_10.setGeometry(QtCore.QRect(710, 390, 211, 20))
+        self.label_10.setObjectName("label_10")
 
         self.retranslateUi(AthletesView)
         QtCore.QMetaObject.connectSlotsByName(AthletesView)
@@ -205,6 +208,7 @@ class Ui_AthletesView(object):
         item.setText(_translate("AthletesView", "Eliminar"))
         self.label_8.setText(_translate("AthletesView", "Cedula"))
         self.label_9.setText(_translate("AthletesView", "Requiere minimo 3 caracteres"))
+        self.label_10.setText(_translate("AthletesView", "Busca por nombre, club y categoria"))
 
 
 if __name__ == "__main__":
