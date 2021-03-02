@@ -382,7 +382,12 @@ class TakeTimeController:
                     pdf.set_font('Arial', '', 9.0)
                     pdf.ln(2 * th)
 
-                    for athlete in athlete_list:
+                    list_with_time = [a for a in athlete_list if a.total_time]
+                    list_no_time = [a for a in athlete_list if a.total_time is None]
+                    sorted_list = sorted(list_with_time, key=lambda x: x.total_time)
+                    sorted_list = sorted_list + list_no_time
+
+                    for athlete in sorted_list:
                         data = [
                             athlete.group.name[:10],
                             athlete.athlete.nit,
