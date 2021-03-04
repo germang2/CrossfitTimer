@@ -12,6 +12,7 @@ from datetime import datetime
 from managers.GroupManager import GroupManager
 from managers.GroupAthleteManager import GroupAthleteManager
 from fpdf import FPDF
+from PyQt5.QtWidgets import QMessageBox
 
 
 class TakeTimeController:

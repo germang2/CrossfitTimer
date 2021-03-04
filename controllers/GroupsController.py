@@ -5,6 +5,7 @@ from models.Competence import Competence
 from models.Group import Group
 from utils.Validations import *
 from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QMessageBox
 from controllers.AthletesGroupsController import AthletesGroupsController
 
 
@@ -22,6 +23,20 @@ class GroupController:
 
         self.athletes_groups_window = AthletesGroupsWindow()
         self.athletes_groups_controller = None
+        self.message_box = None
+        self.btn_yes = None
+        self.btn_no = None
+        self.built_message_box()
+
+    def built_message_box(self):
+        self.message_box = QMessageBox(self.window)
+        self.message_box.setWindowTitle('Confirmar accion')
+        self.message_box.setIcon(QMessageBox.Question)
+        self.message_box.setText('Desea borrar la oleada?')
+
+        self.btn_yes = self.message_box.addButton('Aceptar', QMessageBox.YesRole)
+        self.btn_no = self.message_box.addButton('Cancelar', QMessageBox.NoRole)
+        self.message_box.setDefaultButton(self.btn_no)
 
     def create_group(self):
         """ validate data and creates a new Group """
@@ -90,7 +105,7 @@ class GroupController:
 
                     delete = QtWidgets.QPushButton()
                     delete.setText('Eliminar')
-                    delete.clicked.connect(self.delete_group)
+                    delete.clicked.connect(self.ask_confirmation)
                     delete.setProperty('id', group.id)
                     self.window.groups_table.setCellWidget(i, 4, delete)
                 while True:
@@ -148,6 +163,18 @@ class GroupController:
                                                                    competence=competence,
                                                                    group=group)
         self.athletes_groups_window.show()
+
+    def ask_confirmation(self):
+        index_row = self.window.groups_table.currentRow()
+        index_column = self.window.groups_table.currentColumn()
+        if index_row >= 0 and index_column >= 0:
+            group_id = int(self.window.groups_table.cellWidget(index_row, index_column).property('id'))
+            group = db.session.query(Group).filter_by(id=group_id).first()
+            self.message_box.setText(f"Desea borrar la oleada '{group.name}'?")
+            self.message_box.exec_()
+
+            if self.message_box.clickedButton() == self.btn_yes:
+                self.delete_group()
 
 
 def validate_data(name, order):
