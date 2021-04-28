@@ -1,1 +1,5 @@
 pyinstaller --onefile --windowed --icon=icon.ico --paths=..\venvs\crossfittimer36\Lib\site-packages\PyQt5\Qt\bin CrossfitTimer.py
+
+
+# compile qt window
+pyuic5 -x ventana.ui -o ventana_ui.py

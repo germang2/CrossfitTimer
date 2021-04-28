@@ -1,21 +1,27 @@
 from future.backports.email.headerregistry import Group
-
+from datetime import datetime
 from engine import db
 from app import TakeTimeWindow
+
 from models.Athlete import Athlete
+from models.Category import Category
+from models.Competence import Competence
 from models.Group import Group
 from models.GroupAthlete import GroupAthlete
-from models.Competence import Competence
-from sqlalchemy import or_, and_
+
+
+from managers.GroupAthleteManager import GroupAthleteManager
+from managers.GroupManager import GroupManager
+
+from fpdf import FPDF
 from PyQt5 import QtWidgets, QtCore
-from datetime import datetime
-from datetime import time
 
 
 class TakeTimeController:
     def __init__(self, window: TakeTimeWindow, competence: Competence):
         self.window = window
         self.competence = competence
+        self.category_id_create = {}
         self.window.ed_filter.setText('')
         self.window.lb_competence_name.setText(self.competence.name)
         self.window.lb_competence_date.setText(self.competence.date.strftime('%H:%M:%S'))
@@ -23,6 +29,8 @@ class TakeTimeController:
         self.window.btn_update_final_time.clicked.connect(self.update_final_time)
         self.load_initial_data()
         self.window.cb_order_table.currentIndexChanged.connect(self.order_table_filter)
+        self.window.btn_generate_pdf.clicked.connect(self.generate_pdf)
+        self.load_categories()
 
     def load_initial_data(self):
         try:
@@ -115,6 +123,7 @@ class TakeTimeController:
                 break
             else:
                 self.window.table_times.removeRow(row_count - 1)
+        self.window.lb_msg.setText('')
 
     def update_initial_time(self):
         """ updates the initial time of a set of athletes, in the same group """
@@ -122,7 +131,9 @@ class TakeTimeController:
             index_row = self.window.table_times.currentRow()
             index_column = self.window.table_times.currentColumn()
             group = self.window.table_times.cellWidget(index_row, index_column).property('group')
-            athletes_groups = db.session.query(GroupAthlete).filter_by(group_id=group.id).all()
+            athletes_groups = db.session.query(GroupAthlete)\
+                .filter(GroupAthlete.initial_time.is_(None))\
+                .filter_by(group_id=group.id).all()
             initial_time = datetime.now()
             for athlete_group in athletes_groups:
                 athlete_group.initial_time = initial_time
@@ -208,3 +219,113 @@ class TakeTimeController:
     def clear_table(self):
         for i in range(self.window.table_times.rowCount()):
             self.window.table_times.removeRow(i)
+
+    def load_categories(self):
+        """ loads in a comboBox all the existing categories """
+        try:
+            self.window.cb_categories.clear()
+            categories = db.session.query(Category).order_by('name').all()
+            if categories:
+                self.category_id_create.clear()
+                for i, category in enumerate(categories):
+                    self.window.cb_categories.addItem(category.name, userData=category.id)
+                    # it adds a relation between the index of the comboBox and the category.id
+                    self.category_id_create[i] = category.id
+        except Exception as e:
+            print(e)
+
+    def generate_pdf(self):
+        try:
+            index_category = self.window.cb_categories.currentIndex()
+            category_id = self.category_id_create[index_category]
+
+            groups = GroupManager.get_groups_by_filters(
+                filters={
+                    Group.competence_id == self.competence.id
+                }
+            )
+            groups_id_list = [g.id for g in groups]
+
+            athletes_groups = GroupAthleteManager.get_group_athletes_by_filters(
+                filters={
+                    Group.id.in_(groups_id_list),
+                    Athlete.category_id == category_id
+                },
+                order='total_time'
+            )
+
+            if athletes_groups:
+                athletes_dict = {}
+
+                for athlete in athletes_groups:
+                    category_name = athlete.athlete.category.name
+                    if category_name in athletes_dict:
+                        athletes_dict[category_name].append(athlete)
+                    else:
+                        athletes_dict[category_name] = [athlete]
+
+                for category_name, athlete_list in athletes_dict.items():
+                    pdf = FPDF(format='letter', unit='in', orientation='L')
+                    # Effective page width, or just epw
+                    epw = pdf.w - 2 * pdf.l_margin
+                    # Set column width to 1/4 of effective page width to distribute content
+                    # evenly across table and page
+                    headers = ['Grupo', 'Identificacion', 'Nombre', 'Categoria', 'Dorsal', 'Hora Inicial',
+                               'Hora Final', 'Tiempo total']
+                    col_width = epw / 4
+                    column_width = {
+                        0: col_width * 0.3,
+                        1: col_width * 0.5,
+                        2: col_width * 1.1,
+                        3: col_width * 0.45,
+                        4: col_width * 0.3,
+                        5: col_width * 0.4,
+                        6: col_width * 0.4,
+                        7: col_width * 0.4
+                    }
+                    pdf.set_font('Arial', 'B', 14)
+                    pdf.add_page()
+                    pdf.cell(epw, 0.0, f'{self.competence.name} - Categoria: {category_name}', align='C')
+
+                    pdf.ln(0.5)
+                    # Text height is the same as current font size
+                    th = pdf.font_size
+
+                    pdf.set_font('Arial', 'B', 9.0)
+                    for i, header in enumerate(headers):
+                        width = column_width[i]
+                        # TODO: cut val in base of column size
+                        pdf.cell(width, 2 * th, header, border=1)
+
+                    pdf.set_font('Arial', '', 9.0)
+                    pdf.ln(2 * th)
+
+                    list_with_time = [a for a in athlete_list if a.total_time]
+                    list_no_time = [a for a in athlete_list if a.total_time is None]
+                    sorted_list = sorted(list_with_time, key=lambda x: x.total_time)
+                    sorted_list = sorted_list + list_no_time
+
+                    for athlete in sorted_list:
+                        data = [
+                            athlete.group.name[:10],
+                            athlete.athlete.nit,
+                            f'{athlete.athlete.name} {athlete.athlete.last_name}'[:32],
+                            athlete.athlete.category.name[:11],
+
+                            athlete.dorsal,
+                            '' if athlete.initial_time is None else athlete.initial_time.strftime('%H:%M:%S.%f')[:-3],
+                            '' if athlete.final_time is None else athlete.final_time.strftime('%H:%M:%S.%f')[:-3],
+                            '' if athlete.total_time is None else athlete.total_time.strftime('%H:%M:%S.%f')[:-3]
+
+                        ]
+                        for i, val in enumerate(data):
+                            width = column_width[i]
+                            # TODO: cut val in base of column size
+                            pdf.cell(width, 2 * th, str(val), border=1)
+
+                        pdf.ln(2 * th)
+
+                    pdf.output(f'{self.competence.name}_{category_name}.pdf', 'F')
+                    self.window.lb_msg.setText(f'PDF para categoria {category_name} generado con exito')
+        except Exception as e:
+            print(e)
