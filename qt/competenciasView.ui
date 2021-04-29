@@ -16,9 +16,9 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>30</x>
      <y>30</y>
-     <width>311</width>
+     <width>751</width>
      <height>41</height>
     </rect>
    </property>
@@ -33,206 +33,8 @@
    <property name="text">
     <string>CONFIGURAR COMPETENCIAS</string>
    </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>190</x>
-     <y>90</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Nombre</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>450</x>
-     <y>90</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Lugar</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="ed_name">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>130</y>
-     <width>191</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="ed_place">
-   <property name="geometry">
-    <rect>
-     <x>380</x>
-     <y>130</y>
-     <width>191</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lb_name_error">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>160</y>
-     <width>191</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color:rgb(255, 0, 0)</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lb_place_error">
-   <property name="geometry">
-    <rect>
-     <x>380</x>
-     <y>160</y>
-     <width>191</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color:rgb(255, 0, 0)</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="ed_date">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>220</y>
-     <width>191</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lb_date_error">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>250</y>
-     <width>351</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color:rgb(255, 0, 0)</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>180</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Fecha</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>450</x>
-     <y>180</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Hora</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="ed_time">
-   <property name="geometry">
-    <rect>
-     <x>380</x>
-     <y>220</y>
-     <width>191</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lb_time_error">
-   <property name="geometry">
-    <rect>
-     <x>380</x>
-     <y>250</y>
-     <width>191</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color:rgb(255, 0, 0)</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btn_create_competition">
-   <property name="geometry">
-    <rect>
-     <x>260</x>
-     <y>270</y>
-     <width>171</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>CREAR</string>
    </property>
   </widget>
   <widget class="QTableWidget" name="competences_table">
@@ -296,9 +98,9 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>870</x>
+     <x>790</x>
      <y>100</y>
-     <width>311</width>
+     <width>501</width>
      <height>41</height>
     </rect>
    </property>
@@ -444,44 +246,6 @@
     <string>Orden</string>
    </property>
   </widget>
-  <widget class="QTableWidget" name="groups_table">
-   <property name="geometry">
-    <rect>
-     <x>790</x>
-     <y>340</y>
-     <width>481</width>
-     <height>311</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <column>
-    <property name="text">
-     <string>Nombre</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Orden</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Ver</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Modificar</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Eliminar</string>
-    </property>
-   </column>
-  </widget>
   <widget class="QPushButton" name="btn_create_group">
    <property name="geometry">
     <rect>
@@ -496,22 +260,6 @@
    </property>
    <property name="text">
     <string>Agregar</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btn_see_all_groups">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>300</y>
-     <width>93</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string>Recargar</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_error_delete">
@@ -530,6 +278,302 @@
     <string/>
    </property>
   </widget>
+  <widget class="QGroupBox" name="group_box_competence">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>761</width>
+     <height>671</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Competencia</string>
+   </property>
+   <widget class="QLabel" name="lb_place_error">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>140</y>
+      <width>191</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:rgb(255, 0, 0)</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>160</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Fecha</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="ed_time">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>200</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lb_date_error">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>230</y>
+      <width>351</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:rgb(255, 0, 0)</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>160</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Hora</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="ed_name">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>110</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="ed_date">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>200</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lb_time_error">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>230</y>
+      <width>191</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:rgb(255, 0, 0)</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>70</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Nombre</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="ed_place">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>110</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>70</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Lugar</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lb_name_error">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>140</y>
+      <width>191</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:rgb(255, 0, 0)</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_create_competition">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>260</y>
+      <width>171</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>CREAR</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="group_box_groups">
+   <property name="geometry">
+    <rect>
+     <x>790</x>
+     <y>10</y>
+     <width>511</width>
+     <height>671</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Grupos</string>
+   </property>
+   <widget class="QTableWidget" name="groups_table">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>330</y>
+      <width>481</width>
+      <height>311</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <column>
+     <property name="text">
+      <string>Nombre</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Orden</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Ver</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Modificar</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Eliminar</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QPushButton" name="btn_see_all_groups">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>290</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Recargar</string>
+    </property>
+   </widget>
+  </widget>
+  <zorder>group_box_groups</zorder>
+  <zorder>group_box_competence</zorder>
+  <zorder>label</zorder>
+  <zorder>competences_table</zorder>
+  <zorder>btn_get_all_competitions</zorder>
+  <zorder>label_7</zorder>
+  <zorder>lb_competence_selected</zorder>
+  <zorder>label_8</zorder>
+  <zorder>lb_group_name_error</zorder>
+  <zorder>ed_group_name</zorder>
+  <zorder>ed_group_order</zorder>
+  <zorder>lb_group_order_error</zorder>
+  <zorder>label_9</zorder>
+  <zorder>btn_create_group</zorder>
+  <zorder>lb_error_delete</zorder>
  </widget>
  <resources/>
  <connections/>

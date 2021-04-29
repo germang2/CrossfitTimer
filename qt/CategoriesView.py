@@ -36,13 +36,14 @@ class Ui_CategoriesView(object):
         self.ed_category.setGeometry(QtCore.QRect(370, 190, 231, 41))
         self.ed_category.setObjectName("ed_category")
         self.label_3 = QtWidgets.QLabel(CategoriesView)
-        self.label_3.setGeometry(QtCore.QRect(290, 60, 191, 51))
+        self.label_3.setGeometry(QtCore.QRect(10, 60, 791, 51))
         font = QtGui.QFont()
         font.setFamily("Verdana")
         font.setPointSize(15)
         font.setBold(True)
         font.setWeight(75)
         self.label_3.setFont(font)
+        self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setObjectName("label_3")
         self.lb_error_delete = QtWidgets.QLabel(CategoriesView)
         self.lb_error_delete.setGeometry(QtCore.QRect(50, 490, 701, 20))
@@ -66,3 +67,13 @@ class Ui_CategoriesView(object):
         item.setText(_translate("CategoriesView", "Eliminar"))
         self.btn_get_all_categories.setText(_translate("CategoriesView", "Consultar"))
         self.label_3.setText(_translate("CategoriesView", "CATEGORIAS"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    CategoriesView = QtWidgets.QDialog()
+    ui = Ui_CategoriesView()
+    ui.setupUi(CategoriesView)
+    CategoriesView.show()
+    sys.exit(app.exec_())

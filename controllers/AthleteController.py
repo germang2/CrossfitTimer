@@ -4,6 +4,7 @@ from models.Athlete import Athlete
 from models.Category import Category
 from models.GroupAthlete import GroupAthlete
 from utils.Validations import *
+from utils.Colors import ColorPicker
 from PyQt5 import QtWidgets
 from sqlalchemy import or_
 
@@ -18,6 +19,29 @@ class AthletesController:
         self.category_id_modify = {}
         self.load_categories()
         self.clear_table()
+        self.built_style()
+
+    def built_style(self):
+        self.window.setStyleSheet(ColorPicker.BACKGROUND_GRADIENT_COLOR)
+        self.window.label.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_2.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_3.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_4.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_5.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_6.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_7.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_8.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_9.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.ed_name.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.ed_lastname.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.ed_age.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.ed_nit.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.ed_club.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.ed_filter.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.cb_categories.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.athletes_table.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.btn_get_all_athletes.setStyleSheet(ColorPicker.BUTTON_COLOR)
+        self.window.btn_add_atlete.setStyleSheet(ColorPicker.BUTTON_COLOR)
 
     def create_athlete(self):
         """ Creates a new athlete with all fields """
@@ -82,18 +106,23 @@ class AthletesController:
                         if category.id == athlete.category_id:
                             cb_categories.setCurrentIndex(j)
                     self.window.athletes_table.setCellWidget(i, 5, cb_categories)
-                    modify = QtWidgets.QPushButton()
-                    modify.setText('Modificar')
-                    modify.setProperty('id', athlete.id)
-                    modify.setProperty('operation', 'modify')
-                    modify.clicked.connect(self.handle_athletes_table)
-                    self.window.athletes_table.setCellWidget(i, 6, modify)
-                    delete = QtWidgets.QPushButton()
-                    delete.setText('Eliminar')
-                    delete.setProperty('id', athlete.id)
-                    delete.setProperty('operation', 'delete')
-                    delete.clicked.connect(self.handle_athletes_table)
-                    self.window.athletes_table.setCellWidget(i, 7, delete)
+                    btn_modify = QtWidgets.QPushButton()
+                    btn_modify.setText('Modificar')
+                    btn_modify.setProperty('id', athlete.id)
+                    btn_modify.setProperty('operation', 'modify')
+                    btn_modify.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
+                    btn_modify.clicked.connect(self.handle_athletes_table)
+                    btn_modify.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
+                    self.window.athletes_table.setCellWidget(i, 6, btn_modify)
+
+                    btn_delete = QtWidgets.QPushButton()
+                    btn_delete.setText('Eliminar')
+                    btn_delete.setProperty('id', athlete.id)
+                    btn_delete.setProperty('operation', 'delete')
+                    btn_delete.clicked.connect(self.handle_athletes_table)
+                    btn_delete.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
+                    btn_delete.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
+                    self.window.athletes_table.setCellWidget(i, 7, btn_delete)
 
             while True:
                 row_count = self.window.athletes_table.rowCount()

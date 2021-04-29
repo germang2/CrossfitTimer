@@ -4,6 +4,7 @@ from app import AthletesGroupsWindow
 from models.Competence import Competence
 from models.Group import Group
 from utils.Validations import *
+from utils.Colors import ColorPicker
 from PyQt5 import QtWidgets
 from controllers.AthletesGroupsController import AthletesGroupsController
 
@@ -22,6 +23,11 @@ class GroupController:
 
         self.athletes_groups_window = AthletesGroupsWindow()
         self.athletes_groups_controller = None
+        self.built_style()
+
+    def built_style(self):
+        self.window.setStyleSheet(ColorPicker.BACKGROUND_GRADIENT_COLOR)
+        self.window.groups_table.setStyleSheet(ColorPicker.FONT_COLOR)
 
     def create_group(self):
         """ validate data and creates a new Group """
@@ -80,19 +86,22 @@ class GroupController:
                     btn_see.clicked.connect(self.open_assign_athlete)
                     btn_see.setProperty('competence', self.competence)
                     btn_see.setProperty('group', group)
+                    btn_see.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
                     self.window.groups_table.setCellWidget(i, 2, btn_see)
 
-                    modify = QtWidgets.QPushButton()
-                    modify.setText('Modificar')
-                    modify.clicked.connect(self.modify_group)
-                    modify.setProperty('id', group.id)
-                    self.window.groups_table.setCellWidget(i, 3, modify)
+                    btn_modify = QtWidgets.QPushButton()
+                    btn_modify.setText('Modificar')
+                    btn_modify.clicked.connect(self.modify_group)
+                    btn_modify.setProperty('id', group.id)
+                    btn_modify.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
+                    self.window.groups_table.setCellWidget(i, 3, btn_modify)
 
-                    delete = QtWidgets.QPushButton()
-                    delete.setText('Eliminar')
-                    delete.clicked.connect(self.delete_group)
-                    delete.setProperty('id', group.id)
-                    self.window.groups_table.setCellWidget(i, 4, delete)
+                    btn_delete = QtWidgets.QPushButton()
+                    btn_delete.setText('Eliminar')
+                    btn_delete.clicked.connect(self.delete_group)
+                    btn_delete.setProperty('id', group.id)
+                    btn_delete.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
+                    self.window.groups_table.setCellWidget(i, 4, btn_delete)
                 while True:
                     row_count = self.window.groups_table.rowCount()
                     if row_count <= len(groups):

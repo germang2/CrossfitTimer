@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets
 from models.Category import Category
 from models.Athlete import Athlete
 from app import CategoriesWindow
+from utils.Colors import ColorPicker
 
 
 class CategoryController:
@@ -15,6 +16,15 @@ class CategoryController:
         self.window.btn_create_category.clicked.connect(self.create_category)
         self.window.btn_get_all_categories.clicked.connect(self.get_all_categories)
         self.clear_table()
+        self.built_style()
+
+    def built_style(self):
+        self.window.label_3.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.setStyleSheet(ColorPicker.BACKGROUND_GRADIENT_COLOR)
+        self.window.btn_create_category.setStyleSheet(ColorPicker.BUTTON_COLOR)
+        self.window.btn_get_all_categories.setStyleSheet(ColorPicker.BUTTON_COLOR)
+        self.window.ed_category.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.categories_table.setStyleSheet(ColorPicker.FONT_COLOR)
 
     def create_category(self):
         text = self.window.ed_category.text()
@@ -34,18 +44,21 @@ class CategoryController:
                 self.window.categories_table.insertRow(i)
                 name = QtWidgets.QTableWidgetItem(category.name)
                 self.window.categories_table.setItem(i, 0, name)
-                modify = QtWidgets.QPushButton()
-                modify.setText('Modificar')
-                modify.setProperty('id', category.id)
-                modify.setProperty('operation', 'modify')
-                modify.clicked.connect(self.handle_categories_table)
-                self.window.categories_table.setCellWidget(i, 1, modify)
-                delete = QtWidgets.QPushButton()
-                delete.setText('Eliminar')
-                delete.setProperty('id', category.id)
-                delete.setProperty('operation', 'delete')
-                delete.clicked.connect(self.handle_categories_table)
-                self.window.categories_table.setCellWidget(i, 2, delete)
+                btn_modify = QtWidgets.QPushButton()
+                btn_modify.setText('Modificar')
+                btn_modify.setProperty('id', category.id)
+                btn_modify.setProperty('operation', 'modify')
+                btn_modify.clicked.connect(self.handle_categories_table)
+                btn_modify.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
+                self.window.categories_table.setCellWidget(i, 1, btn_modify)
+
+                btn_delete = QtWidgets.QPushButton()
+                btn_delete.setText('Eliminar')
+                btn_delete.setProperty('id', category.id)
+                btn_delete.setProperty('operation', 'delete')
+                btn_delete.clicked.connect(self.handle_categories_table)
+                btn_delete.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
+                self.window.categories_table.setCellWidget(i, 2, btn_delete)
             while True:
                 row_count = self.window.categories_table.rowCount()
                 if row_count <= len(categories):

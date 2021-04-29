@@ -77,9 +77,9 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>290</x>
+     <x>10</x>
      <y>60</y>
-     <width>191</width>
+     <width>791</width>
      <height>51</height>
     </rect>
    </property>
@@ -93,6 +93,9 @@
    </property>
    <property name="text">
     <string>CATEGORIAS</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="lb_error_delete">

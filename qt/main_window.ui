@@ -6,55 +6,74 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>849</width>
     <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #12232E, stop:1 #203647);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>30</x>
       <y>110</y>
-      <width>501</width>
+      <width>771</width>
       <height>141</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <pointsize>12</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:#EEFBFB;</string>
     </property>
     <property name="text">
      <string>Programa y toma el tiempo de tus competiciones</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>290</x>
+      <x>30</x>
       <y>30</y>
-      <width>231</width>
+      <width>771</width>
       <height>61</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <pointsize>15</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:#EEFBFB;</string>
     </property>
     <property name="text">
      <string>CROSSFIT TIMER</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_open_categories">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>240</y>
+      <x>330</x>
+      <y>280</y>
       <width>181</width>
       <height>51</height>
      </rect>
@@ -63,6 +82,10 @@
      <font>
       <pointsize>10</pointsize>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:#007CC7;
+color:#EEFBFB;</string>
     </property>
     <property name="text">
      <string>CATEGORIAS</string>
@@ -71,8 +94,8 @@
    <widget class="QPushButton" name="btn_open_atletes">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>300</y>
+      <x>330</x>
+      <y>340</y>
       <width>181</width>
       <height>51</height>
      </rect>
@@ -81,6 +104,10 @@
      <font>
       <pointsize>10</pointsize>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:#007CC7;
+color:#EEFBFB;</string>
     </property>
     <property name="text">
      <string>REGISTRAR ATLETAS</string>
@@ -89,8 +116,8 @@
    <widget class="QPushButton" name="btn_open_competences">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>360</y>
+      <x>330</x>
+      <y>400</y>
       <width>181</width>
       <height>51</height>
      </rect>
@@ -100,20 +127,14 @@
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:#007CC7;
+color:#EEFBFB;</string>
+    </property>
     <property name="text">
      <string>COMPETENCIAS</string>
     </property>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>26</height>
-    </rect>
-   </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

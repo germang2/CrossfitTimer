@@ -6,6 +6,7 @@ from models.Group import Group
 from models.GroupAthlete import GroupAthlete
 from sqlalchemy import or_
 from PyQt5 import QtWidgets, QtCore
+from utils.Colors import ColorPicker
 
 
 class AthletesGroupsController:
@@ -18,6 +19,26 @@ class AthletesGroupsController:
         self.window.ed_filter_athlete.textChanged.connect(self.filter_athletes)
         self.window.btn_load_athletes.clicked.connect(self.load_all_athletes)
         self.window.btn_reload_assigned_athletes.clicked.connect(self.load_athletes_assigned)
+        self.built_style()
+
+    def built_style(self):
+        self.window.setStyleSheet(ColorPicker.BACKGROUND_GRADIENT_COLOR)
+        self.window.label.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_2.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_3.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_4.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_5.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_6.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_7.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.lb_competence_name.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.lb_competence_date.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.lb_group_name.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.lb_group_name_2.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.btn_load_athletes.setStyleSheet(ColorPicker.BUTTON_COLOR)
+        self.window.btn_reload_assigned_athletes.setStyleSheet(ColorPicker.BUTTON_COLOR)
+        self.window.table_athletes_assigned.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.athletes_table.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.ed_filter_athlete.setStyleSheet(ColorPicker.FONT_COLOR)
 
     def load_info(self):
         """ loads the information about the competence and group """
@@ -61,12 +82,14 @@ class AthletesGroupsController:
                     btn_modify.setText('Modificar')
                     btn_modify.setProperty('group_athlete', item)
                     btn_modify.clicked.connect(self.modify_dorsal)
+                    btn_modify.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
                     self.window.table_athletes_assigned.setCellWidget(i, 5, btn_modify)
 
                     btn_remove = QtWidgets.QPushButton()
                     btn_remove.setText('Quitar')
                     btn_remove.clicked.connect(self.remove_athlete_from_group)
                     btn_remove.setProperty('group_athlete', item)
+                    btn_remove.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
                     self.window.table_athletes_assigned.setCellWidget(i, 6, btn_remove)
 
                 while True:
@@ -156,6 +179,7 @@ class AthletesGroupsController:
                 btn_add.setText('Agregar')
                 btn_add.setProperty('athlete', athlete)
                 btn_add.clicked.connect(self.add_athlete_to_group)
+                btn_add.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
                 self.window.athletes_table.setCellWidget(i, 3, btn_add)
             while True:
                 row_count = self.window.athletes_table.rowCount()

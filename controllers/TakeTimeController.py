@@ -2,6 +2,7 @@ from future.backports.email.headerregistry import Group
 from datetime import datetime
 from engine import db
 from app import TakeTimeWindow
+from utils.Colors import ColorPicker
 
 from models.Athlete import Athlete
 from models.Category import Category
@@ -15,6 +16,7 @@ from managers.GroupManager import GroupManager
 
 from fpdf import FPDF
 from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QMessageBox
 
 
 class TakeTimeController:
@@ -27,11 +29,34 @@ class TakeTimeController:
         self.window.lb_competence_date.setText(self.competence.date.strftime('%Y-%m-%d'))
         self.window.ed_filter.textChanged.connect(self.filter_athletes)
         self.window.btn_update_final_time.clicked.connect(self.update_final_time)
-        self.window.btn_reset_time.clicked.connect(self.reset_time)
+        self.window.btn_reset_time.clicked.connect(self.ask_confirmation_reset_time)
         self.load_initial_data()
         self.window.cb_order_table.currentIndexChanged.connect(self.order_table_filter)
         self.window.btn_generate_pdf.clicked.connect(self.generate_pdf)
         self.load_categories()
+        self.message_box = None
+        self.btn_yes = None
+        self.btn_no = None
+        self.built_message_box()
+
+    def built_message_box(self):
+        self.message_box = QMessageBox(self.window)
+        self.message_box.setWindowTitle('Confirmar accion')
+        self.message_box.setIcon(QMessageBox.Question)
+        self.message_box.setText('Desea resetear el tiempo final?')
+
+        self.btn_yes = self.message_box.addButton('Aceptar', QMessageBox.YesRole)
+        self.btn_no = self.message_box.addButton('Cancelar', QMessageBox.NoRole)
+        self.message_box.setDefaultButton(self.btn_no)
+        self.btn_yes.setStyleSheet(f'color: {ColorPicker.SHADOW_OF_LIGHT_BLUE}')
+        self.btn_no.setStyleSheet(f'color: {ColorPicker.SHADOW_OF_LIGHT_BLUE}')
+        self.message_box.setStyleSheet(f'color: {ColorPicker.SHADOW_OF_LIGHT_BLUE}')
+
+    def ask_confirmation_reset_time(self):
+        self.message_box.setText(f"Confirmar accion")
+        self.message_box.exec_()
+        if self.message_box.clickedButton() == self.btn_yes:
+            self.reset_time()
 
     def load_initial_data(self):
         try:
@@ -86,6 +111,7 @@ class TakeTimeController:
             else:
                 btn_start.clicked.connect(self.update_initial_time)
                 btn_start.setProperty('group', athlete.group)
+            btn_start.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
             self.window.table_times.setCellWidget(i, 1, btn_start)
 
             athlete_full_name = QtWidgets.QTableWidgetItem(

@@ -5,6 +5,7 @@ from controllers.GroupsController import GroupController
 from controllers.TakeTimeController import TakeTimeController
 from models.Competence import Competence
 from utils.Validations import *
+from utils.Colors import ColorPicker
 from PyQt5 import QtWidgets
 
 
@@ -17,6 +18,26 @@ class CompetenceController:
         self.take_time_window = TakeTimeWindow()
         self.take_time_controller = None
         self.clear_tables()
+        self.built_style()
+
+    def built_style(self):
+        self.window.setStyleSheet(ColorPicker.BACKGROUND_GRADIENT_COLOR)
+        self.window.group_box_competence.setStyleSheet(ColorPicker.BACKGROUND_GRADIENT_COLOR + ColorPicker.FONT_COLOR)
+        self.window.group_box_groups.setStyleSheet(ColorPicker.BACKGROUND_GRADIENT_COLOR + ColorPicker.FONT_COLOR)
+        self.window.label.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_2.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_3.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_4.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_5.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_7.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_8.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.label_9.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.lb_competence_selected.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.btn_create_competition.setStyleSheet(ColorPicker.BUTTON_COLOR)
+        self.window.btn_get_all_competitions.setStyleSheet(ColorPicker.BUTTON_COLOR)
+        self.window.btn_create_group.setStyleSheet(ColorPicker.BUTTON_COLOR)
+        self.window.btn_see_all_groups.setStyleSheet(ColorPicker.BUTTON_COLOR)
+        self.window.competences_table.setStyleSheet(ColorPicker.FONT_COLOR)
 
     def get_all_competences(self):
         """ shows in a table all the competences created """
@@ -39,21 +60,24 @@ class CompetenceController:
                     btn_group = QtWidgets.QPushButton()
                     btn_group.setText('Grupos')
                     btn_group.setProperty('competence', competence)
+                    btn_group.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
                     btn_group.clicked.connect(self.see_groups)
                     self.window.competences_table.setCellWidget(i, 4, btn_group)
 
                     btn_see = QtWidgets.QPushButton()
                     btn_see.setText('Tiempos')
                     btn_see.setProperty('competence', competence)
+                    btn_see.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
                     btn_see.clicked.connect(self.see_competence)
                     self.window.competences_table.setCellWidget(i, 5, btn_see)
 
-                    modify = QtWidgets.QPushButton()
-                    modify.setText('Modificar')
-                    modify.setProperty('id', competence.id)
-                    modify.setProperty('operation', 'modify')
-                    modify.clicked.connect(self.handle_competences_table)
-                    self.window.competences_table.setCellWidget(i, 6, modify)
+                    btn_modify = QtWidgets.QPushButton()
+                    btn_modify.setText('Modificar')
+                    btn_modify.setProperty('id', competence.id)
+                    btn_modify.setProperty('operation', 'modify')
+                    btn_modify.setStyleSheet(ColorPicker.BUTTON_TABLE_COLOR)
+                    btn_modify.clicked.connect(self.handle_competences_table)
+                    self.window.competences_table.setCellWidget(i, 6, btn_modify)
         except Exception as e:
             print('Error loading all competences')
             print(e)
