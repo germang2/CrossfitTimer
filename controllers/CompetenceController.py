@@ -38,6 +38,8 @@ class CompetenceController:
         self.window.btn_create_group.setStyleSheet(ColorPicker.BUTTON_COLOR)
         self.window.btn_see_all_groups.setStyleSheet(ColorPicker.BUTTON_COLOR)
         self.window.competences_table.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.competences_table.horizontalHeader().setStyleSheet(ColorPicker.TABLE_HORIZONTAL_HEADER_COLOR)
+        self.window.competences_table.verticalHeader().setStyleSheet(ColorPicker.TABLE_VERTICAL_HEADER_COLOR)
 
     def get_all_competences(self):
         """ shows in a table all the competences created """

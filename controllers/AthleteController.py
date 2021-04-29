@@ -42,6 +42,8 @@ class AthletesController:
         self.window.athletes_table.setStyleSheet(ColorPicker.FONT_COLOR)
         self.window.btn_get_all_athletes.setStyleSheet(ColorPicker.BUTTON_COLOR)
         self.window.btn_add_atlete.setStyleSheet(ColorPicker.BUTTON_COLOR)
+        self.window.athletes_table.horizontalHeader().setStyleSheet(ColorPicker.TABLE_HORIZONTAL_HEADER_COLOR)
+        self.window.athletes_table.verticalHeader().setStyleSheet(ColorPicker.TABLE_VERTICAL_HEADER_COLOR)
 
     def create_athlete(self):
         """ Creates a new athlete with all fields """

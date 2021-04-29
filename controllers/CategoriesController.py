@@ -25,6 +25,8 @@ class CategoryController:
         self.window.btn_get_all_categories.setStyleSheet(ColorPicker.BUTTON_COLOR)
         self.window.ed_category.setStyleSheet(ColorPicker.FONT_COLOR)
         self.window.categories_table.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.categories_table.horizontalHeader().setStyleSheet(ColorPicker.TABLE_HORIZONTAL_HEADER_COLOR)
+        self.window.categories_table.verticalHeader().setStyleSheet(ColorPicker.TABLE_VERTICAL_HEADER_COLOR)
 
     def create_category(self):
         text = self.window.ed_category.text()

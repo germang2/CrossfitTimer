@@ -39,6 +39,10 @@ class AthletesGroupsController:
         self.window.table_athletes_assigned.setStyleSheet(ColorPicker.FONT_COLOR)
         self.window.athletes_table.setStyleSheet(ColorPicker.FONT_COLOR)
         self.window.ed_filter_athlete.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.table_athletes_assigned.horizontalHeader().setStyleSheet(ColorPicker.TABLE_HORIZONTAL_HEADER_COLOR)
+        self.window.table_athletes_assigned.verticalHeader().setStyleSheet(ColorPicker.TABLE_VERTICAL_HEADER_COLOR)
+        self.window.athletes_table.horizontalHeader().setStyleSheet(ColorPicker.TABLE_HORIZONTAL_HEADER_COLOR)
+        self.window.athletes_table.verticalHeader().setStyleSheet(ColorPicker.TABLE_VERTICAL_HEADER_COLOR)
 
     def load_info(self):
         """ loads the information about the competence and group """

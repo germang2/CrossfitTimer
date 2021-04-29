@@ -28,6 +28,8 @@ class GroupController:
     def built_style(self):
         self.window.setStyleSheet(ColorPicker.BACKGROUND_GRADIENT_COLOR)
         self.window.groups_table.setStyleSheet(ColorPicker.FONT_COLOR)
+        self.window.groups_table.horizontalHeader().setStyleSheet(ColorPicker.TABLE_HORIZONTAL_HEADER_COLOR)
+        self.window.groups_table.verticalHeader().setStyleSheet(ColorPicker.TABLE_VERTICAL_HEADER_COLOR)
 
     def create_group(self):
         """ validate data and creates a new Group """

@@ -38,6 +38,12 @@ class TakeTimeController:
         self.btn_yes = None
         self.btn_no = None
         self.built_message_box()
+        self.built_style()
+
+    def built_style(self):
+        self.window.setStyleSheet(ColorPicker.BACKGROUND_GRADIENT_COLOR)
+        self.window.table_times.horizontalHeader().setStyleSheet(ColorPicker.TABLE_HORIZONTAL_HEADER_COLOR)
+        self.window.table_times.verticalHeader().setStyleSheet(ColorPicker.TABLE_VERTICAL_HEADER_COLOR)
 
     def built_message_box(self):
         self.message_box = QMessageBox(self.window)
