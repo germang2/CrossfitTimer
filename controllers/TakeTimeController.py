@@ -24,7 +24,7 @@ class TakeTimeController:
         self.category_id_create = {}
         self.window.ed_filter.setText('')
         self.window.lb_competence_name.setText(self.competence.name)
-        self.window.lb_competence_date.setText(self.competence.date.strftime('%H:%M:%S'))
+        self.window.lb_competence_date.setText(self.competence.date.strftime('%Y-%m-%d'))
         self.window.ed_filter.textChanged.connect(self.filter_athletes)
         self.window.btn_update_final_time.clicked.connect(self.update_final_time)
         self.load_initial_data()
@@ -235,10 +235,10 @@ class TakeTimeController:
             print(e)
 
     def generate_pdf(self):
-        try:
-            index_category = self.window.cb_categories.currentIndex()
-            category_id = self.category_id_create[index_category]
+        index_category = self.window.cb_categories.currentIndex()
+        category_id = self.category_id_create[index_category]
 
+        try:
             groups = GroupManager.get_groups_by_filters(
                 filters={
                     Group.competence_id == self.competence.id
@@ -326,6 +326,11 @@ class TakeTimeController:
                         pdf.ln(2 * th)
 
                     pdf.output(f'{self.competence.name}_{category_name}.pdf', 'F')
+                    self.window.lb_msg.setStyleSheet("color: green;")
                     self.window.lb_msg.setText(f'PDF para categoria {category_name} generado con exito')
+            else:
+                category_name = db.session.query(Category).filter(Category.id == category_id).first().name
+                self.window.lb_msg.setStyleSheet("color: red;")
+                self.window.lb_msg.setText(f'No hay atletas de la categoria {category_name} para esta competencia')
         except Exception as e:
             print(e)
