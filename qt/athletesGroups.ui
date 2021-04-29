@@ -329,7 +329,7 @@
     <rect>
      <x>646</x>
      <y>300</y>
-     <width>211</width>
+     <width>171</width>
      <height>21</height>
     </rect>
    </property>
@@ -345,9 +345,9 @@
   <widget class="QLabel" name="lb_group_name_2">
    <property name="geometry">
     <rect>
-     <x>860</x>
+     <x>810</x>
      <y>300</y>
-     <width>55</width>
+     <width>81</width>
      <height>21</height>
     </rect>
    </property>

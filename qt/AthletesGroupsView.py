@@ -131,13 +131,13 @@ class Ui_AthletesGroups(object):
         self.label_5.setFont(font)
         self.label_5.setObjectName("label_5")
         self.label_6 = QtWidgets.QLabel(AthletesGroups)
-        self.label_6.setGeometry(QtCore.QRect(646, 300, 211, 21))
+        self.label_6.setGeometry(QtCore.QRect(646, 300, 171, 21))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.label_6.setFont(font)
         self.label_6.setObjectName("label_6")
         self.lb_group_name_2 = QtWidgets.QLabel(AthletesGroups)
-        self.lb_group_name_2.setGeometry(QtCore.QRect(860, 300, 55, 21))
+        self.lb_group_name_2.setGeometry(QtCore.QRect(810, 300, 81, 21))
         self.lb_group_name_2.setText("")
         self.lb_group_name_2.setObjectName("lb_group_name_2")
         self.lb_alert = QtWidgets.QLabel(AthletesGroups)
@@ -184,13 +184,3 @@ class Ui_AthletesGroups(object):
         self.btn_load_athletes.setText(_translate("AthletesGroups", "Ver todos"))
         self.label_5.setText(_translate("AthletesGroups", "FECHA:"))
         self.label_6.setText(_translate("AthletesGroups", "Atletas asignados al grupo: "))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    AthletesGroups = QtWidgets.QDialog()
-    ui = Ui_AthletesGroups()
-    ui.setupUi(AthletesGroups)
-    AthletesGroups.show()
-    sys.exit(app.exec_())

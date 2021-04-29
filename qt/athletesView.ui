@@ -234,8 +234,8 @@
   <widget class="QTableWidget" name="athletes_table">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>410</y>
+     <x>90</x>
+     <y>420</y>
      <width>951</width>
      <height>291</height>
     </rect>
@@ -578,8 +578,8 @@
   <widget class="QLabel" name="lb_error_delete">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>650</y>
+     <x>90</x>
+     <y>720</y>
      <width>951</width>
      <height>20</height>
     </rect>

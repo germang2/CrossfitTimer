@@ -42,6 +42,16 @@ class TakeTimeController:
 
     def built_style(self):
         self.window.setStyleSheet(ColorPicker.BACKGROUND_GRADIENT_COLOR)
+        self.window.label_2.setStyleSheet(ColorPicker.LABEL_COLOR)
+        self.window.label_3.setStyleSheet(ColorPicker.LABEL_COLOR)
+        self.window.label_5.setStyleSheet(ColorPicker.LABEL_COLOR)
+        self.window.label_7.setStyleSheet(ColorPicker.LABEL_COLOR)
+        self.window.label_8.setStyleSheet(ColorPicker.LABEL_COLOR)
+        self.window.lb_msg.setStyleSheet(ColorPicker.LABEL_COLOR)
+        self.window.groupBox.setStyleSheet(ColorPicker.LABEL_COLOR)
+        self.window.groupBox_2.setStyleSheet(ColorPicker.LABEL_COLOR)
+        self.window.lb_competence_name.setStyleSheet(ColorPicker.LABEL_COLOR)
+        self.window.lb_competence_date.setStyleSheet(ColorPicker.LABEL_COLOR)
         self.window.table_times.horizontalHeader().setStyleSheet(ColorPicker.TABLE_HORIZONTAL_HEADER_COLOR)
         self.window.table_times.verticalHeader().setStyleSheet(ColorPicker.TABLE_VERTICAL_HEADER_COLOR)
 

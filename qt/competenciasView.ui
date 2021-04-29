@@ -122,9 +122,9 @@
   <widget class="QLabel" name="lb_competence_selected">
    <property name="geometry">
     <rect>
-     <x>840</x>
+     <x>800</x>
      <y>160</y>
-     <width>381</width>
+     <width>491</width>
      <height>41</height>
     </rect>
    </property>
@@ -140,33 +140,12 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_8">
-   <property name="geometry">
-    <rect>
-     <x>930</x>
-     <y>210</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string>Nombre</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="lb_group_name_error">
    <property name="geometry">
     <rect>
      <x>860</x>
      <y>280</y>
-     <width>191</width>
+     <width>161</width>
      <height>20</height>
     </rect>
    </property>
@@ -204,46 +183,6 @@
    </property>
    <property name="styleSheet">
     <string notr="true"/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lb_group_order_error">
-   <property name="geometry">
-    <rect>
-     <x>1020</x>
-     <y>280</y>
-     <width>151</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_9">
-   <property name="geometry">
-    <rect>
-     <x>1080</x>
-     <y>210</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string>Orden</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_create_group">
@@ -312,9 +251,9 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>160</y>
-      <width>81</width>
+      <x>150</x>
+      <y>170</y>
+      <width>191</width>
       <height>31</height>
      </rect>
     </property>
@@ -325,6 +264,9 @@
     </property>
     <property name="text">
      <string>Fecha</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLineEdit" name="ed_time">
@@ -340,9 +282,9 @@
    <widget class="QLabel" name="lb_date_error">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>150</x>
       <y>230</y>
-      <width>351</width>
+      <width>191</width>
       <height>20</height>
      </rect>
     </property>
@@ -359,9 +301,9 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>160</y>
-      <width>81</width>
+      <x>400</x>
+      <y>170</y>
+      <width>191</width>
       <height>31</height>
      </rect>
     </property>
@@ -372,6 +314,9 @@
     </property>
     <property name="text">
      <string>Hora</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLineEdit" name="ed_name">
@@ -416,9 +361,9 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>70</y>
-      <width>81</width>
+      <x>150</x>
+      <y>80</y>
+      <width>191</width>
       <height>31</height>
      </rect>
     </property>
@@ -429,6 +374,9 @@
     </property>
     <property name="text">
      <string>Nombre</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLineEdit" name="ed_place">
@@ -444,9 +392,9 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>70</y>
-      <width>81</width>
+      <x>400</x>
+      <y>80</y>
+      <width>191</width>
       <height>31</height>
      </rect>
     </property>
@@ -457,6 +405,9 @@
     </property>
     <property name="text">
      <string>Lugar</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="lb_name_error">
@@ -558,6 +509,73 @@
      <string>Recargar</string>
     </property>
    </widget>
+   <widget class="QLabel" name="lb_group_order_error">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>270</y>
+      <width>141</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>210</y>
+      <width>161</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Nombre</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>210</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Orden</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
   </widget>
   <zorder>group_box_groups</zorder>
   <zorder>group_box_competence</zorder>
@@ -566,12 +584,9 @@
   <zorder>btn_get_all_competitions</zorder>
   <zorder>label_7</zorder>
   <zorder>lb_competence_selected</zorder>
-  <zorder>label_8</zorder>
   <zorder>lb_group_name_error</zorder>
   <zorder>ed_group_name</zorder>
   <zorder>ed_group_order</zorder>
-  <zorder>lb_group_order_error</zorder>
-  <zorder>label_9</zorder>
   <zorder>btn_create_group</zorder>
   <zorder>lb_error_delete</zorder>
  </widget>
