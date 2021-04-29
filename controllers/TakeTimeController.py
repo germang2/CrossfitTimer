@@ -27,6 +27,7 @@ class TakeTimeController:
         self.window.lb_competence_date.setText(self.competence.date.strftime('%Y-%m-%d'))
         self.window.ed_filter.textChanged.connect(self.filter_athletes)
         self.window.btn_update_final_time.clicked.connect(self.update_final_time)
+        self.window.btn_reset_time.clicked.connect(self.reset_time)
         self.load_initial_data()
         self.window.cb_order_table.currentIndexChanged.connect(self.order_table_filter)
         self.window.btn_generate_pdf.clicked.connect(self.generate_pdf)
@@ -178,6 +179,32 @@ class TakeTimeController:
             print('Error updating final time and total time')
             print(e)
             self.window.ed_filter.setText('')
+
+    def reset_time(self):
+        try:
+            filter_text = self.window.ed_filter.text()
+            filter_text.strip()
+            athletes_groups_list = []
+            if filter_text[-1] == ',':
+                filter_text = filter_text[:-1]
+            filter_list = filter_text.split(',')
+            groups = db.session.query(Group).filter_by(competence_id=self.competence.id).order_by(
+                Group.order.asc()).all()
+            group_list = [g.id for g in groups]
+            for f in set(filter_list):
+                athletes_groups = db.session.query(GroupAthlete).filter(GroupAthlete.dorsal.ilike(f)) \
+                    .join(Group).filter(Group.id.in_(group_list)).order_by('dorsal').all()
+                athletes_groups_list += athletes_groups
+            if athletes_groups_list:
+                for athlete in athletes_groups_list:
+                    athlete.final_time = None
+                    athlete.total_time = None
+                    db.session.add(athlete)
+                db.session.commit()
+                self.window.ed_filter.setText('')
+        except Exception as e:
+            print('Error reseting time')
+            print(e)
 
     def order_table_filter(self):
         try:
