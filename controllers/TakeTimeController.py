@@ -304,6 +304,7 @@ class TakeTimeController:
             print(e)
 
     def generate_pdf(self):
+        # TODO add column club next to category
         index_category = self.window.cb_categories.currentIndex()
         category_id = self.category_id_create[index_category]
 
@@ -339,18 +340,19 @@ class TakeTimeController:
                     epw = pdf.w - 2 * pdf.l_margin
                     # Set column width to 1/4 of effective page width to distribute content
                     # evenly across table and page
-                    headers = ['Grupo', 'Identificacion', 'Nombre', 'Categoria', 'Dorsal', 'Hora Inicial',
+                    headers = ['Grupo', 'Identificacion', 'Nombre', 'Categoria', 'Club', 'Dorsal', 'Hora Inicial',
                                'Hora Final', 'Tiempo total']
                     col_width = epw / 4
                     column_width = {
                         0: col_width * 0.3,
-                        1: col_width * 0.5,
+                        1: col_width * 0.38,
                         2: col_width * 1.1,
-                        3: col_width * 0.45,
-                        4: col_width * 0.3,
-                        5: col_width * 0.4,
+                        3: col_width * 0.38,
+                        4: col_width * 0.38,
+                        5: col_width * 0.3,
                         6: col_width * 0.4,
-                        7: col_width * 0.4
+                        7: col_width * 0.4,
+                        8: col_width * 0.4
                     }
                     pdf.set_font('Arial', 'B', 14)
                     pdf.add_page()
@@ -380,7 +382,7 @@ class TakeTimeController:
                             athlete.athlete.nit,
                             f'{athlete.athlete.name} {athlete.athlete.last_name}'[:32],
                             athlete.athlete.category.name[:11],
-
+                            athlete.athlete.club[:11],
                             athlete.dorsal,
                             '' if athlete.initial_time is None else athlete.initial_time.strftime('%H:%M:%S.%f')[:-3],
                             '' if athlete.final_time is None else athlete.final_time.strftime('%H:%M:%S.%f')[:-3],
