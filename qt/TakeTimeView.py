@@ -124,7 +124,7 @@ class Ui_TakeTime(object):
         self.ed_filter_group.setGeometry(QtCore.QRect(350, 230, 181, 31))
         self.ed_filter_group.setObjectName("ed_filter_group")
         self.label_6 = QtWidgets.QLabel(TakeTime)
-        self.label_6.setGeometry(QtCore.QRect(360, 210, 181, 16))
+        self.label_6.setGeometry(QtCore.QRect(340, 210, 221, 16))
         self.label_6.setObjectName("label_6")
         self.ed_filter_2 = QtWidgets.QLineEdit(TakeTime)
         self.ed_filter_2.setGeometry(QtCore.QRect(640, 190, 181, 31))
@@ -189,16 +189,6 @@ class Ui_TakeTime(object):
         self.label_7.setText(_translate("TakeTime", "Ordernar"))
         self.btn_reset_time.setText(_translate("TakeTime", "Resetear"))
         self.btn_pdf.setText(_translate("TakeTime", "Generar PDF"))
-        self.label_6.setText(_translate("TakeTime", "Filtrar por grupo/oleada"))
+        self.label_6.setText(_translate("TakeTime", "Filtrar por grupo/oleada/nombre/categoria"))
         self.btn_update_final_time_2.setText(_translate("TakeTime", "✔"))
         self.btn_update_final_time_3.setText(_translate("TakeTime", "✔"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    TakeTime = QtWidgets.QDialog()
-    ui = Ui_TakeTime()
-    ui.setupUi(TakeTime)
-    TakeTime.show()
-    sys.exit(app.exec_())

@@ -3,6 +3,7 @@ from future.backports.email.headerregistry import Group
 from engine import db
 from app import TakeTimeWindow
 from models.Athlete import Athlete
+from models.Category import Category
 from models.Group import Group
 from models.GroupAthlete import GroupAthlete
 from models.Competence import Competence
@@ -13,6 +14,7 @@ from managers.GroupManager import GroupManager
 from managers.GroupAthleteManager import GroupAthleteManager
 from fpdf import FPDF
 from PyQt5.QtWidgets import QMessageBox
+from sqlalchemy import or_
 
 
 class TakeTimeController:
@@ -121,9 +123,20 @@ class TakeTimeController:
                 group_list = [g.id for g in groups]
                 filters_list = filter_text.split(',')
                 athletes_list = []
+
                 for f in set(filters_list):
+                    param_to_filter = f'%{f}%'
+                    category_list = db.session.query(Category).filter(Category.name.ilike(param_to_filter)).all()
+                    category_id_list = [cat.id for cat in category_list]
                     athletes_groups = GroupAthleteManager.filter_athletes_by_dorsal(
-                        filters={Group.name.ilike(f), Group.id.in_(group_list)},
+                        filters={
+                            or_(
+                                Group.name.ilike(param_to_filter),
+                                Athlete.full_name.ilike(param_to_filter),
+                                Athlete.category_id.in_(category_id_list)
+                            ),
+                            Group.id.in_(group_list)
+                        },
                     )
                     athletes_list += athletes_groups
                 if athletes_list:
