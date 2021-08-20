@@ -18,7 +18,7 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QLabel" name="label_7">
+  <widget class="QLabel" name="lb_title">
    <property name="geometry">
     <rect>
      <x>10</x>

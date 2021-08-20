@@ -6,6 +6,7 @@ from models.GroupAthlete import GroupAthlete
 from utils.Validations import *
 from PyQt5 import QtWidgets
 from sqlalchemy import or_
+from utils.style_sheet import ButtonStyleSheet
 
 
 class AthletesController:
@@ -18,6 +19,8 @@ class AthletesController:
         self.category_id_modify = {}
         self.load_categories()
         self.clear_table()
+        self.window.athletes_table.setColumnWidth(0, 380)
+        self.set_style_sheet()
 
     def create_athlete(self):
         """ Creates a new athlete with all fields """
@@ -79,18 +82,21 @@ class AthletesController:
                         self.category_id_modify[j] = category.id
                         if category.id == athlete.category_id:
                             cb_categories.setCurrentIndex(j)
+                    cb_categories.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
                     self.window.athletes_table.setCellWidget(i, 3, cb_categories)
                     modify = QtWidgets.QPushButton()
                     modify.setText('Modificar')
                     modify.setProperty('id', athlete.id)
                     modify.setProperty('operation', 'modify')
                     modify.clicked.connect(self.handle_athletes_table)
+                    modify.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
                     self.window.athletes_table.setCellWidget(i, 4, modify)
                     delete = QtWidgets.QPushButton()
                     delete.setText('Eliminar')
                     delete.setProperty('id', athlete.id)
                     delete.setProperty('operation', 'delete')
                     delete.clicked.connect(self.handle_athletes_table)
+                    delete.setStyleSheet(ButtonStyleSheet.BUTTON_ERROR)
                     self.window.athletes_table.setCellWidget(i, 5, delete)
 
             while True:
@@ -185,6 +191,12 @@ class AthletesController:
         for i in range(self.window.athletes_table.rowCount()):
             self.window.athletes_table.removeRow(i)
 
+    def set_style_sheet(self):
+        self.window.lb_title.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.btn_get_all_athletes.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.btn_add_atlete.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.cb_categories.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+
 
 def validate_data(full_name, club, nit):
     """ validate each field for an athlete """
@@ -213,3 +225,5 @@ def validate_data(full_name, club, nit):
         print(e)
 
     return errors
+
+

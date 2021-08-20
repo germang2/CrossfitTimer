@@ -6,6 +6,7 @@ from controllers.TakeTimeController import TakeTimeController
 from models.Competence import Competence
 from utils.Validations import *
 from PyQt5 import QtWidgets
+from utils.style_sheet import ButtonStyleSheet
 
 
 class CompetenceController:
@@ -17,6 +18,7 @@ class CompetenceController:
         self.take_time_window = TakeTimeWindow()
         self.take_time_controller = None
         self.clear_tables()
+        self.set_style_sheet()
 
     def get_all_competences(self):
         """ shows in a table all the competences created """
@@ -40,12 +42,14 @@ class CompetenceController:
                     btn_group.setText('Grupos')
                     btn_group.setProperty('competence', competence)
                     btn_group.clicked.connect(self.see_groups)
+                    btn_group.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
                     self.window.competences_table.setCellWidget(i, 4, btn_group)
 
                     btn_see = QtWidgets.QPushButton()
                     btn_see.setText('Tiempos')
                     btn_see.setProperty('competence', competence)
                     btn_see.clicked.connect(self.see_competence)
+                    btn_see.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
                     self.window.competences_table.setCellWidget(i, 5, btn_see)
 
                     modify = QtWidgets.QPushButton()
@@ -53,6 +57,7 @@ class CompetenceController:
                     modify.setProperty('id', competence.id)
                     modify.setProperty('operation', 'modify')
                     modify.clicked.connect(self.handle_competences_table)
+                    modify.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
                     self.window.competences_table.setCellWidget(i, 6, modify)
         except Exception as e:
             print('Error loading all competences')
@@ -172,6 +177,14 @@ class CompetenceController:
         self.window.groups_table.clearContents()
         for i in range(self.window.groups_table.rowCount()):
             self.window.groups_table.removeRow(i)
+
+    def set_style_sheet(self):
+        self.window.lb_title.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.lb_subtitle.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.btn_get_all_competitions.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.btn_create_competition.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.btn_create_group.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.btn_see_all_groups.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
 
 
 def validate_data(name, place, date_competence, time):

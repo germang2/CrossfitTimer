@@ -14,6 +14,7 @@ from managers.GroupManager import GroupManager
 from managers.GroupAthleteManager import GroupAthleteManager
 from fpdf import FPDF
 from PyQt5.QtWidgets import QMessageBox
+from utils.style_sheet import ButtonStyleSheet
 from sqlalchemy import or_
 
 
@@ -36,6 +37,7 @@ class TakeTimeController:
         self.window.cb_order_table.currentIndexChanged.connect(self.order_table_filter)
         self.window.btn_reset_time.clicked.connect(self.reset_time)
         self.window.btn_pdf.clicked.connect(self.generate_pdf)
+        self.set_style_sheet()
 
     def on_key_ed_filter(self, e):
         if e.key() == QtCore.Qt.Key_Return:
@@ -162,6 +164,7 @@ class TakeTimeController:
             else:
                 btn_start.clicked.connect(self.update_initial_time)
                 btn_start.setProperty('group', athlete.group)
+            btn_start.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
             self.window.table_times.setCellWidget(i, 1, btn_start)
 
             athlete_full_name = QtWidgets.QTableWidgetItem(
@@ -425,3 +428,8 @@ class TakeTimeController:
                     self.window.lb_pdf.setText('PDF generados con exito')
         except Exception as e:
             print(e)
+
+    def set_style_sheet(self):
+        self.window.lb_title.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.btn_pdf.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.cb_order_table.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)

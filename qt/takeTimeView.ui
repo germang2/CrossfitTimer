@@ -13,12 +13,12 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="lb_title">
    <property name="geometry">
     <rect>
-     <x>420</x>
+     <x>0</x>
      <y>40</y>
-     <width>361</width>
+     <width>1161</width>
      <height>51</height>
     </rect>
    </property>

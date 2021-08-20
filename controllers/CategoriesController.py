@@ -1,8 +1,14 @@
-from engine import db
-from PyQt5 import QtWidgets
-from models.Category import Category
 from models.Athlete import Athlete
+
 from app import CategoriesWindow
+
+from engine import db
+
+from PyQt5 import QtWidgets
+
+from models.Category import Category
+
+from utils.style_sheet import ButtonStyleSheet
 
 
 class CategoryController:
@@ -15,6 +21,7 @@ class CategoryController:
         self.window.btn_create_category.clicked.connect(self.create_category)
         self.window.btn_get_all_categories.clicked.connect(self.get_all_categories)
         self.clear_table()
+        self.set_style_sheet()
 
     def create_category(self):
         text = self.window.ed_category.text()
@@ -39,12 +46,14 @@ class CategoryController:
                 modify.setProperty('id', category.id)
                 modify.setProperty('operation', 'modify')
                 modify.clicked.connect(self.handle_categories_table)
+                modify.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
                 self.window.categories_table.setCellWidget(i, 1, modify)
                 delete = QtWidgets.QPushButton()
                 delete.setText('Eliminar')
                 delete.setProperty('id', category.id)
                 delete.setProperty('operation', 'delete')
                 delete.clicked.connect(self.handle_categories_table)
+                delete.setStyleSheet(ButtonStyleSheet.BUTTON_ERROR)
                 self.window.categories_table.setCellWidget(i, 2, delete)
             while True:
                 row_count = self.window.categories_table.rowCount()
@@ -90,3 +99,9 @@ class CategoryController:
     def clear_table(self):
         for i in range(self.window.categories_table.rowCount()):
             self.window.categories_table.removeRow(i)
+
+    def set_style_sheet(self):
+        self.window.setFixedWidth(self.window.geometry().width())
+        self.window.lb_title.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.btn_get_all_categories.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.btn_create_category.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)

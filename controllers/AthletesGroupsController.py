@@ -10,6 +10,7 @@ from PyQt5 import QtWidgets, QtCore
 from managers.GroupAthleteManager import GroupAthleteManager
 from managers.AthleteManager import AthleteManager
 from managers.GroupManager import GroupManager
+from utils.style_sheet import ButtonStyleSheet
 
 
 class AthletesGroupsController:
@@ -30,6 +31,7 @@ class AthletesGroupsController:
         self.window.lb_group_name.setText(self.group.name)
         self.window.lb_group_name_2.setText(self.group.name)
         self.load_athletes_assigned()
+        self.set_style_sheet()
 
     def load_athletes_assigned(self):
         """ loads all athletes for the current group """
@@ -65,12 +67,14 @@ class AthletesGroupsController:
                     btn_modify.setText('Modificar')
                     btn_modify.setProperty('group_athlete', item)
                     btn_modify.clicked.connect(self.modify_dorsal)
+                    btn_modify.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
                     self.window.table_athletes_assigned.setCellWidget(i, 4, btn_modify)
 
                     btn_remove = QtWidgets.QPushButton()
                     btn_remove.setText('Quitar')
                     btn_remove.clicked.connect(self.remove_athlete_from_group)
                     btn_remove.setProperty('group_athlete', item)
+                    btn_remove.setStyleSheet(ButtonStyleSheet.BUTTON_ERROR)
                     self.window.table_athletes_assigned.setCellWidget(i, 5, btn_remove)
 
                 while True:
@@ -168,6 +172,7 @@ class AthletesGroupsController:
                 btn_add.setText('Agregar')
                 btn_add.setProperty('athlete', athlete)
                 btn_add.clicked.connect(self.add_athlete_to_group)
+                btn_add.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
                 self.window.athletes_table.setCellWidget(i, 3, btn_add)
             while True:
                 row_count = self.window.athletes_table.rowCount()
@@ -208,3 +213,7 @@ class AthletesGroupsController:
         for i in range(self.window.athletes_table.rowCount()):
             self.window.athletes_table.removeRow(i)
 
+    def set_style_sheet(self):
+        self.window.lb_title.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.btn_load_athletes.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.btn_reload_assigned_athletes.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)

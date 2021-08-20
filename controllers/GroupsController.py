@@ -7,6 +7,7 @@ from utils.Validations import *
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from controllers.AthletesGroupsController import AthletesGroupsController
+from utils.style_sheet import ButtonStyleSheet
 
 
 class GroupController:
@@ -95,18 +96,21 @@ class GroupController:
                     btn_see.clicked.connect(self.open_assign_athlete)
                     btn_see.setProperty('competence', self.competence)
                     btn_see.setProperty('group', group)
+                    btn_see.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
                     self.window.groups_table.setCellWidget(i, 2, btn_see)
 
                     modify = QtWidgets.QPushButton()
                     modify.setText('Modificar')
                     modify.clicked.connect(self.modify_group)
                     modify.setProperty('id', group.id)
+                    modify.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
                     self.window.groups_table.setCellWidget(i, 3, modify)
 
                     delete = QtWidgets.QPushButton()
                     delete.setText('Eliminar')
                     delete.clicked.connect(self.ask_confirmation)
                     delete.setProperty('id', group.id)
+                    delete.setStyleSheet(ButtonStyleSheet.BUTTON_ERROR)
                     self.window.groups_table.setCellWidget(i, 4, delete)
                 while True:
                     row_count = self.window.groups_table.rowCount()

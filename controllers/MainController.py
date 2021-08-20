@@ -3,6 +3,7 @@ from app import CategoriesWindow, AthletesWindow, CompetencesWindow
 from controllers.AthleteController import AthletesController
 from controllers.CategoriesController import CategoryController
 from controllers.CompetenceController import CompetenceController
+from utils.style_sheet import ButtonStyleSheet
 
 
 class MainController:
@@ -43,11 +44,7 @@ class MainController:
             border-image: url("resources/img/background.jpg");
         """
         self.window.background_image.setStyleSheet(style_sheet)
-        button_style_sheet = """
-            background-color: rgba(0,23,39,240);
-            color: #f7f7f7;
-        """
-        self.window.btn_open_categories.setStyleSheet(button_style_sheet)
-        self.window.btn_open_atletes.setStyleSheet(button_style_sheet)
-        self.window.btn_open_competences.setStyleSheet(button_style_sheet)
-        self.window.label.setStyleSheet(button_style_sheet)
+        self.window.btn_open_categories.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.btn_open_atletes.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.btn_open_competences.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        self.window.label.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)

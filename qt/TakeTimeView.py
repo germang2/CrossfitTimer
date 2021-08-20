@@ -15,13 +15,13 @@ class Ui_TakeTime(object):
     def setupUi(self, TakeTime):
         TakeTime.setObjectName("TakeTime")
         TakeTime.resize(1166, 697)
-        self.label = QtWidgets.QLabel(TakeTime)
-        self.label.setGeometry(QtCore.QRect(420, 40, 361, 51))
+        self.lb_title = QtWidgets.QLabel(TakeTime)
+        self.lb_title.setGeometry(QtCore.QRect(0, 40, 1161, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.label.setFont(font)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName("label")
+        self.lb_title.setFont(font)
+        self.lb_title.setAlignment(QtCore.Qt.AlignCenter)
+        self.lb_title.setObjectName("lb_title")
         self.label_2 = QtWidgets.QLabel(TakeTime)
         self.label_2.setGeometry(QtCore.QRect(250, 120, 141, 31))
         font = QtGui.QFont()
@@ -158,7 +158,7 @@ class Ui_TakeTime(object):
     def retranslateUi(self, TakeTime):
         _translate = QtCore.QCoreApplication.translate
         TakeTime.setWindowTitle(_translate("TakeTime", "Dialog"))
-        self.label.setText(_translate("TakeTime", "TOMAR TIEMPOS"))
+        self.lb_title.setText(_translate("TakeTime", "TOMAR TIEMPOS"))
         self.label_2.setText(_translate("TakeTime", "COMPETENCIA:"))
         self.label_3.setText(_translate("TakeTime", "FECHA:"))
         item = self.table_times.horizontalHeaderItem(0)

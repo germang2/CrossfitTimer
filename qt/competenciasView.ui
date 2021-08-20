@@ -13,12 +13,12 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="lb_title">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>40</x>
      <y>30</y>
-     <width>311</width>
+     <width>731</width>
      <height>41</height>
     </rect>
    </property>
@@ -32,6 +32,9 @@
    </property>
    <property name="text">
     <string>CONFIGURAR COMPETENCIAS</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -226,7 +229,7 @@
    <property name="geometry">
     <rect>
      <x>260</x>
-     <y>270</y>
+     <y>280</y>
      <width>171</width>
      <height>41</height>
     </rect>
@@ -293,12 +296,12 @@
     <string>CONSULTAR</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_7">
+  <widget class="QLabel" name="lb_subtitle">
    <property name="geometry">
     <rect>
-     <x>870</x>
+     <x>800</x>
      <y>100</y>
-     <width>311</width>
+     <width>461</width>
      <height>41</height>
     </rect>
    </property>
