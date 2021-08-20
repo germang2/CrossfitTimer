@@ -16,13 +16,14 @@ class Ui_AthletesView(object):
         AthletesView.setObjectName("AthletesView")
         AthletesView.resize(1088, 764)
         self.label = QtWidgets.QLabel(AthletesView)
-        self.label.setGeometry(QtCore.QRect(440, 30, 231, 41))
+        self.label.setGeometry(QtCore.QRect(10, 30, 1071, 41))
         font = QtGui.QFont()
         font.setFamily("MS Sans Serif")
         font.setPointSize(12)
         font.setBold(True)
         font.setWeight(75)
         self.label.setFont(font)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(AthletesView)
         self.label_2.setGeometry(QtCore.QRect(190, 80, 161, 41))
@@ -209,13 +210,3 @@ class Ui_AthletesView(object):
         self.label_8.setText(_translate("AthletesView", "Cedula"))
         self.label_9.setText(_translate("AthletesView", "Requiere minimo 3 caracteres"))
         self.label_10.setText(_translate("AthletesView", "Busca por nombre, club y categoria"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    AthletesView = QtWidgets.QDialog()
-    ui = Ui_AthletesView()
-    ui.setupUi(AthletesView)
-    AthletesView.show()
-    sys.exit(app.exec_())

@@ -23,6 +23,8 @@ class MainController:
         self.competences_window = CompetencesWindow()
         self.competences_controller = None
 
+        self.set_style_sheet()
+
     def open_category_window(self):
         self.categories_controller = CategoryController(self.category_window)
         self.category_window.show()
@@ -34,3 +36,18 @@ class MainController:
     def open_competences_window(self):
         self.competences_controller = CompetenceController(self.competences_window)
         self.competences_window.show()
+
+    def set_style_sheet(self):
+        self.window.setFixedSize(self.window.geometry().width(), self.window.geometry().height())
+        style_sheet = f"""
+            border-image: url("resources/img/background.jpg");
+        """
+        self.window.background_image.setStyleSheet(style_sheet)
+        button_style_sheet = """
+            background-color: rgba(0,23,39,240);
+            color: #f7f7f7;
+        """
+        self.window.btn_open_categories.setStyleSheet(button_style_sheet)
+        self.window.btn_open_atletes.setStyleSheet(button_style_sheet)
+        self.window.btn_open_competences.setStyleSheet(button_style_sheet)
+        self.window.label.setStyleSheet(button_style_sheet)

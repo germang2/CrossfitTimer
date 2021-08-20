@@ -19,7 +19,7 @@ class Ui_AthletesGroups(object):
         font.setPointSize(8)
         AthletesGroups.setFont(font)
         self.label_7 = QtWidgets.QLabel(AthletesGroups)
-        self.label_7.setGeometry(QtCore.QRect(430, 40, 501, 41))
+        self.label_7.setGeometry(QtCore.QRect(10, 40, 1291, 41))
         font = QtGui.QFont()
         font.setFamily("MS Sans Serif")
         font.setPointSize(12)
@@ -180,13 +180,3 @@ class Ui_AthletesGroups(object):
         self.btn_load_athletes.setText(_translate("AthletesGroups", "Ver todos"))
         self.label_5.setText(_translate("AthletesGroups", "FECHA:"))
         self.label_6.setText(_translate("AthletesGroups", "Atletas asignados al grupo: "))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    AthletesGroups = QtWidgets.QDialog()
-    ui = Ui_AthletesGroups()
-    ui.setupUi(AthletesGroups)
-    AthletesGroups.show()
-    sys.exit(app.exec_())
