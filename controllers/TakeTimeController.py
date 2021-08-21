@@ -433,3 +433,5 @@ class TakeTimeController:
         self.window.lb_title.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.btn_pdf.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.cb_order_table.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+
+        self.window.table_times.setColumnWidth(2, 250)
