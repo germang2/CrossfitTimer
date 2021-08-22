@@ -196,6 +196,7 @@ class AthletesController:
         self.window.btn_get_all_athletes.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.btn_add_atlete.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.cb_categories.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        ButtonStyleSheet.set_window_icon(self.window)
 
 
 def validate_data(full_name, club, nit):

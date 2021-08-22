@@ -173,7 +173,7 @@ class Ui_AthletesView(object):
         self.label_9.setGeometry(QtCore.QRect(720, 370, 191, 20))
         self.label_9.setObjectName("label_9")
         self.lb_error_delete = QtWidgets.QLabel(AthletesView)
-        self.lb_error_delete.setGeometry(QtCore.QRect(70, 650, 951, 20))
+        self.lb_error_delete.setGeometry(QtCore.QRect(70, 720, 951, 20))
         self.lb_error_delete.setStyleSheet("color:red;")
         self.lb_error_delete.setText("")
         self.lb_error_delete.setAlignment(QtCore.Qt.AlignCenter)

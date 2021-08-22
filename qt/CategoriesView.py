@@ -46,7 +46,7 @@ class Ui_CategoriesView(object):
         self.lb_title.setAlignment(QtCore.Qt.AlignCenter)
         self.lb_title.setObjectName("lb_title")
         self.lb_error_delete = QtWidgets.QLabel(CategoriesView)
-        self.lb_error_delete.setGeometry(QtCore.QRect(50, 490, 701, 20))
+        self.lb_error_delete.setGeometry(QtCore.QRect(50, 590, 701, 20))
         self.lb_error_delete.setStyleSheet("color:red;")
         self.lb_error_delete.setText("")
         self.lb_error_delete.setAlignment(QtCore.Qt.AlignCenter)

@@ -435,3 +435,4 @@ class TakeTimeController:
         self.window.cb_order_table.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
 
         self.window.table_times.setColumnWidth(2, 250)
+        ButtonStyleSheet.set_window_icon(self.window)

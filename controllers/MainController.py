@@ -4,6 +4,7 @@ from controllers.AthleteController import AthletesController
 from controllers.CategoriesController import CategoryController
 from controllers.CompetenceController import CompetenceController
 from utils.style_sheet import ButtonStyleSheet
+from PyQt5 import QtWidgets, QtGui
 
 
 class MainController:
@@ -48,3 +49,4 @@ class MainController:
         self.window.btn_open_atletes.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.btn_open_competences.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.label.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        ButtonStyleSheet.set_window_icon(self.window)

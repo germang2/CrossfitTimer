@@ -185,6 +185,7 @@ class CompetenceController:
         self.window.btn_create_competition.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.btn_create_group.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.btn_see_all_groups.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        ButtonStyleSheet.set_window_icon(self.window)
 
 
 def validate_data(name, place, date_competence, time):

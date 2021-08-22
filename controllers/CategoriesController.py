@@ -105,3 +105,4 @@ class CategoryController:
         self.window.lb_title.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.btn_get_all_categories.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.btn_create_category.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        ButtonStyleSheet.set_window_icon(self.window)

@@ -217,3 +217,5 @@ class AthletesGroupsController:
         self.window.lb_title.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.btn_load_athletes.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.btn_reload_assigned_athletes.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+        ButtonStyleSheet.set_window_icon(self.window)
+
