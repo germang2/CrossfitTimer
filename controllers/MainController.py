@@ -4,7 +4,6 @@ from controllers.AthleteController import AthletesController
 from controllers.CategoriesController import CategoryController
 from controllers.CompetenceController import CompetenceController
 from utils.style_sheet import ButtonStyleSheet
-from PyQt5 import QtWidgets, QtGui
 
 
 class MainController:

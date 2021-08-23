@@ -1,1 +1,1 @@
-pyinstaller --onefile --windowed --icon=icon.ico --paths=..\venvs\crossfittimer36\Lib\site-packages\PyQt5\Qt\bin CrossfitTimer.py
+pyinstaller --onefile --windowed --icon=belicos-icon.ico --paths=..\venvs\crossfittimer36\Lib\site-packages\PyQt5\Qt\bin CrossfitTimer.py
