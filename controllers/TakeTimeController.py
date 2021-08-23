@@ -40,31 +40,31 @@ class TakeTimeController:
         self.set_style_sheet()
 
     def on_key_ed_filter(self, e):
-        if e.key() == QtCore.Qt.Key_Return:
+        if e.key() == QtCore.Qt.Key_Return or e.key() == QtCore.Qt.Key_Enter:
             self.filter_athletes(edit_widget=self.window.ed_filter)
         else:
             QLineEdit.keyPressEvent(self.window.ed_filter, e)
 
     def on_key_ed_filter_2(self, e):
-        if e.key() == QtCore.Qt.Key_Return:
+        if e.key() == QtCore.Qt.Key_Return or e.key() == QtCore.Qt.Key_Enter:
             self.filter_athletes(edit_widget=self.window.ed_filter_2)
         else:
             QLineEdit.keyPressEvent(self.window.ed_filter_2, e)
 
     def on_key_ed_filter_3(self, e):
-        if e.key() == QtCore.Qt.Key_Return:
+        if e.key() == QtCore.Qt.Key_Return or e.key() == QtCore.Qt.Key_Enter:
             self.filter_athletes(edit_widget=self.window.ed_filter_3)
         else:
             QLineEdit.keyPressEvent(self.window.ed_filter_3, e)
 
     def on_key_reset(self, e):
-        if e.key() == QtCore.Qt.Key_Return:
+        if e.key() == QtCore.Qt.Key_Return or e.key() == QtCore.Qt.Key_Enter:
             self.filter_athletes(edit_widget=self.window.ed_reset)
         else:
             QLineEdit.keyPressEvent(self.window.ed_reset, e)
 
     def on_key_ed_group(self, e):
-        if e.key() == QtCore.Qt.Key_Return:
+        if e.key() == QtCore.Qt.Key_Return or e.key() == QtCore.Qt.Key_Enter:
             self.filter_by_group()
         else:
             QLineEdit.keyPressEvent(self.window.ed_filter_group, e)
