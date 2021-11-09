@@ -16,7 +16,7 @@ class ButtonStyleSheet(object):
         color: #f7f7f7;
     """
 
-    WINDOW_ICON_PATH = 'resources/img/belicos-icon.ico'
+    WINDOW_ICON_PATH = 'resources/img/icon.ico'
 
     @staticmethod
     def set_window_icon(window):

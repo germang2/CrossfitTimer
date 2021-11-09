@@ -369,7 +369,7 @@ class TakeTimeController:
                     epw = pdf.w - 2 * pdf.l_margin
                     # Set column width to 1/4 of effective page width to distribute content
                     # evenly across table and page
-                    headers = ['Grupo', 'Identificacion', 'Nombre', 'Categoria', 'Dorsal', 'Hora Inicial',
+                    headers = ['Grupo', 'Identificacion', 'Nombre', 'Club', 'Dorsal', 'Hora Inicial',
                                'Hora Final', 'Tiempo total']
                     col_width = epw / 4
                     column_width = {
@@ -409,7 +409,7 @@ class TakeTimeController:
                             athlete.group.name[:10],
                             athlete.athlete.nit,
                             athlete.athlete.full_name[:32],
-                            athlete.athlete.category.name[:11],
+                            athlete.athlete.club[:11],
 
                             athlete.dorsal,
                             '' if athlete.initial_time is None else athlete.initial_time.strftime('%H:%M:%S.%f')[:-3],
