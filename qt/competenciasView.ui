@@ -282,6 +282,11 @@
      <string>Modificar</string>
     </property>
    </column>
+   <column>
+    <property name="text">
+     <string>Eliminar</string>
+    </property>
+   </column>
   </widget>
   <widget class="QPushButton" name="btn_get_all_competitions">
    <property name="geometry">

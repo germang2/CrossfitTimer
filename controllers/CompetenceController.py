@@ -19,6 +19,18 @@ class CompetenceController:
         self.take_time_controller = None
         self.clear_tables()
         self.set_style_sheet()
+        self.message_box = None
+        self.built_message_box()
+
+    def built_message_box(self):
+        self.message_box = QtWidgets.QMessageBox(self.window)
+        self.message_box.setWindowTitle('Confirmar accion')
+        self.message_box.setIcon(QtWidgets.QMessageBox.Question)
+        self.message_box.setText('Desea borrar la competencia?')
+
+        self.btn_yes = self.message_box.addButton('Aceptar', QtWidgets.QMessageBox.YesRole)
+        self.btn_no = self.message_box.addButton('Cancelar', QtWidgets.QMessageBox.NoRole)
+        self.message_box.setDefaultButton(self.btn_no)
 
     def get_all_competences(self):
         """ shows in a table all the competences created """
@@ -59,9 +71,29 @@ class CompetenceController:
                     modify.clicked.connect(self.handle_competences_table)
                     modify.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
                     self.window.competences_table.setCellWidget(i, 6, modify)
+
+                    delete = QtWidgets.QPushButton()
+                    delete.setText('Eliminar')
+                    delete.setProperty('id', competence.id)
+                    delete.setProperty('operation', 'delete')
+                    delete.clicked.connect(self.ask_confirmation)
+                    delete.setStyleSheet(ButtonStyleSheet.BUTTON_ERROR)
+                    self.window.competences_table.setCellWidget(i, 7, delete)
         except Exception as e:
             print('Error loading all competences')
             print(e)
+
+    def ask_confirmation(self):
+        index_row = self.window.competences_table.currentRow()
+        index_column = self.window.competences_table.currentColumn()
+        if index_row >= 0 and index_column >= 0:
+            competence_id = int(self.window.competences_table.cellWidget(index_row, index_column).property('id'))
+            competence = db.session.query(Competence).filter_by(id=competence_id).first()
+            self.message_box.setText(f"Desea borrar la competencia '{competence.name}'?")
+            self.message_box.exec_()
+
+            if self.message_box.clickedButton() == self.btn_yes:
+                self.delete_competence()
 
     def handle_competences_table(self):
         """ handles the clicks over the buttons modify and delete on the table for athletes """
@@ -135,6 +167,16 @@ class CompetenceController:
                 self.clear_fields_errors()
         except Exception as e:
             print(f'Failed creation of competence: {e}')
+
+    def delete_competence(self):
+        index_row = self.window.competences_table.currentRow()
+        index_column = self.window.competences_table.currentColumn()
+        if index_row >= 0 and index_column >= 0:
+            competence_id = int(self.window.competences_table.cellWidget(index_row, index_column).property('id'))
+            competence = db.session.query(Competence).filter_by(id=competence_id).first()
+            db.session.delete(competence)
+            db.session.commit()
+        self.get_all_competences()
 
     def show_errors(self, errors):
         """ shows the errors gotten from the validations """
