@@ -506,7 +506,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Requiere minimo 3 caracteres</string>
+    <string>Requiere minimo 2 caracteres</string>
    </property>
   </widget>
   <widget class="QLabel" name="lb_error_delete">

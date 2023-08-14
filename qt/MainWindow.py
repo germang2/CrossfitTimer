@@ -78,7 +78,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label.setText(_translate("MainWindow", "CROSSFIT TIMER"))
+        self.label.setText(_translate("MainWindow", "Ocr Timer"))
         self.btn_open_categories.setText(_translate("MainWindow", "CATEGORIAS"))
         self.btn_open_atletes.setText(_translate("MainWindow", "REGISTRAR ATLETAS"))
         self.btn_open_competences.setText(_translate("MainWindow", "COMPETENCIAS"))

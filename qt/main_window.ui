@@ -53,7 +53,7 @@
      </font>
     </property>
     <property name="text">
-     <string>CROSSFIT TIMER</string>
+     <string>Ocr Timer</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

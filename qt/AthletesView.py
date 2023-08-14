@@ -208,5 +208,5 @@ class Ui_AthletesView(object):
         item = self.athletes_table.horizontalHeaderItem(5)
         item.setText(_translate("AthletesView", "Eliminar"))
         self.label_8.setText(_translate("AthletesView", "Cedula"))
-        self.label_9.setText(_translate("AthletesView", "Requiere minimo 3 caracteres"))
+        self.label_9.setText(_translate("AthletesView", "Requiere minimo 2 caracteres"))
         self.label_10.setText(_translate("AthletesView", "Busca por nombre, club y categoria"))
