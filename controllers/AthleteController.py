@@ -28,15 +28,26 @@ class AthletesController:
             full_name = self.window.ed_name.text()
             club = self.window.ed_club.text()
             nit = self.window.ed_nit.text()
-            errors = validate_data(full_name=full_name, club=club, nit=nit)
+            dorsal = self.window.ed_dorsal.text()
+            errors = validate_data(
+                full_name=full_name,
+                club=club,
+                nit=nit,
+                dorsal=dorsal
+            )
             if errors:
                 self.show_errors(errors)
             else:
                 # if there are not error, the athlete is create
                 index_category = self.window.cb_categories.currentIndex()
                 category_id = self.category_id_create[index_category]
-                athlete = Athlete(full_name=full_name, club=club, category_id=category_id,
-                                  nit=nit)
+                athlete = Athlete(
+                    full_name=full_name,
+                    club=club,
+                    category_id=category_id,
+                    nit=nit,
+                    dorsal=dorsal
+                )
                 db.session.add(athlete)
                 db.session.commit()
                 self.clear_fields()
@@ -75,6 +86,8 @@ class AthletesController:
                     self.window.athletes_table.setItem(i, 1, nit)
                     club = QtWidgets.QTableWidgetItem(athlete.club)
                     self.window.athletes_table.setItem(i, 2, club)
+                    dorsal = QtWidgets.QTableWidgetItem(athlete.dorsal)
+                    self.window.athletes_table.setItem(i, 3, dorsal)
                     """ creates a comboBox for categories, set as default the current one of the athlete """
                     cb_categories = QtWidgets.QComboBox()
                     for j, category in enumerate(categories):
@@ -83,21 +96,21 @@ class AthletesController:
                         if category.id == athlete.category_id:
                             cb_categories.setCurrentIndex(j)
                     cb_categories.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
-                    self.window.athletes_table.setCellWidget(i, 3, cb_categories)
+                    self.window.athletes_table.setCellWidget(i, 4, cb_categories)
                     modify = QtWidgets.QPushButton()
                     modify.setText('Modificar')
                     modify.setProperty('id', athlete.id)
                     modify.setProperty('operation', 'modify')
                     modify.clicked.connect(self.handle_athletes_table)
                     modify.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
-                    self.window.athletes_table.setCellWidget(i, 4, modify)
+                    self.window.athletes_table.setCellWidget(i, 5, modify)
                     delete = QtWidgets.QPushButton()
                     delete.setText('Eliminar')
                     delete.setProperty('id', athlete.id)
                     delete.setProperty('operation', 'delete')
                     delete.clicked.connect(self.handle_athletes_table)
                     delete.setStyleSheet(ButtonStyleSheet.BUTTON_ERROR)
-                    self.window.athletes_table.setCellWidget(i, 5, delete)
+                    self.window.athletes_table.setCellWidget(i, 6, delete)
 
             while True:
                 row_count = self.window.athletes_table.rowCount()
@@ -123,12 +136,14 @@ class AthletesController:
                     full_name = self.window.athletes_table.item(index_row, 0).text()
                     nit = self.window.athletes_table.item(index_row, 1).text()
                     club = self.window.athletes_table.item(index_row, 2).text()
-                    index_category = self.window.athletes_table.cellWidget(index_row, 3).currentIndex()
+                    dorsal = self.window.athletes_table.item(index_row, 3).text()
+                    index_category = self.window.athletes_table.cellWidget(index_row, 4).currentIndex()
                     category_id = self.category_id_create[index_category]
                     athlete.full_name = full_name
                     athlete.club = club
                     athlete.category_id = int(category_id)
                     athlete.nit = nit
+                    athlete.dorsal = dorsal
                     db.session.add(athlete)
                     db.session.commit()
                     self.get_all_athletes()
@@ -174,18 +189,24 @@ class AthletesController:
             self.window.lb_nit_error.setText(errors['nit'])
         else:
             self.window.lb_nit_error.setText('')
+        if 'dorsal' in errors:
+            self.window.lb_dorsal_error.setText(errors['dorsal'])
+        else:
+            self.window.lb_dorsal_error.setText()
 
     def clear_fields(self):
         """ clear all editText fields for the user """
         self.window.ed_name.setText('')
         self.window.ed_club.setText('')
         self.window.ed_nit.setText('')
+        self.window.ed_dorsal.setText('')
 
     def clear_fields_errors(self):
         """ clear all the label fields where errors are show """
         self.window.lb_name_error.setText('')
         self.window.lb_club_error.setText('')
         self.window.lb_nit_error.setText('')
+        self.window.lb_dorsal_error.setText('')
 
     def clear_table(self):
         for i in range(self.window.athletes_table.rowCount()):
@@ -199,7 +220,7 @@ class AthletesController:
         ButtonStyleSheet.set_window_icon(self.window)
 
 
-def validate_data(full_name, club, nit):
+def validate_data(full_name, club, nit, dorsal):
     """ validate each field for an athlete """
     errors = {}
     # validations for field 'name'
@@ -221,6 +242,10 @@ def validate_data(full_name, club, nit):
         athlete = db.session.query(Athlete).filter_by(nit=nit).first()
         if athlete:
             errors['nit'] = 'Ya existe esta cedula'
+
+        dorsal = db.session.query(Athlete).filter_by(dorsal=dorsal).first()
+        if dorsal:
+            errors['dorsal'] = 'Esta dorsal ya esta en uso'
     except Exception as e:
         print('Error validando cedula')
         print(e)
