@@ -153,6 +153,11 @@
    </column>
    <column>
     <property name="text">
+     <string>Dorsal</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
      <string>Cedula</string>
     </property>
    </column>

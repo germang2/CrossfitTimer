@@ -56,6 +56,7 @@ class AthletesGroupsController:
                     nit.setFlags(QtCore.Qt.ItemIsEnabled)
                     self.window.table_athletes_assigned.setItem(i, 1, nit)
                     category_name = QtWidgets.QTableWidgetItem(item.athlete.category.name)
+                    category_name.setFlags(QtCore.Qt.ItemIsEnabled)
                     self.window.table_athletes_assigned.setItem(i, 2, category_name)
                     dorsal = QtWidgets.QTableWidgetItem(item.dorsal)
                     self.window.table_athletes_assigned.setItem(i, 3, dorsal)
@@ -163,17 +164,23 @@ class AthletesGroupsController:
             for i, athlete in enumerate(athletes):
                 self.window.athletes_table.insertRow(i)
                 name = QtWidgets.QTableWidgetItem(athlete.full_name)
+                name.setFlags(QtCore.Qt.ItemIsEnabled)
                 self.window.athletes_table.setItem(i, 0, name)
                 category = QtWidgets.QTableWidgetItem(athlete.category.name)
+                category.setFlags(QtCore.Qt.ItemIsEnabled)
                 self.window.athletes_table.setItem(i, 1, category)
+                dorsal = QtWidgets.QTableWidgetItem(athlete.dorsal)
+                dorsal.setFlags(QtCore.Qt.ItemIsEnabled)
+                self.window.athletes_table.setItem(i, 2, dorsal)
                 nit = QtWidgets.QTableWidgetItem(athlete.nit)
-                self.window.athletes_table.setItem(i, 2, nit)
+                nit.setFlags(QtCore.Qt.ItemIsEnabled)
+                self.window.athletes_table.setItem(i, 3, nit)
                 btn_add = QtWidgets.QPushButton()
                 btn_add.setText('Agregar')
                 btn_add.setProperty('athlete', athlete)
                 btn_add.clicked.connect(self.add_athlete_to_group)
                 btn_add.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
-                self.window.athletes_table.setCellWidget(i, 3, btn_add)
+                self.window.athletes_table.setCellWidget(i, 4, btn_add)
             while True:
                 row_count = self.window.athletes_table.rowCount()
                 if row_count <= len(athletes):
@@ -194,7 +201,11 @@ class AthletesGroupsController:
             if check_exists:
                 self.window.lb_error_add_athlete.setText(f'{athlete.full_name} ya pertence a un grupo')
             else:
-                group_athlete = GroupAthlete(athlete_id=athlete.id, group_id=self.group.id)
+                group_athlete = GroupAthlete(
+                    athlete_id=athlete.id,
+                    group_id=self.group.id,
+                    dorsal=athlete.dorsal,
+                )
                 db.session.add(group_athlete)
                 db.session.commit()
                 self.load_athletes_assigned()
