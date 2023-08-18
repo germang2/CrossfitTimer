@@ -1,4 +1,11 @@
+from datetime import datetime
+from sqlalchemy import or_
 from future.backports.email.headerregistry import Group
+
+from fpdf import FPDF
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QMessageBox
 
 from engine import db
 from app import TakeTimeWindow
@@ -7,15 +14,10 @@ from models.Category import Category
 from models.Group import Group
 from models.GroupAthlete import GroupAthlete
 from models.Competence import Competence
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QLineEdit
-from datetime import datetime
 from managers.GroupManager import GroupManager
 from managers.GroupAthleteManager import GroupAthleteManager
-from fpdf import FPDF
-from PyQt5.QtWidgets import QMessageBox
+
 from utils.style_sheet import ButtonStyleSheet
-from sqlalchemy import or_
 
 
 class TakeTimeController:
@@ -71,6 +73,12 @@ class TakeTimeController:
 
     def load_initial_data(self):
         try:
+            filter_text = self.window.ed_filter_group.text()
+            filter_text.strip()
+            if filter_text:
+                self.filter_by_group()
+                return
+
             groups = GroupManager.get_groups_by_filters({Group.competence_id == self.competence.id}, order=Group.order.asc())
             if groups:
                 self.clear_table()
