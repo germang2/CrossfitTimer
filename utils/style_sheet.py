@@ -11,6 +11,11 @@ class ButtonStyleSheet(object):
         color: #f7f7f7;
     """
 
+    BUTTON_DISABLED = """
+        background-color: rgb(93,93,93);
+        color: #f7f7f7;
+    """
+
     BUTTON_ERROR = """
         background-color: rgba(64,107,3,255);
         color: #f7f7f7;

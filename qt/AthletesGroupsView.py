@@ -137,7 +137,7 @@ class Ui_AthletesGroups(object):
         self.label_6.setFont(font)
         self.label_6.setObjectName("label_6")
         self.lb_group_name_2 = QtWidgets.QLabel(AthletesGroups)
-        self.lb_group_name_2.setGeometry(QtCore.QRect(860, 300, 55, 21))
+        self.lb_group_name_2.setGeometry(QtCore.QRect(860, 300, 411, 21))
         self.lb_group_name_2.setText("")
         self.lb_group_name_2.setObjectName("lb_group_name_2")
         self.lb_alert = QtWidgets.QLabel(AthletesGroups)

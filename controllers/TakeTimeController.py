@@ -194,10 +194,11 @@ class TakeTimeController:
             btn_start.setText('INICIAR')
             if athlete.initial_time is not None:
                 btn_start.setEnabled(False)
+                btn_start.setStyleSheet(ButtonStyleSheet.BUTTON_DISABLED)
             else:
                 btn_start.clicked.connect(self.update_initial_time)
                 btn_start.setProperty('group', athlete.group)
-            btn_start.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+                btn_start.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
             self.window.table_times.setCellWidget(i, 1, btn_start)
 
             athlete_full_name = QtWidgets.QTableWidgetItem(
