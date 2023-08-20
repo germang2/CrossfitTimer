@@ -40,6 +40,31 @@ class TakeTimeController:
         self.window.btn_reset_time.clicked.connect(self.reset_time)
         self.window.btn_pdf.clicked.connect(self.generate_pdf)
         self.set_style_sheet()
+        self.message_box = None
+        self.btn_yes = None
+        self.btn_no = None
+        self.built_message_box()
+
+    def built_message_box(self):
+        self.message_box = QtWidgets.QMessageBox(self.window)
+        self.message_box.setWindowTitle('Confirmar accion')
+        self.message_box.setIcon(QtWidgets.QMessageBox.Question)
+        self.message_box.setText('Desea iniciar el tiempo de la oleada')
+
+        self.btn_yes = self.message_box.addButton('Aceptar', QtWidgets.QMessageBox.YesRole)
+        self.btn_no = self.message_box.addButton('Cancelar', QtWidgets.QMessageBox.NoRole)
+        self.message_box.setDefaultButton(self.btn_no)
+
+    def ask_confirmation(self, group_name):
+        index_row = self.window.table_times.currentRow()
+        index_column = self.window.table_times.currentColumn()
+        if index_row >= 0 and index_column >= 0:
+            self.message_box.setText(f"Desea iniciar el tiempo de la oleada '{group_name}'?")
+            self.message_box.exec_()
+
+            if self.message_box.clickedButton() == self.btn_yes:
+                return True
+        return False
 
     def on_key_ed_filter(self, e):
         if e.key() == QtCore.Qt.Key_Return or e.key() == QtCore.Qt.Key_Enter:
@@ -219,14 +244,16 @@ class TakeTimeController:
             index_row = self.window.table_times.currentRow()
             index_column = self.window.table_times.currentColumn()
             group = self.window.table_times.cellWidget(index_row, index_column).property('group')
-            # athletes_groups = db.session.query(GroupAthlete).filter_by(group_id=group.id).all()
-            athletes_groups = GroupAthleteManager.get_group_athletes_by_filters({GroupAthlete.group_id == group.id})
-            initial_time = datetime.now()
-            for athlete_group in athletes_groups:
-                athlete_group.initial_time = initial_time
-                db.session.add(athlete_group)
-            db.session.commit()
-            self.load_initial_data()
+            confirm_start_time = self.ask_confirmation(group.name)
+            if confirm_start_time:
+                # athletes_groups = db.session.query(GroupAthlete).filter_by(group_id=group.id).all()
+                athletes_groups = GroupAthleteManager.get_group_athletes_by_filters({GroupAthlete.group_id == group.id})
+                initial_time = datetime.now()
+                for athlete_group in athletes_groups:
+                    athlete_group.initial_time = initial_time
+                    db.session.add(athlete_group)
+                db.session.commit()
+                self.load_initial_data()
 
         except Exception as e:
             print(f'Error updating initial time')
