@@ -1,16 +1,23 @@
-from engine import db
+from PyQt5 import QtWidgets, QtCore
+
+from sqlalchemy import or_
+
 from app import AthletesGroupsWindow
+
+from engine import db
+
 from models.Athlete import Athlete
+from models.Category import Category
 from models.Competence import Competence
 from models.Group import Group
-from models.Category import Category
 from models.GroupAthlete import GroupAthlete
-from sqlalchemy import or_
-from PyQt5 import QtWidgets, QtCore
+
 from managers.GroupAthleteManager import GroupAthleteManager
 from managers.AthleteManager import AthleteManager
 from managers.GroupManager import GroupManager
+
 from utils.style_sheet import ButtonStyleSheet
+from utils.string_helper import get_edit_box_value
 
 
 class AthletesGroupsController:
@@ -99,7 +106,7 @@ class AthletesGroupsController:
         index_row = self.window.table_athletes_assigned.currentRow()
         index_column = self.window.table_athletes_assigned.currentColumn()
         if index_row >= 0 and index_column >= 0:
-            dorsal = self.window.table_athletes_assigned.item(index_row, 3).text()
+            dorsal = get_edit_box_value(self.window.table_athletes_assigned.item(index_row, 3))
             if dorsal:
                 group_athlete = self.window.table_athletes_assigned.cellWidget(index_row, index_column) \
                     .property('group_athlete')
@@ -122,8 +129,7 @@ class AthletesGroupsController:
     def filter_athletes(self):
         """ search athletes filtering with the text the user type """
         try:
-            text = self.window.ed_filter_athlete.text()
-            text.strip()
+            text = get_edit_box_value(self.window.ed_filter_athlete)
             if text and len(text) >= 1:
                 athletes = []
                 order = 'full_name'

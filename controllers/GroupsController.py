@@ -1,13 +1,19 @@
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5 import QtWidgets
+
 from engine import db
+
 from app import CompetencesWindow
 from app import AthletesGroupsWindow
+
+from controllers.AthletesGroupsController import AthletesGroupsController
+
 from models.Competence import Competence
 from models.Group import Group
+
 from utils.Validations import *
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QMessageBox
-from controllers.AthletesGroupsController import AthletesGroupsController
 from utils.style_sheet import ButtonStyleSheet
+from utils.string_helper import get_edit_box_value
 
 
 class GroupController:
@@ -41,8 +47,8 @@ class GroupController:
 
     def create_group(self):
         """ validate data and creates a new Group """
-        name = self.window.ed_group_name.text()
-        order = self.window.ed_group_order.text()
+        name = get_edit_box_value(self.window.ed_group_name)
+        order = get_edit_box_value(self.window.ed_group_order)
         errors = validate_data(name=name, order=order)
         if errors:
             self.show_errors(errors)
@@ -134,8 +140,8 @@ class GroupController:
         index_row = self.window.groups_table.currentRow()
         index_column = self.window.groups_table.currentColumn()
         if index_row >= 0 and index_column >= 0:
-            name = self.window.groups_table.item(index_row, 0).text()
-            order = self.window.groups_table.item(index_row, 1).text()
+            name = get_edit_box_value(self.window.groups_table.item(index_row, 0))
+            order = get_edit_box_value(self.window.groups_table.item(index_row, 1))
             errors = validate_data(name, order)
             if not errors:
                 group_id = int(self.window.groups_table.cellWidget(index_row, index_column).property('id'))

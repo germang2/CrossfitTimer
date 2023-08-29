@@ -1,11 +1,9 @@
 from datetime import datetime
 from sqlalchemy import or_
-from future.backports.email.headerregistry import Group
 
 from fpdf import FPDF
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QLineEdit
-from PyQt5.QtWidgets import QMessageBox
 
 from engine import db
 from app import TakeTimeWindow
@@ -18,6 +16,10 @@ from managers.GroupManager import GroupManager
 from managers.GroupAthleteManager import GroupAthleteManager
 
 from utils.style_sheet import ButtonStyleSheet
+from utils.string_helper import (
+    get_edit_box_value,
+    remove_inner_new_lines,
+)
 
 
 class TakeTimeController:
@@ -98,8 +100,7 @@ class TakeTimeController:
 
     def load_initial_data(self):
         try:
-            filter_text = self.window.ed_filter_group.text()
-            filter_text.strip()
+            filter_text = get_edit_box_value(self.window.ed_filter_group)
             if filter_text:
                 self.filter_by_group()
                 return
@@ -118,8 +119,7 @@ class TakeTimeController:
 
     def filter_athletes(self, edit_widget):
         try:
-            filter_text = edit_widget.text()
-            filter_text.strip()
+            filter_text = get_edit_box_value(edit_widget)
             if filter_text and filter_text[-1] == ',':
                 return
             groups = GroupManager.get_groups_by_filters(
@@ -146,8 +146,7 @@ class TakeTimeController:
 
     def filter_by_group(self):
         try:
-            filter_text = self.window.ed_filter_group.text()
-            filter_text.strip()
+            filter_text = get_edit_box_value(self.window.ed_filter_group)
             if filter_text and filter_text[-1] == ',':
                 return
             groups = GroupManager.get_groups_by_filters(
@@ -268,8 +267,7 @@ class TakeTimeController:
         :return: Array of GroupAthlete
         """
         try:
-            filter_text = edit_widget.text()
-            filter_text.strip()
+            filter_text = get_edit_box_value(edit_widget)
             athletes_groups_list = []
             if filter_text and filter_text[-1] == ',':
                 filter_text = filter_text[:-1]
@@ -400,6 +398,7 @@ class TakeTimeController:
                             athletes_dict[category_name] = [athlete]
 
                 for category_name, athlete_list in athletes_dict.items():
+                    category_name = remove_inner_new_lines(category_name).strip()
                     pdf = FPDF(format='letter', unit='in', orientation='L')
                     # Effective page width, or just epw
                     epw = pdf.w - 2 * pdf.l_margin

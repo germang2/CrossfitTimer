@@ -42,7 +42,7 @@ def validate_string(field, value, errors):
 def validate_int(field, value, errors):
     try:
         val = int(value)
-    except ValueError as e:
+    except Exception as e:
         errors[field] = 'Ingrese un número entero'
 
 

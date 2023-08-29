@@ -1,12 +1,17 @@
+from sqlalchemy import or_
+from PyQt5 import QtWidgets
+
 from app import AthletesWindow
-from engine import db
+
 from models.Athlete import Athlete
 from models.Category import Category
 from models.GroupAthlete import GroupAthlete
-from utils.Validations import *
-from PyQt5 import QtWidgets
-from sqlalchemy import or_
+
+from engine import db
+
 from utils.style_sheet import ButtonStyleSheet
+from utils.string_helper import get_edit_box_value
+from utils.Validations import *
 
 
 class AthletesController:
@@ -25,10 +30,10 @@ class AthletesController:
     def create_athlete(self):
         """ Creates a new athlete with all fields """
         try:
-            full_name = self.window.ed_name.text()
-            club = self.window.ed_club.text()
-            nit = self.window.ed_nit.text()
-            dorsal = self.window.ed_dorsal.text()
+            full_name = get_edit_box_value(self.window.ed_name)
+            club = get_edit_box_value(self.window.ed_club)
+            nit = get_edit_box_value(self.window.ed_nit)
+            dorsal = get_edit_box_value(self.window.ed_dorsal)
             errors = validate_data(
                 full_name=full_name,
                 club=club,
@@ -56,7 +61,7 @@ class AthletesController:
             print(e)
 
     def filter_athletes(self):
-        text = self.window.ed_filter.text()
+        text = get_edit_box_value(self.window.ed_filter)
         if text and len(text) >= 2:
             self.get_all_athletes(filter_text=text)
 
@@ -65,15 +70,16 @@ class AthletesController:
         try:
             self.clear_table()
             if filter_text:
-                filter_text.strip()
                 athletes = db.session.query(Athlete).join(Category, Category.id == Athlete.category_id).filter(
                     or_(
                         Athlete.full_name.ilike(f'%{filter_text}%'),
                         Athlete.club.ilike(f'%{filter_text}%'),
-                        Category.name.ilike(f'%{filter_text}%')
+                        Category.name.ilike(f'%{filter_text}%'),
+                        Athlete.dorsal.ilike(f'{filter_text}%'),
                     )
                 ).order_by('full_name').all()
             else:
+                self.window.ed_filter.setText('')
                 athletes = db.session.query(Athlete).order_by('full_name').all()
             categories = db.session.query(Category).order_by('name').all()
             if athletes:
@@ -105,6 +111,7 @@ class AthletesController:
                     modify.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
                     self.window.athletes_table.setCellWidget(i, 5, modify)
                     delete = QtWidgets.QPushButton()
+
                     delete.setText('Eliminar')
                     delete.setProperty('id', athlete.id)
                     delete.setProperty('operation', 'delete')
@@ -133,10 +140,10 @@ class AthletesController:
             operation = self.window.athletes_table.cellWidget(index_row, index_column).property('operation')
             try:
                 if operation == 'modify' and athlete:
-                    full_name = self.window.athletes_table.item(index_row, 0).text()
-                    nit = self.window.athletes_table.item(index_row, 1).text()
-                    club = self.window.athletes_table.item(index_row, 2).text()
-                    dorsal = self.window.athletes_table.item(index_row, 3).text()
+                    full_name = get_edit_box_value(self.window.athletes_table.item(index_row, 0))
+                    nit = get_edit_box_value(self.window.athletes_table.item(index_row, 1))
+                    club = get_edit_box_value(self.window.athletes_table.item(index_row, 2))
+                    dorsal = get_edit_box_value(self.window.athletes_table.item(index_row, 3))
                     index_category = self.window.athletes_table.cellWidget(index_row, 4).currentIndex()
                     category_id = self.category_id_create[index_category]
                     athlete.full_name = full_name
@@ -146,7 +153,9 @@ class AthletesController:
                     athlete.dorsal = dorsal
                     db.session.add(athlete)
                     db.session.commit()
-                    self.get_all_athletes()
+
+                    filter_text = get_edit_box_value(self.window.ed_filter)
+                    self.get_all_athletes(filter_text=filter_text)
 
                 elif operation == 'delete' and athlete:
                     # checks if the athlete is assign to a group_athlete, that is the same as competition
@@ -178,7 +187,7 @@ class AthletesController:
     def show_errors(self, errors):
         """ shows the errors gotten from the validations """
         if 'full_name' in errors:
-            self.window.lb_name_error.setText(errors['name'])
+            self.window.lb_name_error.setText(errors['full_name'])
         else:
             self.window.lb_name_error.setText('')
         if 'club' in errors:
