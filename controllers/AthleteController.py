@@ -64,6 +64,7 @@ class AthletesController:
         text = get_edit_box_value(self.window.ed_filter)
         if text and len(text) >= 2:
             self.get_all_athletes(filter_text=text)
+            self.clear_fields_errors()
 
     def get_all_athletes(self, filter_text=None):
         """ loads in a table the existing/filtered athletes """
@@ -146,6 +147,17 @@ class AthletesController:
                     dorsal = get_edit_box_value(self.window.athletes_table.item(index_row, 3))
                     index_category = self.window.athletes_table.cellWidget(index_row, 4).currentIndex()
                     category_id = self.category_id_create[index_category]
+                    errors = validate_data(
+                        full_name=full_name,
+                        club=club,
+                        nit=nit,
+                        dorsal=dorsal,
+                        athlete_id=athlete_id,
+                    )
+                    if errors:
+                        self.show_errors(errors)
+                        return
+
                     athlete.full_name = full_name
                     athlete.club = club
                     athlete.category_id = int(category_id)
@@ -154,6 +166,7 @@ class AthletesController:
                     db.session.add(athlete)
                     db.session.commit()
 
+                    self.clear_fields_errors()
                     filter_text = get_edit_box_value(self.window.ed_filter)
                     self.get_all_athletes(filter_text=filter_text)
 
@@ -201,7 +214,11 @@ class AthletesController:
         if 'dorsal' in errors:
             self.window.lb_dorsal_error.setText(errors['dorsal'])
         else:
-            self.window.lb_dorsal_error.setText()
+            self.window.lb_dorsal_error.setText('')
+        if 'general_error' in errors:
+            self.window.lb_general_error.setText(errors['general_error'])
+        else:
+            self.window.lb_general_error.setText('')
 
     def clear_fields(self):
         """ clear all editText fields for the user """
@@ -216,6 +233,7 @@ class AthletesController:
         self.window.lb_club_error.setText('')
         self.window.lb_nit_error.setText('')
         self.window.lb_dorsal_error.setText('')
+        self.window.lb_general_error.setText('')
 
     def clear_table(self):
         for i in range(self.window.athletes_table.rowCount()):
@@ -229,7 +247,7 @@ class AthletesController:
         ButtonStyleSheet.set_window_icon(self.window)
 
 
-def validate_data(full_name, club, nit, dorsal):
+def validate_data(full_name, club, nit, dorsal, athlete_id=None):
     """ validate each field for an athlete """
     errors = {}
     # validations for field 'name'
@@ -248,13 +266,29 @@ def validate_data(full_name, club, nit, dorsal):
     validate_max(field, nit, 20, errors)
     validate_int(field, nit, errors)
     try:
-        athlete = db.session.query(Athlete).filter_by(nit=nit).first()
-        if athlete:
-            errors['nit'] = 'Ya existe esta cedula'
+        athlete_query = db.session.query(Athlete).filter_by(nit=nit)
+        nit_error_label = 'nit'
+        nit_error_message = 'Ya existe esta cedula'
+        if athlete_id:
+            athlete_query = athlete_query.filter(Athlete.id != athlete_id)
+            nit_error_label = 'general_error'
+            nit_error_message = f'La cedula {nit} ya se encuentra en uso'
 
-        dorsal = db.session.query(Athlete).filter_by(dorsal=dorsal).first()
+        athlete = athlete_query.first()
+        if athlete:
+            errors[nit_error_label] = nit_error_message
+
+        dorsal_error_label = 'dorsal'
+        dorsal_error_message = 'Esta dorsal ya esta en uso'
+        dorsal_query = db.session.query(Athlete).filter_by(dorsal=dorsal)
+        if athlete_id:
+            dorsal_query = dorsal_query.filter(Athlete.id != athlete_id)
+            dorsal_error_label = 'general_error'
+            dorsal_error_message = f'La dorsal {dorsal} ya se encuentra en uso'
+
+        dorsal = dorsal_query.first()
         if dorsal:
-            errors['dorsal'] = 'Esta dorsal ya esta en uso'
+            errors[dorsal_error_label] = dorsal_error_message
     except Exception as e:
         print('Error validando cedula')
         print(e)
