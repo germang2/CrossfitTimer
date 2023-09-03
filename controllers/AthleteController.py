@@ -33,7 +33,7 @@ class AthletesController:
             full_name = get_edit_box_value(self.window.ed_name)
             club = get_edit_box_value(self.window.ed_club)
             nit = get_edit_box_value(self.window.ed_nit)
-            dorsal = get_edit_box_value(self.window.ed_dorsal)
+            dorsal = get_edit_box_value(self.window.ed_dorsal, return_none=True)
             errors = validate_data(
                 full_name=full_name,
                 club=club,
@@ -179,7 +179,10 @@ class AthletesController:
                     else:
                         db.session.delete(athlete)
                         db.session.commit()
-                        self.get_all_athletes()
+
+                        self.clear_fields_errors()
+                        filter_text = get_edit_box_value(self.window.ed_filter)
+                        self.get_all_athletes(filter_text=filter_text)
             except Exception as e:
                 print(e)
 
@@ -278,17 +281,18 @@ def validate_data(full_name, club, nit, dorsal, athlete_id=None):
         if athlete:
             errors[nit_error_label] = nit_error_message
 
-        dorsal_error_label = 'dorsal'
-        dorsal_error_message = 'Esta dorsal ya esta en uso'
-        dorsal_query = db.session.query(Athlete).filter_by(dorsal=dorsal)
-        if athlete_id:
-            dorsal_query = dorsal_query.filter(Athlete.id != athlete_id)
-            dorsal_error_label = 'general_error'
-            dorsal_error_message = f'La dorsal {dorsal} ya se encuentra en uso'
-
-        dorsal = dorsal_query.first()
         if dorsal:
-            errors[dorsal_error_label] = dorsal_error_message
+            dorsal_error_label = 'dorsal'
+            dorsal_error_message = 'Esta dorsal ya esta en uso'
+            dorsal_query = db.session.query(Athlete).filter_by(dorsal=dorsal)
+            if athlete_id:
+                dorsal_query = dorsal_query.filter(Athlete.id != athlete_id)
+                dorsal_error_label = 'general_error'
+                dorsal_error_message = f'La dorsal {dorsal} ya se encuentra en uso'
+
+            dorsal = dorsal_query.first()
+            if dorsal:
+                errors[dorsal_error_label] = dorsal_error_message
     except Exception as e:
         print('Error validando cedula')
         print(e)
