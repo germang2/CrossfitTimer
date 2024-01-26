@@ -536,14 +536,14 @@
   <widget class="QLabel" name="label_10">
    <property name="geometry">
     <rect>
-     <x>710</x>
-     <y>390</y>
-     <width>211</width>
-     <height>20</height>
+     <x>690</x>
+     <y>389</y>
+     <width>261</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>Busca por nombre, club y categoria</string>
+    <string>Busca por nombre, club, categoria y cedula</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="ed_dorsal">
