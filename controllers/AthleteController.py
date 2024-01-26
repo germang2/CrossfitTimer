@@ -77,6 +77,7 @@ class AthletesController:
                         Athlete.club.ilike(f'%{filter_text}%'),
                         Category.name.ilike(f'%{filter_text}%'),
                         Athlete.dorsal.ilike(f'{filter_text}%'),
+                        Athlete.nit.like(f'%{filter_text}%'),
                     )
                 ).order_by('full_name').all()
             else:
