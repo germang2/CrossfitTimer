@@ -158,11 +158,21 @@ class AthletesController:
                         self.show_errors(errors)
                         return
 
-                    athlete.full_name = full_name
-                    athlete.club = club
-                    athlete.category_id = int(category_id)
-                    athlete.nit = nit
-                    athlete.dorsal = dorsal
+                    if full_name:
+                        athlete.full_name = full_name
+
+                    if club:
+                        athlete.club = club
+
+                    if category_id:
+                        athlete.category_id = int(category_id)
+
+                    if nit:
+                        athlete.nit = nit
+
+                    if dorsal:
+                        athlete.dorsal = dorsal
+
                     db.session.add(athlete)
                     db.session.commit()
 
