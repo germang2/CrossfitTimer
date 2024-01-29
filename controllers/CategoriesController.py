@@ -71,7 +71,7 @@ class CategoryController:
                 try:
                     category_id = int(self.window.categories_table.cellWidget(index_row, index_column).property('id'))
                     category = db.session.query(Category).filter_by(id=category_id).first()
-                    new_name = get_edit_box_valueget_edit_box_value(self.window.categories_table.item(index_row, 0))
+                    new_name = get_edit_box_value(self.window.categories_table.item(index_row, 0))
                     category.name = new_name
                     db.session.add(category)
                     db.session.commit()
