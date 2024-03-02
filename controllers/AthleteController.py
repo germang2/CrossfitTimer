@@ -1,5 +1,6 @@
 from sqlalchemy import or_
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QLineEdit
 
 from app import AthletesWindow
 
@@ -19,7 +20,7 @@ class AthletesController:
         self.window = window
         self.window.btn_add_atlete.clicked.connect(self.create_athlete)
         self.window.btn_get_all_athletes.clicked.connect(self.get_all_athletes)
-        self.window.ed_filter.textChanged.connect(self.filter_athletes)
+        self.window.ed_filter.keyPressEvent = self.on_key_search_athlete
         self.category_id_create = {}
         self.category_id_modify = {}
         self.load_categories()
@@ -65,6 +66,16 @@ class AthletesController:
         if text and len(text) >= 2:
             self.get_all_athletes(filter_text=text)
             self.clear_fields_errors()
+
+    def on_key_search_athlete(self, e):
+        """
+        Verifies the key pressed in ed field to filter athletes
+        :param e: event object
+        """
+        if e.key() == QtCore.Qt.Key_Return or e.key() == QtCore.Qt.Key_Enter:
+            self.filter_athletes()
+        else:
+            QLineEdit.keyPressEvent(self.window.ed_filter, e)
 
     def get_all_athletes(self, filter_text=None):
         """ loads in a table the existing/filtered athletes """
