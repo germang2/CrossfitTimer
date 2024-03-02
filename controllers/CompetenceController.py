@@ -3,7 +3,9 @@ from app import CompetencesWindow
 from app import TakeTimeWindow
 from controllers.GroupsController import GroupController
 from controllers.TakeTimeController import TakeTimeController
+from managers.GroupManager import GroupManager
 from models.Competence import Competence
+from models.Group import Group
 from utils.Validations import *
 from PyQt5 import QtWidgets
 from utils.style_sheet import ButtonStyleSheet
@@ -174,8 +176,13 @@ class CompetenceController:
         if index_row >= 0 and index_column >= 0:
             competence_id = int(self.window.competences_table.cellWidget(index_row, index_column).property('id'))
             competence = db.session.query(Competence).filter_by(id=competence_id).first()
+            competence_groups = GroupManager.get_groups_by_filters(filters={Group.competence_id == competence_id})
+            for group in competence_groups:
+                db.session.delete(group)
             db.session.delete(competence)
             db.session.commit()
+
+            self.clear_groups_table()
         self.get_all_competences()
 
     def show_errors(self, errors):
