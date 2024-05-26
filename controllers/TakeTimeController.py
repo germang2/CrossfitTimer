@@ -404,20 +404,39 @@ class TakeTimeController:
                     epw = pdf.w - 2 * pdf.l_margin
                     # Set column width to 1/4 of effective page width to distribute content
                     # evenly across table and page
-                    headers = ['Grupo', 'Identificacion', 'Nombre', 'Club', 'Dorsal', 'Hora Inicial',
-                               'Hora Final', 'Tiempo total']
+                    headers = [
+                        'Grupo',
+                        'Posición',
+                        'Nombre',
+                        'Identificacion',
+                        'Club',
+                        'Dorsal',
+                        'Hora Inicial',
+                        'Hora Final',
+                        'Tiempo total',
+                    ]
                     col_width = epw / 4
                     column_width = {
+                        # Group
                         0: col_width * 0.3,
-                        1: col_width * 0.5,
-                        2: col_width * 1.1,
-                        3: col_width * 0.45,
-                        4: col_width * 0.3,
-                        5: col_width * 0.4,
+                        # Position
+                        1: col_width * 0.3,
+                        # Name
+                        2: col_width * 0.95,
+                        # Identification
+                        3: col_width * 0.5,
+                        # Club
+                        4: col_width * 0.45,
+                        # Dorsal
+                        5: col_width * 0.3,
+                        # Initial time
                         6: col_width * 0.4,
-                        7: col_width * 0.4
+                        # Final time
+                        7: col_width * 0.4,
+                        # Total time
+                        8: col_width * 0.4,
                     }
-                    pdf.set_font('Arial', 'B', 14)
+                    pdf.set_font('Arial', 'B', 12)
                     pdf.add_page()
                     pdf.cell(epw, 0.0, f'{self.competence.name} - Categoria: {category_name}', align='C')
 
@@ -439,11 +458,13 @@ class TakeTimeController:
                     sorted_list = sorted(list_with_time, key=lambda x: x.total_time)
                     sorted_list = sorted_list + list_no_time
 
-                    for athlete in sorted_list:
+                    for position, athlete in enumerate(sorted_list):
                         data = [
                             athlete.group.name[:10],
-                            athlete.athlete.nit,
+                            # index + 1 = position
+                            position + 1,
                             athlete.athlete.full_name[:32],
+                            athlete.athlete.nit,
                             athlete.athlete.club[:11],
 
                             athlete.dorsal,
