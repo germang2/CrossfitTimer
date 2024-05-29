@@ -405,7 +405,7 @@ class TakeTimeController:
                     # Set column width to 1/4 of effective page width to distribute content
                     # evenly across table and page
                     headers = [
-                        'Grupo',
+                        'Tanda',
                         'Posición',
                         'Nombre',
                         'Identificacion',

@@ -119,7 +119,7 @@ class AthletesGroupsController:
 
                 # verify dorsal must be unique in competence
                 competence_id = self.competence.id
-                dorsal_in_use_by = GroupAthleteManager.get_athlete_by_dorsal(
+                dorsal_in_use_by, group_athlete_in_use = GroupAthleteManager.get_athlete_by_dorsal(
                     dorsal=dorsal,
                     competence_id=competence_id,
                 )
@@ -133,8 +133,8 @@ class AthletesGroupsController:
                     dorsal_cell.setText(current_dorsal)
                     # display validation error message
                     athlete_name = dorsal_in_use_by.full_name
-                    group_name = group_athlete.group.name
-                    self.window.lb_alert.setText(f'Dorsal "{dorsal}" en uso por: {athlete_name} - Grupo: "{group_name}"')
+                    group_name = group_athlete_in_use.group.name
+                    self.window.lb_alert.setText(f'Dorsal "{dorsal}" en uso por: {athlete_name} - Tanda: "{group_name}"')
 
     def remove_athlete_from_group(self):
         """ removes an athlete from the current group """
@@ -226,7 +226,7 @@ class AthletesGroupsController:
             filters = {GroupAthlete.group_id.in_(groups_list), GroupAthlete.athlete_id == athlete.id}
             check_exists = GroupAthleteManager.get_group_athletes_by_filters(filters)
             if check_exists:
-                self.window.lb_error_add_athlete.setText(f'{athlete.full_name} ya pertence a un grupo')
+                self.window.lb_error_add_athlete.setText(f'{athlete.full_name} ya pertence a una tanda')
             else:
                 group_athlete = GroupAthlete(
                     athlete_id=athlete.id,

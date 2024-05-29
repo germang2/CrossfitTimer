@@ -269,7 +269,7 @@
    </column>
    <column>
     <property name="text">
-     <string>Grupos</string>
+     <string>Tandas</string>
     </property>
    </column>
    <column>
@@ -319,7 +319,7 @@
     </font>
    </property>
    <property name="text">
-    <string>GRUPOS/OLEADAS</string>
+    <string>TANDAS</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>

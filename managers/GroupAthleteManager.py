@@ -48,7 +48,8 @@ class GroupAthleteManager:
                     db.session.query(Athlete)
                     .filter(Athlete.id == group_athlete.athlete_id)
                 )
-                return query.first()
+                athlete = query.first()
+                return athlete, group_athlete
         except Exception as e:
             print(e)
             return {}

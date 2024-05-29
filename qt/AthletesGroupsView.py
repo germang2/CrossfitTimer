@@ -153,9 +153,9 @@ class Ui_AthletesGroups(object):
     def retranslateUi(self, AthletesGroups):
         _translate = QtCore.QCoreApplication.translate
         AthletesGroups.setWindowTitle(_translate("AthletesGroups", "Dialog"))
-        self.lb_title.setText(_translate("AthletesGroups", "CONFIGURAR ATLETAS CON GRUPOS/OLEADAS"))
+        self.lb_title.setText(_translate("AthletesGroups", "CONFIGURAR ATLETAS CON TANDAS"))
         self.label.setText(_translate("AthletesGroups", "COMPETENCIA:"))
-        self.label_2.setText(_translate("AthletesGroups", "GRUPO/OLEADA:"))
+        self.label_2.setText(_translate("AthletesGroups", "TANDA:"))
         item = self.athletes_table.horizontalHeaderItem(0)
         item.setText(_translate("AthletesGroups", "Nombre"))
         item = self.athletes_table.horizontalHeaderItem(1)

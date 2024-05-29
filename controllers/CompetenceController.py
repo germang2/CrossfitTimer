@@ -53,7 +53,7 @@ class CompetenceController:
                     self.window.competences_table.setItem(i, 3, time)
 
                     btn_group = QtWidgets.QPushButton()
-                    btn_group.setText('Grupos')
+                    btn_group.setText('Tandas')
                     btn_group.setProperty('competence', competence)
                     btn_group.clicked.connect(self.see_groups)
                     btn_group.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
