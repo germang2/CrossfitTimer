@@ -106,14 +106,35 @@ class AthletesGroupsController:
         index_row = self.window.table_athletes_assigned.currentRow()
         index_column = self.window.table_athletes_assigned.currentColumn()
         if index_row >= 0 and index_column >= 0:
-            dorsal = get_edit_box_value(self.window.table_athletes_assigned.item(index_row, 3))
+            dorsal_cell = self.window.table_athletes_assigned.item(index_row, 3)
+            dorsal = get_edit_box_value(dorsal_cell)
+            dorsal = dorsal.strip() if dorsal else ""
             if dorsal:
-                group_athlete = self.window.table_athletes_assigned.cellWidget(index_row, index_column) \
-                    .property('group_athlete')
-                group_athlete.dorsal = dorsal
-                db.session.add(group_athlete)
-                db.session.commit()
-                self.load_athletes_assigned()
+                group_athlete = (
+                    self.window.table_athletes_assigned.cellWidget(index_row, index_column).property('group_athlete')
+                )
+                current_dorsal = group_athlete.dorsal
+                if dorsal == current_dorsal:
+                    return
+
+                # verify dorsal must be unique in competence
+                competence_id = self.competence.id
+                dorsal_in_use_by = GroupAthleteManager.get_athlete_by_dorsal(
+                    dorsal=dorsal,
+                    competence_id=competence_id,
+                )
+                if not dorsal_in_use_by:
+                    group_athlete.dorsal = dorsal
+                    db.session.add(group_athlete)
+                    db.session.commit()
+                    self.load_athletes_assigned()
+                else:
+                    # restore previous dorsal to cell in table
+                    dorsal_cell.setText(current_dorsal)
+                    # display validation error message
+                    athlete_name = dorsal_in_use_by.full_name
+                    group_name = group_athlete.group.name
+                    self.window.lb_alert.setText(f'Dorsal "{dorsal}" en uso por: {athlete_name} - Grupo: "{group_name}"')
 
     def remove_athlete_from_group(self):
         """ removes an athlete from the current group """
