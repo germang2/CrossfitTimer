@@ -340,10 +340,10 @@ class TakeTimeController:
                 elif filter_selected == 'Nombre':
                     athletes_groups = db.session.query(GroupAthlete).join(Athlete)\
                         .join(Group).filter(Group.id.in_(groups_list)).order_by(Athlete.full_name.asc()).all()
-                elif filter_selected == 'Grupo ascendente':
+                elif filter_selected == 'Tanda ascendente':
                     athletes_groups = db.session.query(GroupAthlete).join(Group).filter(Group.id.in_(groups_list))\
                         .order_by(Group.order.asc()).all()
-                elif filter_selected == 'Grupo descendente':
+                elif filter_selected == 'Tanda descendente':
                     athletes_groups = db.session.query(GroupAthlete).join(Group).filter(Group.id.in_(groups_list))\
                         .order_by(Group.order.desc()).all()
                 else:

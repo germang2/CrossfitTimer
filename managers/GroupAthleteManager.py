@@ -50,6 +50,7 @@ class GroupAthleteManager:
                 )
                 athlete = query.first()
                 return athlete, group_athlete
+            return None, None
         except Exception as e:
             print(e)
             return {}

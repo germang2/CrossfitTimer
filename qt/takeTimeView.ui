@@ -212,12 +212,12 @@
    </item>
    <item>
     <property name="text">
-     <string>Grupo ascendente</string>
+     <string>Tanda ascendente</string>
     </property>
    </item>
    <item>
     <property name="text">
-     <string>Grupo descendente</string>
+     <string>Tanda descendente</string>
     </property>
    </item>
   </widget>
@@ -350,7 +350,7 @@ color:white;</string>
     </rect>
    </property>
    <property name="text">
-    <string>Filtrar por grupo/oleada/nombre/categoria</string>
+    <string>Filtrar por tanda/oleada/nombre/categoria</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="ed_filter_2">
