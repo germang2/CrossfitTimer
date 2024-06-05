@@ -196,15 +196,14 @@ class AthletesController:
                     # checks if the athlete is assign to a group_athlete, that is the same as competition
                     group_athlete = db.session.query(GroupAthlete).filter_by(athlete_id=athlete.id).first()
                     if group_athlete:
-                        self.window.lb_error_delete.setText(
-                            f'No se puede borrar a {athlete.full_name} mientras pertenezca a una competencia')
-                    else:
-                        db.session.delete(athlete)
-                        db.session.commit()
+                        db.session.delete(group_athlete)
 
-                        self.clear_fields_errors()
-                        filter_text = get_edit_box_value(self.window.ed_filter)
-                        self.get_all_athletes(filter_text=filter_text)
+                    db.session.delete(athlete)
+                    db.session.commit()
+
+                    self.clear_fields_errors()
+                    filter_text = get_edit_box_value(self.window.ed_filter)
+                    self.get_all_athletes(filter_text=filter_text)
             except Exception as e:
                 print(e)
 

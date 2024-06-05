@@ -4,6 +4,7 @@ from app import TakeTimeWindow
 from controllers.GroupsController import GroupController
 from controllers.TakeTimeController import TakeTimeController
 from managers.GroupManager import GroupManager
+from managers.GroupAthleteManager import GroupAthleteManager
 from models.Competence import Competence
 from models.Group import Group
 from utils.Validations import *
@@ -177,7 +178,17 @@ class CompetenceController:
             competence_id = int(self.window.competences_table.cellWidget(index_row, index_column).property('id'))
             competence = db.session.query(Competence).filter_by(id=competence_id).first()
             competence_groups = GroupManager.get_groups_by_filters(filters={Group.competence_id == competence_id})
+
             for group in competence_groups:
+                group_athletes_filters = {
+                    "group_id": group.id
+                }
+                group_athletes = GroupAthleteManager.get_by_filters(
+                    filters=group_athletes_filters,
+                )
+                for group_athlete in group_athletes:
+                    db.session.delete(group_athlete)
+
                 db.session.delete(group)
             db.session.delete(competence)
             db.session.commit()

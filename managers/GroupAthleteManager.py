@@ -54,3 +54,20 @@ class GroupAthleteManager:
         except Exception as e:
             print(e)
             return {}
+
+    @staticmethod
+    def get_by_filters(filters):
+        """
+        Get GroupAthletes by filters
+        :param filters: Dict, with filters to apply
+        :return: List, with GroupAthletes found
+        """
+        try:
+            query = (
+                db.session.query(GroupAthlete)
+                .filter_by(**filters)
+            )
+            return query.all()
+        except Exception as e:
+            print(e)
+            return []
