@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_AthletesView(object):
     def setupUi(self, AthletesView):
         AthletesView.setObjectName("AthletesView")
-        AthletesView.resize(1088, 764)
+        AthletesView.resize(1140, 764)
         self.lb_title = QtWidgets.QLabel(AthletesView)
         self.lb_title.setGeometry(QtCore.QRect(10, 30, 1071, 41))
         font = QtGui.QFont()
@@ -53,7 +53,7 @@ class Ui_AthletesView(object):
         self.ed_club.setGeometry(QtCore.QRect(360, 210, 201, 41))
         self.ed_club.setObjectName("ed_club")
         self.btn_get_all_athletes = QtWidgets.QPushButton(AthletesView)
-        self.btn_get_all_athletes.setGeometry(QtCore.QRect(130, 337, 121, 41))
+        self.btn_get_all_athletes.setGeometry(QtCore.QRect(90, 320, 121, 41))
         self.btn_get_all_athletes.setObjectName("btn_get_all_athletes")
         self.btn_add_atlete = QtWidgets.QPushButton(AthletesView)
         self.btn_add_atlete.setGeometry(QtCore.QRect(470, 280, 181, 41))
@@ -223,6 +223,15 @@ class Ui_AthletesView(object):
         self.lb_general_error.setText("")
         self.lb_general_error.setAlignment(QtCore.Qt.AlignCenter)
         self.lb_general_error.setObjectName("lb_general_error")
+        self.cb_pagination = QtWidgets.QComboBox(AthletesView)
+        self.cb_pagination.setGeometry(QtCore.QRect(160, 370, 51, 31))
+        self.cb_pagination.setObjectName("cb_pagination")
+        self.lb_pagination = QtWidgets.QLabel(AthletesView)
+        self.lb_pagination.setGeometry(QtCore.QRect(110, 360, 51, 41))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.lb_pagination.setFont(font)
+        self.lb_pagination.setObjectName("lb_pagination")
 
         self.retranslateUi(AthletesView)
         QtCore.QMetaObject.connectSlotsByName(AthletesView)
@@ -255,3 +264,4 @@ class Ui_AthletesView(object):
         self.label_9.setText(_translate("AthletesView", "Requiere minimo 2 caracteres"))
         self.label_10.setText(_translate("AthletesView", "Busca por nombre, club, categoria y cedula"))
         self.label_11.setText(_translate("AthletesView", "Dorsal"))
+        self.lb_pagination.setText(_translate("AthletesView", "Página"))

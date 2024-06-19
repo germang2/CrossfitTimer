@@ -13,6 +13,7 @@ from engine import db
 from utils.style_sheet import ButtonStyleSheet
 from utils.string_helper import get_edit_box_value
 from utils.Validations import *
+from utils.pagination_helper import PaginationHelper
 
 
 class AthletesController:
@@ -27,6 +28,24 @@ class AthletesController:
         self.clear_table()
         self.window.athletes_table.setColumnWidth(0, 380)
         self.set_style_sheet()
+        self.pagination_helper = PaginationHelper()
+        self.initialize_pagination()
+
+    def handle_pagination(self):
+        index = self.window.cb_pagination.currentIndex()
+        if index >= 0:
+            current_page = index + 1
+            self.pagination_helper.set_config({"current_page": current_page})
+            self.filter_athletes()
+
+    def initialize_pagination(self):
+        self.pagination_helper.set_cb_pagination(
+            ui_element=self.window.cb_pagination,
+            handle_cb_pagination_method=self.handle_pagination,
+        )
+        self.pagination_helper.set_lb_pagination(ui_element=self.window.lb_pagination)
+        self.pagination_helper.hide_ui_elements()
+        self.pagination_helper.set_config(config={"order_by": "full_name"})
 
     def create_athlete(self):
         """ Creates a new athlete with all fields """
@@ -66,6 +85,8 @@ class AthletesController:
         if text and len(text) >= 2:
             self.get_all_athletes(filter_text=text)
             self.clear_fields_errors()
+        else:
+            self.get_all_athletes()
 
     def on_key_search_athlete(self, e):
         """
@@ -73,6 +94,7 @@ class AthletesController:
         :param e: event object
         """
         if e.key() == QtCore.Qt.Key_Return or e.key() == QtCore.Qt.Key_Enter:
+            self.pagination_helper.set_config({"current_page": 1})
             self.filter_athletes()
         else:
             QLineEdit.keyPressEvent(self.window.ed_filter, e)
@@ -82,7 +104,7 @@ class AthletesController:
         try:
             self.clear_table()
             if filter_text:
-                athletes = db.session.query(Athlete).join(Category, Category.id == Athlete.category_id).filter(
+                athletes_query = db.session.query(Athlete).join(Category, Category.id == Athlete.category_id).filter(
                     or_(
                         Athlete.full_name.ilike(f'%{filter_text}%'),
                         Athlete.club.ilike(f'%{filter_text}%'),
@@ -90,10 +112,12 @@ class AthletesController:
                         Athlete.dorsal.ilike(f'{filter_text}%'),
                         Athlete.nit.like(f'%{filter_text}%'),
                     )
-                ).order_by('full_name').all()
+                )
             else:
                 self.window.ed_filter.setText('')
-                athletes = db.session.query(Athlete).order_by('full_name').all()
+                athletes_query = db.session.query(Athlete)
+
+            athletes = self.pagination_helper.get_page_result(query=athletes_query)
             categories = db.session.query(Category).order_by('name').all()
             if athletes:
                 self.window.lb_error_delete.setText('')
@@ -141,7 +165,7 @@ class AthletesController:
 
         except Exception as e:
             print(e)
-            print('Could not load all the athletes')
+            print('Could not load all the athletes: Error detail: {}'.format(e))
 
     def handle_athletes_table(self):
         """ handles the clicks over the buttons modify and delete on the table for athletes """
