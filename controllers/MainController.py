@@ -1,9 +1,12 @@
 from app import MainWindow
 from app import CategoriesWindow, AthletesWindow, CompetencesWindow
+
 from controllers.AthleteController import AthletesController
 from controllers.CategoriesController import CategoryController
 from controllers.CompetenceController import CompetenceController
+
 from utils.style_sheet import ButtonStyleSheet
+from utils.migration_helper import run_migrations_online
 
 
 class MainController:
@@ -25,6 +28,15 @@ class MainController:
         self.competences_controller = None
 
         self.set_style_sheet()
+        self.update_app()
+
+    def update_app(self) -> None:
+        """
+        Updates migrations to have application up to date
+        """
+        print("running migrations")
+        run_migrations_online()
+        print("application is up to date")
 
     def open_category_window(self):
         self.categories_controller = CategoryController(self.category_window)

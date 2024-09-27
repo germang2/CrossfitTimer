@@ -1,5 +1,10 @@
-pyinstaller --onefile --windowed --icon=belicos-icon.ico --paths=..\venvs\crossfittimer36\Lib\site-packages\PyQt5\Qt\bin CrossfitTimer.py
+pyinstaller --onefile --windowed --icon=belicos-icon.ico --add-data "alembic.ini;." --add-data "alembic/versions;alembic/versions" --paths=..\venvs\crossfittimer36\Lib\site-packages\PyQt5\Qt\bin CrossfitTimer.py
 
 
 compile window
 pyuic5 mydesign.ui -o mydesign.py
+
+alembic commands
+- alembic upgrade head
+- alembic downgrade -1
+- alembic revision -m ""
