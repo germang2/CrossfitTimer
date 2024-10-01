@@ -21,6 +21,7 @@ from utils.string_helper import (
     remove_inner_new_lines,
 )
 from utils.Validations import is_positive_number
+from utils.logger_helper import logger
 
 
 class TakeTimeController:
@@ -70,7 +71,6 @@ class TakeTimeController:
                 return True
         return False
 
-
     def handle_table_event(self, e):
         if e.key() == QtCore.Qt.Key_Return or e.key() == QtCore.Qt.Key_Enter:
             index_row = self.window.table_times.currentRow()
@@ -81,13 +81,14 @@ class TakeTimeController:
                 tasks_completed = self.window.table_times.item(index_row, index_column).text()
                 is_valid_number = is_positive_number(tasks_completed)
                 if is_valid_number:
+                    tasks_completed = int(tasks_completed)
                     filters = {
                         GroupAthlete.id == _id
                     }
                     group_athlete = GroupAthleteManager.get_group_athletes_by_filters(
                         filters=filters
                     )
-                    if group_athlete and tasks_completed:
+                    if group_athlete:
                         group_athlete = group_athlete[0]
                         group_athlete.tasks_completed = tasks_completed
                         db.session.add(group_athlete)
@@ -111,7 +112,7 @@ class TakeTimeController:
         try:
             table.item(index_row, index_column).setText("")
         except Exception as e:
-            print(f"Error cleaning cell: {index_row}, {index_column}. Error details: {e}")
+            logger.error(f"Error cleaning cell: {index_row}, {index_column}. Error details: {e}")
 
     def on_key_ed_filter(self, e):
         if e.key() == QtCore.Qt.Key_Return or e.key() == QtCore.Qt.Key_Enter:
@@ -281,7 +282,7 @@ class TakeTimeController:
             total_time.setFlags(QtCore.Qt.ItemIsEnabled)
             self.window.table_times.setItem(i, 7, total_time)
 
-            tasks_completed_value = '' if athlete.tasks_completed is None else athlete.tasks_completed
+            tasks_completed_value = str(athlete.tasks_completed) if athlete.tasks_completed else ""
             tasks_completed = QtWidgets.QTableWidgetItem(tasks_completed_value)
             self.window.table_times.setItem(i, 8, tasks_completed)
         while True:
