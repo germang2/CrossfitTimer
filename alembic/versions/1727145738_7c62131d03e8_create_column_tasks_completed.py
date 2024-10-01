@@ -22,7 +22,7 @@ def upgrade() -> None:
     """
     Creates column tasks_completed in groups_athletes
     """
-    op.add_column('groups_athletes', sa.Column('tasks_completed', sa.Integer, nullable=True))
+    op.add_column('groups_athletes', sa.Column('tasks_completed', sa.Integer, nullable=True, default=0))
 
 
 def downgrade() -> None:

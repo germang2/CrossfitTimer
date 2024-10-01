@@ -1,3 +1,5 @@
+import operator
+
 from datetime import datetime
 from sqlalchemy import or_
 
@@ -469,6 +471,7 @@ class TakeTimeController:
                         'Hora Inicial',
                         'Hora Final',
                         'Tiempo total',
+                        "# Manillas",
                     ]
                     col_width = epw / 4
                     column_width = {
@@ -477,9 +480,9 @@ class TakeTimeController:
                         # Position
                         1: col_width * 0.3,
                         # Name
-                        2: col_width * 0.95,
+                        2: col_width * 0.8,
                         # Identification
-                        3: col_width * 0.5,
+                        3: col_width * 0.4,
                         # Club
                         4: col_width * 0.45,
                         # Dorsal
@@ -490,6 +493,8 @@ class TakeTimeController:
                         7: col_width * 0.4,
                         # Total time
                         8: col_width * 0.4,
+                        # Tasks_completed
+                        9: col_width * 0.3
                     }
                     pdf.set_font('Arial', 'B', 12)
                     pdf.add_page()
@@ -510,7 +515,8 @@ class TakeTimeController:
 
                     list_with_time = [a for a in athlete_list if a.total_time]
                     list_no_time = [a for a in athlete_list if a.total_time is None]
-                    sorted_list = sorted(list_with_time, key=lambda x: x.total_time)
+                    # sorted_list = sorted(list_with_time, key=lambda x: x.total_time)
+                    sorted_list = sorted(list_with_time, key=self.none_safe_key, reverse=False)
                     sorted_list = sorted_list + list_no_time
 
                     for position, athlete in enumerate(sorted_list):
@@ -527,8 +533,8 @@ class TakeTimeController:
                             athlete.dorsal,
                             '' if athlete.initial_time is None else athlete.initial_time.strftime('%H:%M:%S.%f')[:-3],
                             '' if athlete.final_time is None else athlete.final_time.strftime('%H:%M:%S.%f')[:-3],
-                            '' if athlete.total_time is None else athlete.total_time.strftime('%H:%M:%S.%f')[:-3]
-
+                            '' if athlete.total_time is None else athlete.total_time.strftime('%H:%M:%S.%f')[:-3],
+                            athlete.tasks_completed if athlete.tasks_completed else 0,
                         ]
                         for i, val in enumerate(data):
                             width = column_width[i]
@@ -541,6 +547,12 @@ class TakeTimeController:
                     self.window.lb_pdf.setText('PDF generados con exito')
         except Exception as e:
             print(e)
+
+    def none_safe_key(self, obj):
+        return (
+            -(obj.tasks_completed if obj.tasks_completed is not None else 0),
+            obj.total_time if obj.total_time is not None else None
+        )
 
     def set_style_sheet(self):
         self.window.lb_title.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
