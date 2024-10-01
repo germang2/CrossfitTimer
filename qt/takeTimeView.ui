@@ -115,6 +115,11 @@
      <height>361</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
    <column>
     <property name="text">
      <string>Grupo</string>
@@ -127,15 +132,24 @@
     <property name="text">
      <string>Iniciar</string>
     </property>
+    <property name="textAlignment">
+     <set>AlignCenter</set>
+    </property>
    </column>
    <column>
     <property name="text">
      <string>Atleta</string>
     </property>
+    <property name="textAlignment">
+     <set>AlignCenter</set>
+    </property>
    </column>
    <column>
     <property name="text">
      <string>Categoria</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignCenter</set>
     </property>
    </column>
    <column>
@@ -165,6 +179,14 @@
    <column>
     <property name="text">
      <string>Tiempo total</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignCenter</set>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Manillas</string>
     </property>
     <property name="textAlignment">
      <set>AlignCenter</set>

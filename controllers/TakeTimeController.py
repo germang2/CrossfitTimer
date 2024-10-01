@@ -20,6 +20,7 @@ from utils.string_helper import (
     get_edit_box_value,
     remove_inner_new_lines,
 )
+from utils.Validations import is_positive_number
 
 
 class TakeTimeController:
@@ -45,6 +46,7 @@ class TakeTimeController:
         self.message_box = None
         self.btn_yes = None
         self.btn_no = None
+        self.window.table_times.keyReleaseEvent = self.handle_table_event
         self.built_message_box()
 
     def built_message_box(self):
@@ -67,6 +69,49 @@ class TakeTimeController:
             if self.message_box.clickedButton() == self.btn_yes:
                 return True
         return False
+
+
+    def handle_table_event(self, e):
+        if e.key() == QtCore.Qt.Key_Return or e.key() == QtCore.Qt.Key_Enter:
+            index_row = self.window.table_times.currentRow()
+            if index_row >= 0:
+                # button start
+                index_column = 8
+                _id = self.window.table_times.cellWidget(index_row, 1).property("group_athlete_id")
+                tasks_completed = self.window.table_times.item(index_row, index_column).text()
+                is_valid_number = is_positive_number(tasks_completed)
+                if is_valid_number:
+                    filters = {
+                        GroupAthlete.id == _id
+                    }
+                    group_athlete = GroupAthleteManager.get_group_athletes_by_filters(
+                        filters=filters
+                    )
+                    if group_athlete and tasks_completed:
+                        group_athlete = group_athlete[0]
+                        group_athlete.tasks_completed = tasks_completed
+                        db.session.add(group_athlete)
+                        db.session.commit()
+                else:
+                    self.clear_table_input(
+                        table=self.window.table_times,
+                        index_row=index_row,
+                        index_column=index_column,
+                    )
+        else:
+            pass
+
+    def clear_table_input(self, table: QtWidgets.QTableWidget, index_row: int, index_column: int):
+        """
+        Clears the table input with an empty value
+        :param table: QtWidgets.QTableWidget, table that contains the cells
+        :param index_row: int, row to apply the clear format
+        :param index_column: int, column to apply the clear format
+        """
+        try:
+            table.item(index_row, index_column).setText("")
+        except Exception as e:
+            print(f"Error cleaning cell: {index_row}, {index_column}. Error details: {e}")
 
     def on_key_ed_filter(self, e):
         if e.key() == QtCore.Qt.Key_Return or e.key() == QtCore.Qt.Key_Enter:
@@ -184,6 +229,9 @@ class TakeTimeController:
 
     def show_athletes_table(self, athletes_groups):
         for i, athlete in enumerate(athletes_groups):
+            if not athlete.athlete:
+                continue
+
             self.window.table_times.insertRow(i)
 
             group_item = QtWidgets.QTableWidgetItem(athlete.group.name)
@@ -198,6 +246,7 @@ class TakeTimeController:
                 btn_start.clicked.connect(self.update_initial_time)
                 btn_start.setProperty('group', athlete.group)
                 btn_start.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
+            btn_start.setProperty('group_athlete_id', athlete.id)
             self.window.table_times.setCellWidget(i, 1, btn_start)
 
             athlete_full_name = QtWidgets.QTableWidgetItem(
@@ -207,6 +256,7 @@ class TakeTimeController:
             self.window.table_times.setItem(i, 2, athlete_full_name)
 
             category_name = QtWidgets.QTableWidgetItem(athlete.athlete.category.name)
+            category_name.setFlags(QtCore.Qt.ItemIsEnabled)
             self.window.table_times.setItem(i, 3, category_name)
 
             dorsal = QtWidgets.QTableWidgetItem(athlete.dorsal)
@@ -230,6 +280,10 @@ class TakeTimeController:
             total_time = QtWidgets.QTableWidgetItem(total_time_value)
             total_time.setFlags(QtCore.Qt.ItemIsEnabled)
             self.window.table_times.setItem(i, 7, total_time)
+
+            tasks_completed_value = '' if athlete.tasks_completed is None else athlete.tasks_completed
+            tasks_completed = QtWidgets.QTableWidgetItem(tasks_completed_value)
+            self.window.table_times.setItem(i, 8, tasks_completed)
         while True:
             row_count = self.window.table_times.rowCount()
             if row_count <= len(athletes_groups):
@@ -459,6 +513,8 @@ class TakeTimeController:
                     sorted_list = sorted_list + list_no_time
 
                     for position, athlete in enumerate(sorted_list):
+                        if not athlete:
+                            continue
                         data = [
                             athlete.group.name[:10],
                             # index + 1 = position
@@ -490,5 +546,6 @@ class TakeTimeController:
         self.window.btn_pdf.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.cb_order_table.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
 
-        self.window.table_times.setColumnWidth(2, 250)
+        self.window.table_times.setColumnWidth(2, 200)
+        self.window.table_times.setColumnWidth(4, 100)
         ButtonStyleSheet.set_window_icon(self.window)

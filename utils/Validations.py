@@ -46,6 +46,20 @@ def validate_int(field, value, errors):
         errors[field] = 'Ingrese un número entero'
 
 
+def is_positive_number(value):
+    """
+    Validates a value is a valid positive integer greater or equals than zero
+    :param value: string, value o check
+    :return: Boolean, if true, it's a valid positive integer
+    """
+    try:
+        val = int(value)
+        return val >= 0
+    except Exception as e:
+        print(f"{value} is not a positive number")
+        return False
+
+
 def validate_float(field, value, errors):
     try:
         val = float(value)
