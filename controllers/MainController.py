@@ -35,7 +35,7 @@ class MainController:
         Updates migrations to have application up to date
         """
         print("running migrations")
-        run_migrations_online()
+        # run_migrations_online()
         print("application is up to date")
 
     def open_category_window(self):

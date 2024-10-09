@@ -9,9 +9,10 @@ from models.GroupAthlete import GroupAthlete
 class GroupAthleteManager:
 
     @staticmethod
-    def get_group_athletes_by_filters(filters, join_group=False, order='dorsal'):
+    def get_group_athletes_by_filters(filters: set, join_group=False, order='dorsal'):
         try:
             query = db.session.query(GroupAthlete)
+            query = query.filter(GroupAthlete.athlete_id.isnot(None))
             if join_group:
                 query = query.join(Group, Group.id == GroupAthlete.group_id)
             query = query.filter(*filters).order_by(order)

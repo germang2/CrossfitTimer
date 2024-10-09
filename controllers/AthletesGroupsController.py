@@ -40,20 +40,33 @@ class AthletesGroupsController:
         self.load_athletes_assigned()
         self.set_style_sheet()
 
+    def clear_table(self, table: QtWidgets.QTableWidget):
+        """
+        Clears the content of the table and remove all the rows
+        :param table: QtWidgets.QTableWidget to clear
+        """
+        table.setRowCount(0)
+        table.clearContents()
+
     def load_athletes_assigned(self):
         """ loads all athletes for the current group """
         try:
             alert_without_dorsal_flag = False
             self.window.lb_error_add_athlete.setText('')
-            for i in range(self.window.table_athletes_assigned.rowCount()):
-                self.window.table_athletes_assigned.removeRow(i)
-        # groups_athletes = db.session.query(GroupAthlete).filter_by(group_id=self.group.id).order_by('dorsal').all()
+
+            self.clear_table(self.window.table_athletes_assigned)
+            # groups_athletes = db.session.query(GroupAthlete).filter_by(group_id=self.group.id).order_by('dorsal').all()
             filters = {GroupAthlete.group_id == self.group.id}
-            groups_athletes = GroupAthleteManager.get_group_athletes_by_filters(filters=filters)
+            groups_athletes = GroupAthleteManager.get_group_athletes_by_filters(filters=filters, join_group=True)
 
             if groups_athletes:
                 self.window.lb_error_add_athlete.setText('')
-                for i, item in enumerate(groups_athletes):
+                for item in groups_athletes:
+                    if not item.athlete:
+                        continue
+
+                    i = self.window.table_athletes_assigned.rowCount()
+
                     self.window.table_athletes_assigned.insertRow(i)
                     name = QtWidgets.QTableWidgetItem(item.athlete.full_name)
                     # disable editing in the cell
@@ -84,13 +97,6 @@ class AthletesGroupsController:
                     btn_remove.setProperty('group_athlete', item)
                     btn_remove.setStyleSheet(ButtonStyleSheet.BUTTON_ERROR)
                     self.window.table_athletes_assigned.setCellWidget(i, 5, btn_remove)
-
-                while True:
-                    row_count = self.window.table_athletes_assigned.rowCount()
-                    if row_count <= len(groups_athletes):
-                        break
-                    else:
-                        self.window.table_athletes_assigned.removeRow(row_count - 1)
 
                 if alert_without_dorsal_flag:
                     self.window.lb_alert.setText('Hay atletas sin dorsal')
@@ -186,8 +192,8 @@ class AthletesGroupsController:
         """ receives an array of athletes and show them in the table """
         if athletes:
             self.window.athletes_table.clearContents()
-            for i in range(self.window.athletes_table.rowCount()):
-                self.window.athletes_table.removeRow(i)
+            self.window.athletes_table.setRowCount(0)
+
             for i, athlete in enumerate(athletes):
                 self.window.athletes_table.insertRow(i)
                 name = QtWidgets.QTableWidgetItem(athlete.full_name)
@@ -208,12 +214,6 @@ class AthletesGroupsController:
                 btn_add.clicked.connect(self.add_athlete_to_group)
                 btn_add.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
                 self.window.athletes_table.setCellWidget(i, 4, btn_add)
-            while True:
-                row_count = self.window.athletes_table.rowCount()
-                if row_count <= len(athletes):
-                    break
-                else:
-                    self.window.athletes_table.removeRow(row_count - 1)
 
     def add_athlete_to_group(self):
         index_row = self.window.athletes_table.currentRow()
@@ -226,7 +226,9 @@ class AthletesGroupsController:
             filters = {GroupAthlete.group_id.in_(groups_list), GroupAthlete.athlete_id == athlete.id}
             check_exists = GroupAthleteManager.get_group_athletes_by_filters(filters)
             if check_exists:
-                self.window.lb_error_add_athlete.setText(f'{athlete.full_name} ya pertence a una tanda')
+                group_athlete = check_exists[0]
+                group_name = group_athlete.group.name
+                self.window.lb_error_add_athlete.setText(f'{athlete.full_name} ya pertence a la tanda {group_name}')
             else:
                 group_athlete = GroupAthlete(
                     athlete_id=athlete.id,

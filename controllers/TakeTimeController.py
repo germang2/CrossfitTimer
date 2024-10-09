@@ -155,7 +155,6 @@ class TakeTimeController:
 
             groups = GroupManager.get_groups_by_filters({Group.competence_id == self.competence.id}, order=Group.order.asc())
             if groups:
-                self.clear_table()
                 total_list = []
                 for group in groups:
                     athletes_groups = GroupAthleteManager.get_group_athletes_by_filters({GroupAthlete.group_id == group.id})
@@ -231,9 +230,12 @@ class TakeTimeController:
         self.clear_pdf_label()
 
     def show_athletes_table(self, athletes_groups):
-        for i, athlete in enumerate(athletes_groups):
+        self.clear_table()
+        for athlete in athletes_groups:
             if not athlete.athlete:
                 continue
+
+            i = self.window.table_times.rowCount()
 
             self.window.table_times.insertRow(i)
 
@@ -287,12 +289,7 @@ class TakeTimeController:
             tasks_completed_value = str(athlete.tasks_completed) if athlete.tasks_completed else ""
             tasks_completed = QtWidgets.QTableWidgetItem(tasks_completed_value)
             self.window.table_times.setItem(i, 8, tasks_completed)
-        while True:
-            row_count = self.window.table_times.rowCount()
-            if row_count <= len(athletes_groups):
-                break
-            else:
-                self.window.table_times.removeRow(row_count - 1)
+
         self.clear_pdf_label()
 
     def update_initial_time(self):
@@ -413,8 +410,10 @@ class TakeTimeController:
         self.clear_pdf_label()
 
     def clear_table(self):
-        for i in range(self.window.table_times.rowCount()):
-            self.window.table_times.removeRow(i)
+        # for i in range(self.window.table_times.rowCount()):
+        #     self.window.table_times.removeRow(i)
+        self.window.table_times.clearContents()
+        self.window.table_times.setRowCount(0)
 
     def reset_time(self):
         try:
