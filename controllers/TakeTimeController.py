@@ -51,6 +51,9 @@ class TakeTimeController:
         self.btn_no = None
         self.window.table_times.keyReleaseEvent = self.handle_table_event
         self.built_message_box()
+        self.pdf_configuration = {
+            "name_max_length": 24
+        }
 
     def built_message_box(self):
         self.message_box = QtWidgets.QMessageBox(self.window)
@@ -525,7 +528,7 @@ class TakeTimeController:
                             athlete.group.name[:10],
                             # index + 1 = position
                             position + 1,
-                            athlete.athlete.full_name[:32],
+                            athlete.athlete.full_name[:self.pdf_configuration["name_max_length"]],
                             athlete.athlete.nit,
                             athlete.athlete.club[:11],
 
@@ -549,7 +552,7 @@ class TakeTimeController:
 
     def none_safe_key(self, obj):
         return (
-            -(obj.tasks_completed if obj.tasks_completed is not None else 0),
+            -(int(obj.tasks_completed) if obj.tasks_completed is not None else 0),
             obj.total_time if obj.total_time is not None else None
         )
 
