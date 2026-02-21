@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+import regex
+
+
 def remove_inner_new_lines(value: str):
     """
     Fix a string and remove inner new lines
@@ -22,3 +26,12 @@ def get_edit_box_value(ed_box, return_none=False):
         return None if return_none else ""
     except Exception as e:
         print(f"Error getting value of edit box, error detail: {e}")
+
+
+def remove_special_chars(text):
+    """
+    Remove special characters from text
+    :param text: Text to remove special characters from
+    :return: str, 'This is a text'
+    """
+    return regex.sub(r'\p{P}', '', text)

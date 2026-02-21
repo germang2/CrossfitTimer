@@ -1,4 +1,4 @@
-import operator
+# -*- coding: utf-8 -*-
 
 from datetime import datetime
 from sqlalchemy import or_
@@ -21,6 +21,7 @@ from utils.style_sheet import ButtonStyleSheet
 from utils.string_helper import (
     get_edit_box_value,
     remove_inner_new_lines,
+    remove_special_chars,
 )
 from utils.Validations import is_positive_number
 from utils.logger_helper import logger
@@ -528,9 +529,9 @@ class TakeTimeController:
                             athlete.group.name[:10],
                             # index + 1 = position
                             position + 1,
-                            athlete.athlete.full_name[:self.pdf_configuration["name_max_length"]],
-                            athlete.athlete.nit,
-                            athlete.athlete.club[:11],
+                            remove_special_chars(athlete.athlete.full_name[:self.pdf_configuration["name_max_length"]]),
+                            remove_special_chars(athlete.athlete.nit),
+                            remove_special_chars(athlete.athlete.club[:11]),
 
                             athlete.dorsal,
                             '' if athlete.initial_time is None else athlete.initial_time.strftime('%H:%M:%S.%f')[:-3],
