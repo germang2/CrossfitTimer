@@ -35,3 +35,11 @@ def remove_special_chars(text):
     :return: str, 'This is a text'
     """
     return regex.sub(r'\p{P}', '', text)
+
+def allow_only_unicode_chars(text):
+    """
+    Allow only Unicode letters, numbers, punctuation, symbols and spaces
+    :param text: Text to filter
+    :return: str, filtered text
+    """
+    return regex.sub(r'[^\p{L}\p{N}\p{P}\p{S}\s]', '', text) if text else ""

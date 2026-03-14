@@ -8,7 +8,7 @@ from models.Athlete import Athlete
 from models.Category import Category
 
 from utils.style_sheet import ButtonStyleSheet
-from utils.string_helper import get_edit_box_value
+from utils.string_helper import get_edit_box_value, allow_only_unicode_chars
 
 
 class CategoryController:
@@ -24,7 +24,7 @@ class CategoryController:
         self.set_style_sheet()
 
     def create_category(self):
-        text = get_edit_box_value(self.window.ed_category)
+        text = allow_only_unicode_chars(get_edit_box_value(self.window.ed_category))
         if text:
             category = Category(name=text)
             db.session.add(category)
@@ -71,7 +71,7 @@ class CategoryController:
                 try:
                     category_id = int(self.window.categories_table.cellWidget(index_row, index_column).property('id'))
                     category = db.session.query(Category).filter_by(id=category_id).first()
-                    new_name = get_edit_box_value(self.window.categories_table.item(index_row, 0))
+                    new_name = allow_only_unicode_chars(get_edit_box_value(self.window.categories_table.item(index_row, 0)))
                     category.name = new_name
                     db.session.add(category)
                     db.session.commit()

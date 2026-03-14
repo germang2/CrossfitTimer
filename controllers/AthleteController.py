@@ -11,7 +11,7 @@ from models.GroupAthlete import GroupAthlete
 from engine import db
 
 from utils.style_sheet import ButtonStyleSheet
-from utils.string_helper import get_edit_box_value
+from utils.string_helper import get_edit_box_value, allow_only_unicode_chars
 from utils.Validations import *
 from utils.pagination_helper import PaginationHelper
 
@@ -50,10 +50,10 @@ class AthletesController:
     def create_athlete(self):
         """ Creates a new athlete with all fields """
         try:
-            full_name = get_edit_box_value(self.window.ed_name)
-            club = get_edit_box_value(self.window.ed_club)
-            nit = get_edit_box_value(self.window.ed_nit)
-            dorsal = get_edit_box_value(self.window.ed_dorsal, return_none=True)
+            full_name = allow_only_unicode_chars(get_edit_box_value(self.window.ed_name))
+            club = allow_only_unicode_chars(get_edit_box_value(self.window.ed_club))
+            nit = allow_only_unicode_chars(get_edit_box_value(self.window.ed_nit))
+            dorsal = allow_only_unicode_chars(get_edit_box_value(self.window.ed_dorsal, return_none=True))
             errors = validate_data(
                 full_name=full_name,
                 club=club,
@@ -81,7 +81,7 @@ class AthletesController:
             print(e)
 
     def filter_athletes(self):
-        text = get_edit_box_value(self.window.ed_filter)
+        text = allow_only_unicode_chars(get_edit_box_value(self.window.ed_filter))
         if text and len(text) >= 2:
             self.get_all_athletes(filter_text=text)
             self.clear_fields_errors()
@@ -177,10 +177,10 @@ class AthletesController:
             operation = self.window.athletes_table.cellWidget(index_row, index_column).property('operation')
             try:
                 if operation == 'modify' and athlete:
-                    full_name = get_edit_box_value(self.window.athletes_table.item(index_row, 0))
-                    nit = get_edit_box_value(self.window.athletes_table.item(index_row, 1))
-                    club = get_edit_box_value(self.window.athletes_table.item(index_row, 2))
-                    dorsal = get_edit_box_value(self.window.athletes_table.item(index_row, 3))
+                    full_name = allow_only_unicode_chars(get_edit_box_value(self.window.athletes_table.item(index_row, 0)))
+                    nit = allow_only_unicode_chars(get_edit_box_value(self.window.athletes_table.item(index_row, 1)))
+                    club = allow_only_unicode_chars(get_edit_box_value(self.window.athletes_table.item(index_row, 2)))
+                    dorsal = allow_only_unicode_chars(get_edit_box_value(self.window.athletes_table.item(index_row, 3)))
                     index_category = self.window.athletes_table.cellWidget(index_row, 4).currentIndex()
                     category_id = self.category_id_create[index_category]
                     errors = validate_data(

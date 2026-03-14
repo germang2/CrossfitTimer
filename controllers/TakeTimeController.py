@@ -22,6 +22,7 @@ from utils.string_helper import (
     get_edit_box_value,
     remove_inner_new_lines,
     remove_special_chars,
+    allow_only_unicode_chars,
 )
 from utils.Validations import is_positive_number
 from utils.logger_helper import logger
@@ -170,7 +171,7 @@ class TakeTimeController:
 
     def filter_athletes(self, edit_widget):
         try:
-            filter_text = get_edit_box_value(edit_widget)
+            filter_text = allow_only_unicode_chars(get_edit_box_value(edit_widget))
             if filter_text and filter_text[-1] == ',':
                 return
             groups = GroupManager.get_groups_by_filters(
@@ -197,7 +198,7 @@ class TakeTimeController:
 
     def filter_by_group(self):
         try:
-            filter_text = get_edit_box_value(self.window.ed_filter_group)
+            filter_text = allow_only_unicode_chars(get_edit_box_value(self.window.ed_filter_group))
             if filter_text and filter_text[-1] == ',':
                 return
             groups = GroupManager.get_groups_by_filters(
@@ -325,7 +326,7 @@ class TakeTimeController:
         :return: Array of GroupAthlete
         """
         try:
-            filter_text = get_edit_box_value(edit_widget)
+            filter_text = allow_only_unicode_chars(get_edit_box_value(edit_widget))
             athletes_groups_list = []
             if filter_text and filter_text[-1] == ',':
                 filter_text = filter_text[:-1]

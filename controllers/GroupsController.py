@@ -13,7 +13,7 @@ from models.Group import Group
 
 from utils.Validations import *
 from utils.style_sheet import ButtonStyleSheet
-from utils.string_helper import get_edit_box_value
+from utils.string_helper import get_edit_box_value, allow_only_unicode_chars
 
 
 class GroupController:
@@ -47,8 +47,8 @@ class GroupController:
 
     def create_group(self):
         """ validate data and creates a new Group """
-        name = get_edit_box_value(self.window.ed_group_name)
-        order = get_edit_box_value(self.window.ed_group_order)
+        name = allow_only_unicode_chars(get_edit_box_value(self.window.ed_group_name))
+        order = allow_only_unicode_chars(get_edit_box_value(self.window.ed_group_order))
         errors = validate_data(name=name, order=order)
         if errors:
             self.show_errors(errors)
@@ -140,8 +140,8 @@ class GroupController:
         index_row = self.window.groups_table.currentRow()
         index_column = self.window.groups_table.currentColumn()
         if index_row >= 0 and index_column >= 0:
-            name = get_edit_box_value(self.window.groups_table.item(index_row, 0))
-            order = get_edit_box_value(self.window.groups_table.item(index_row, 1))
+            name = allow_only_unicode_chars(get_edit_box_value(self.window.groups_table.item(index_row, 0)))
+            order = allow_only_unicode_chars(get_edit_box_value(self.window.groups_table.item(index_row, 1)))
             errors = validate_data(name, order)
             if not errors:
                 group_id = int(self.window.groups_table.cellWidget(index_row, index_column).property('id'))
