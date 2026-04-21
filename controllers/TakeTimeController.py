@@ -530,9 +530,9 @@ class TakeTimeController:
                             athlete.group.name[:10],
                             # index + 1 = position
                             position + 1,
-                            remove_special_chars(athlete.athlete.full_name[:self.pdf_configuration["name_max_length"]]),
-                            remove_special_chars(athlete.athlete.nit),
-                            remove_special_chars(athlete.athlete.club[:11]),
+                            allow_only_unicode_chars(athlete.athlete.full_name[:self.pdf_configuration["name_max_length"]]),
+                            allow_only_unicode_chars(athlete.athlete.nit),
+                            allow_only_unicode_chars(athlete.athlete.club[:11]),
 
                             athlete.dorsal,
                             '' if athlete.initial_time is None else athlete.initial_time.strftime('%H:%M:%S.%f')[:-3],
