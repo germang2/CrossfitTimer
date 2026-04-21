@@ -295,6 +295,20 @@ class TakeTimeController:
             tasks_completed = QtWidgets.QTableWidgetItem(tasks_completed_value)
             self.window.table_times.setItem(i, 8, tasks_completed)
 
+            penalty = QtWidgets.QTableWidgetItem("0")
+            self.window.table_times.setItem(i, 9, penalty)
+
+            # status column
+            container = QtWidgets.QWidget()
+            layout = QtWidgets.QHBoxLayout(container)
+            cb_status = QtWidgets.QCheckBox()
+            cb_status.setChecked(True)
+            cb_status.setStyleSheet(ButtonStyleSheet.CHECKBOX_STYLE)
+            layout.addWidget(cb_status)
+            layout.setAlignment(QtCore.Qt.AlignCenter)
+            layout.setContentsMargins(0, 0, 0, 0)
+            self.window.table_times.setCellWidget(i, 10, container)
+
         self.clear_pdf_label()
 
     def update_initial_time(self):

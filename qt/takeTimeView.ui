@@ -124,72 +124,55 @@
     <property name="text">
      <string>Grupo</string>
     </property>
-    <property name="textAlignment">
-     <set>AlignCenter</set>
-    </property>
    </column>
    <column>
     <property name="text">
      <string>Iniciar</string>
-    </property>
-    <property name="textAlignment">
-     <set>AlignCenter</set>
     </property>
    </column>
    <column>
     <property name="text">
      <string>Atleta</string>
     </property>
-    <property name="textAlignment">
-     <set>AlignCenter</set>
-    </property>
    </column>
    <column>
     <property name="text">
      <string>Categoria</string>
-    </property>
-    <property name="textAlignment">
-     <set>AlignCenter</set>
     </property>
    </column>
    <column>
     <property name="text">
      <string>Dorsal</string>
     </property>
-    <property name="textAlignment">
-     <set>AlignCenter</set>
-    </property>
    </column>
    <column>
     <property name="text">
      <string>Hora inicio</string>
-    </property>
-    <property name="textAlignment">
-     <set>AlignCenter</set>
     </property>
    </column>
    <column>
     <property name="text">
      <string>Hora fin</string>
     </property>
-    <property name="textAlignment">
-     <set>AlignCenter</set>
-    </property>
    </column>
    <column>
     <property name="text">
      <string>Tiempo total</string>
-    </property>
-    <property name="textAlignment">
-     <set>AlignCenter</set>
     </property>
    </column>
    <column>
     <property name="text">
      <string>Manillas</string>
     </property>
-    <property name="textAlignment">
-     <set>AlignCenter</set>
+   </column>
+   <column>
+    <property name="text">
+     <string>Amonestacion</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Estado</string>
     </property>
    </column>
   </widget>

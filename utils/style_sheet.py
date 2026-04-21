@@ -21,6 +21,17 @@ class ButtonStyleSheet(object):
         color: #f7f7f7;
     """
 
+    CHECKBOX_STYLE = """
+        QCheckBox:checked {
+            background-color: rgb(54, 93, 42);
+            color: white;
+        }
+        QCheckBox:unchecked {
+            background-color: white;
+            color: black;
+        }
+    """
+
     WINDOW_ICON_PATH = 'resources/img/icon.ico'
 
     @staticmethod
