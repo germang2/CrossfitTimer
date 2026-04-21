@@ -81,33 +81,59 @@ class TakeTimeController:
     def handle_table_event(self, e):
         if e.key() == QtCore.Qt.Key_Return or e.key() == QtCore.Qt.Key_Enter:
             index_row = self.window.table_times.currentRow()
-            if index_row >= 0:
-                # button start
-                index_column = 8
+            index_column = self.window.table_times.currentColumn()
+            if index_row >= 0 and index_column in [8, 9]:
                 _id = self.window.table_times.cellWidget(index_row, 1).property("group_athlete_id")
-                tasks_completed = self.window.table_times.item(index_row, index_column).text()
-                is_valid_number = is_positive_number(tasks_completed)
-                if is_valid_number:
-                    tasks_completed = int(tasks_completed)
-                    filters = {
-                        GroupAthlete.id == _id
-                    }
-                    group_athlete = GroupAthleteManager.get_group_athletes_by_filters(
-                        filters=filters
-                    )
-                    if group_athlete:
-                        group_athlete = group_athlete[0]
-                        group_athlete.tasks_completed = tasks_completed
+                value_text = self.window.table_times.item(index_row, index_column).text()
+
+                # Get current record to have the old value for reverting if needed
+                filters = {
+                    GroupAthlete.id == _id
+                }
+                group_athletes = GroupAthleteManager.get_group_athletes_by_filters(
+                    filters=filters
+                )
+                if group_athletes:
+                    group_athlete = group_athletes[0]
+                    # Determine old value based on column
+                    old_value = group_athlete.tasks_completed if index_column == 8 else group_athlete.penalty
+                    old_value_str = str(old_value) if old_value is not None else "0"
+
+                    # Validate new value
+                    is_valid = is_positive_number(value_text)
+                    if is_valid:
+                        value_int = int(value_text)
+                        # Specific validation for penalty column
+                        if index_column == 9 and value_int > 1000:
+                            is_valid = False
+
+                    if is_valid:
+                        if index_column == 8:
+                            group_athlete.tasks_completed = int(value_text)
+                        elif index_column == 9:
+                            group_athlete.penalty = int(value_text)
                         db.session.add(group_athlete)
                         db.session.commit()
-                else:
-                    self.clear_table_input(
-                        table=self.window.table_times,
-                        index_row=index_row,
-                        index_column=index_column,
-                    )
+                    else:
+                        # Revert the value in the table cell
+                        self.window.table_times.item(index_row, index_column).setText(old_value_str)
         else:
             pass
+
+    def handle_status_change(self, checkbox):
+        group_athlete_id = checkbox.property('group_athlete_id')
+        is_checked = checkbox.isChecked()
+        filters = {
+            GroupAthlete.id == group_athlete_id
+        }
+        group_athlete = GroupAthleteManager.get_group_athletes_by_filters(
+            filters=filters
+        )
+        if group_athlete:
+            group_athlete = group_athlete[0]
+            group_athlete.status = is_checked
+            db.session.add(group_athlete)
+            db.session.commit()
 
     def clear_table_input(self, table: QtWidgets.QTableWidget, index_row: int, index_column: int):
         """
@@ -295,15 +321,18 @@ class TakeTimeController:
             tasks_completed = QtWidgets.QTableWidgetItem(tasks_completed_value)
             self.window.table_times.setItem(i, 8, tasks_completed)
 
-            penalty = QtWidgets.QTableWidgetItem("0")
+            penalty_value = str(athlete.penalty) if athlete.penalty is not None else "0"
+            penalty = QtWidgets.QTableWidgetItem(penalty_value)
             self.window.table_times.setItem(i, 9, penalty)
 
-            # status column
+            # status column with widget-level styling (reverted)
             container = QtWidgets.QWidget()
             layout = QtWidgets.QHBoxLayout(container)
             cb_status = QtWidgets.QCheckBox()
-            cb_status.setChecked(True)
-            cb_status.setStyleSheet(ButtonStyleSheet.CHECKBOX_STYLE)
+            cb_status.setProperty('group_athlete_id', athlete.id)
+            cb_status.stateChanged.connect(lambda state, cb=cb_status: self.handle_status_change(cb))
+            cb_status.setChecked(athlete.status if athlete.status is not None else True)
+            cb_status.setStyleSheet(ButtonStyleSheet.CHECKBOX_STYLE) # Reverted to widget level
             layout.addWidget(cb_status)
             layout.setAlignment(QtCore.Qt.AlignCenter)
             layout.setContentsMargins(0, 0, 0, 0)

@@ -2,7 +2,7 @@ from ast import Str
 from engine import db
 from models.Athlete import Athlete
 from models.Group import Group
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
 
@@ -20,6 +20,8 @@ class GroupAthlete(db.Base):
     athlete = relationship(Athlete, backref='athletes')
     group = relationship(Group, backref='groups')
     tasks_completed = Column(String(10), nullable=True)
+    penalty = Column(Integer, default=0)
+    status = Column(Boolean, default=True)
 
     def __str__(self):
         return f'{self.athlete}, {self.dorsal}'
