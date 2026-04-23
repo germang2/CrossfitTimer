@@ -492,7 +492,7 @@ class TakeTimeController:
                 for group in groups:
                     athletes_groups = GroupAthleteManager.get_group_athletes_by_filters(
                         filters={GroupAthlete.group_id == group.id},
-                        order='total_time'
+                        order=GroupAthlete.adjusted_total_time
                     )
                     for athlete in athletes_groups:
                         category_name = athlete.athlete.category.name
@@ -578,7 +578,7 @@ class TakeTimeController:
                             athlete.dorsal,
                             '' if athlete.initial_time is None else athlete.initial_time.strftime('%H:%M:%S.%f')[:-3],
                             '' if athlete.final_time is None else athlete.final_time.strftime('%H:%M:%S.%f')[:-3],
-                            '' if athlete.total_time is None else athlete.total_time.strftime('%H:%M:%S.%f')[:-3],
+                            '' if athlete.adjusted_total_time is None else athlete.adjusted_total_time.strftime('%H:%M:%S.%f')[:-3],
                             athlete.tasks_completed if athlete.tasks_completed else 0,
                         ]
                         # Calculate row height based on Name wrapping
@@ -623,7 +623,7 @@ class TakeTimeController:
     def none_safe_key(self, obj):
         return (
             -(int(obj.tasks_completed) if obj.tasks_completed is not None else 0),
-            obj.total_time if obj.total_time is not None else None
+            obj.adjusted_total_time if obj.adjusted_total_time is not None else None
         )
 
     def set_style_sheet(self):

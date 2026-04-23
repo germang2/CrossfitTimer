@@ -2,8 +2,10 @@ from ast import Str
 from engine import db
 from models.Athlete import Athlete
 from models.Group import Group
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Boolean, func, cast
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.hybrid import hybrid_property
+from datetime import timedelta
 
 
 class GroupAthlete(db.Base):
@@ -22,6 +24,17 @@ class GroupAthlete(db.Base):
     tasks_completed = Column(String(10), nullable=True)
     penalty = Column(Integer, default=0)
     status = Column(Boolean, default=True)
+
+    @hybrid_property
+    def adjusted_total_time(self):
+        if self.total_time and self.penalty:
+            return self.total_time + timedelta(minutes=self.penalty)
+        return self.total_time
+
+    @adjusted_total_time.expression
+    def adjusted_total_time(cls):
+        # sqlite syntax for and adding minutes to a datetime
+        return func.datetime(cls.total_time, '+' + cast(func.coalesce(cls.penalty, 0), String) + ' minutes')
 
     def __str__(self):
         return f'{self.athlete}, {self.dorsal}'
