@@ -557,11 +557,13 @@ class TakeTimeController:
                     pdf.set_font('Arial', '', 9.0)
                     pdf.ln(2 * th)
 
-                    list_with_time = [a for a in athlete_list if a.total_time]
-                    list_no_time = [a for a in athlete_list if a.total_time is None]
-                    # sorted_list = sorted(list_with_time, key=lambda x: x.total_time)
+                    list_active = [a for a in athlete_list if a.status]
+                    list_inactive = [a for a in athlete_list if not a.status]
+
+                    list_with_time = [a for a in list_active if a.total_time]
+                    list_no_time = [a for a in list_active if a.total_time is None]
                     sorted_list = sorted(list_with_time, key=self.none_safe_key, reverse=False)
-                    sorted_list = sorted_list + list_no_time
+                    sorted_list = sorted_list + list_no_time + list_inactive
 
                     for position, athlete in enumerate(sorted_list):
                         if not athlete:
@@ -593,16 +595,23 @@ class TakeTimeController:
                         x_start = pdf.get_x()
                         y_start = pdf.get_y()
 
+                        # Styling for inactive rows
+                        fill = not athlete.status
+                        if fill:
+                            pdf.set_fill_color(255, 200, 200)
+                        else:
+                            pdf.set_fill_color(255, 255, 255)
+
                         for i, val in enumerate(data):
                             width = column_width[i]
                             if i == 2:
                                 # Nombre column with wrapping
                                 x = pdf.get_x()
                                 y = pdf.get_y()
-                                pdf.multi_cell(width, row_h / lines, str(val), border=1)
+                                pdf.multi_cell(width, row_h / lines, str(val), border=1, fill=fill)
                                 pdf.set_xy(x + width, y)
                             else:
-                                pdf.cell(width, row_h, str(val), border=1)
+                                pdf.cell(width, row_h, str(val), border=1, fill=fill)
 
                         pdf.set_y(y_start + row_h)
 
