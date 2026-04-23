@@ -24,6 +24,8 @@
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
+.idea/CrossfitTimer.iml
+.idea/misc.xmls
 
 # Gradle
 .idea/**/gradle.xml

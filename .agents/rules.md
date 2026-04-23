@@ -1,0 +1,1 @@
+- Do not add steps for manual verification. The user will handle all manual verification and review the implementation directly.

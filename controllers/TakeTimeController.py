@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import math
 from datetime import datetime
 from sqlalchemy import or_
 
@@ -21,7 +22,6 @@ from utils.style_sheet import ButtonStyleSheet
 from utils.string_helper import (
     get_edit_box_value,
     remove_inner_new_lines,
-    remove_special_chars,
     allow_only_unicode_chars,
 )
 from utils.Validations import is_positive_number
@@ -512,7 +512,6 @@ class TakeTimeController:
                         'Tanda',
                         'Posición',
                         'Nombre',
-                        'Identificacion',
                         'Club',
                         'Dorsal',
                         'Hora Inicial',
@@ -527,21 +526,19 @@ class TakeTimeController:
                         # Position
                         1: col_width * 0.3,
                         # Name
-                        2: col_width * 0.8,
-                        # Identification
-                        3: col_width * 0.4,
+                        2: col_width * 1.2,
                         # Club
-                        4: col_width * 0.45,
+                        3: col_width * 0.45,
                         # Dorsal
-                        5: col_width * 0.3,
+                        4: col_width * 0.3,
                         # Initial time
-                        6: col_width * 0.4,
+                        5: col_width * 0.4,
                         # Final time
-                        7: col_width * 0.4,
+                        6: col_width * 0.4,
                         # Total time
-                        8: col_width * 0.4,
+                        7: col_width * 0.4,
                         # Tasks_completed
-                        9: col_width * 0.3
+                        8: col_width * 0.3
                     }
                     pdf.set_font('Arial', 'B', 12)
                     pdf.add_page()
@@ -573,8 +570,7 @@ class TakeTimeController:
                             athlete.group.name[:10],
                             # index + 1 = position
                             position + 1,
-                            allow_only_unicode_chars(athlete.athlete.full_name[:self.pdf_configuration["name_max_length"]]),
-                            allow_only_unicode_chars(athlete.athlete.nit),
+                            allow_only_unicode_chars(athlete.athlete.full_name),
                             allow_only_unicode_chars(athlete.athlete.club[:11]),
 
                             athlete.dorsal,
@@ -583,12 +579,32 @@ class TakeTimeController:
                             '' if athlete.total_time is None else athlete.total_time.strftime('%H:%M:%S.%f')[:-3],
                             athlete.tasks_completed if athlete.tasks_completed else 0,
                         ]
+                        # Calculate row height based on Name wrapping
+                        name_text = str(data[2])
+                        name_w = column_width[2]
+                        # Rough estimate of lines needed
+                        lines = math.ceil(pdf.get_string_width(name_text) / (name_w - 0.1))
+                        lines = max(lines, 1)
+                        row_h = max(2 * th, lines * th)
+
+                        if pdf.get_y() + row_h > pdf.page_break_trigger:
+                            pdf.add_page()
+
+                        x_start = pdf.get_x()
+                        y_start = pdf.get_y()
+
                         for i, val in enumerate(data):
                             width = column_width[i]
-                            #TODO: cut val in base of column size
-                            pdf.cell(width, 2 * th, str(val), border=1)
+                            if i == 2:
+                                # Nombre column with wrapping
+                                x = pdf.get_x()
+                                y = pdf.get_y()
+                                pdf.multi_cell(width, row_h / lines, str(val), border=1)
+                                pdf.set_xy(x + width, y)
+                            else:
+                                pdf.cell(width, row_h, str(val), border=1)
 
-                        pdf.ln(2*th)
+                        pdf.set_y(y_start + row_h)
 
                     pdf.output(f'{self.competence.name}_{category_name}.pdf', 'F')
                     self.window.lb_pdf.setText('PDF generados con exito')
