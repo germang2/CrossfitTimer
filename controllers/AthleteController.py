@@ -19,6 +19,12 @@ from utils.pagination_helper import PaginationHelper
 class AthletesController:
     def __init__(self, window: AthletesWindow):
         self.window = window
+        
+        # Setup Resizable Layout and Styles
+        self.setup_resizable_layout()
+        self.set_style_sheet()
+        
+        # Initialize Controller State
         self.window.btn_add_atlete.clicked.connect(self.create_athlete)
         self.window.btn_get_all_athletes.clicked.connect(self.get_all_athletes)
         self.window.ed_filter.keyPressEvent = self.on_key_search_athlete
@@ -26,10 +32,170 @@ class AthletesController:
         self.category_id_modify = {}
         self.load_categories()
         self.clear_table()
-        self.window.athletes_table.setColumnWidth(0, 380)
-        self.set_style_sheet()
+        
         self.pagination_helper = PaginationHelper()
         self.initialize_pagination()
+
+    def setup_resizable_layout(self):
+        """
+        Organizes the UI components into nested layouts to allow for resizing.
+        This version centers the form elements above the table and fixes their width.
+        """
+        # Set minimum window size to match the original design
+        self.window.setMinimumSize(QtCore.QSize(1140, 764))
+        
+        self.centralwidget = QtWidgets.QWidget(self.window)
+        self.centralwidget.setObjectName("centralwidget")
+        self.main_layout = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.main_layout.setContentsMargins(50, 20, 50, 20)
+        self.main_layout.setSpacing(20)
+        self.main_layout.setObjectName("main_layout")
+
+        # --- CENTERING WRAPPER FOR FORM ELEMENTS ---
+        self.centering_layout = QtWidgets.QHBoxLayout()
+        self.form_vbox = QtWidgets.QVBoxLayout()
+        self.form_vbox.setSpacing(15)
+        # Fix the width of the form area to match the "small screen" look (~1000px)
+        # This will be centered horizontally by the stretches in centering_layout
+        self.form_container_widget = QtWidgets.QWidget()
+        self.form_container_widget.setFixedWidth(1040)
+        self.form_container_layout = QtWidgets.QVBoxLayout(self.form_container_widget)
+        self.form_container_layout.setContentsMargins(0, 0, 0, 0)
+        self.form_container_layout.setSpacing(15)
+
+        # 1. Title Section
+        self.window.lb_title.setParent(self.form_container_widget)
+        self.window.lb_title.setMinimumHeight(60)
+        self.form_container_layout.addWidget(self.window.lb_title)
+
+        # 2. Name Section
+        self.name_section = QtWidgets.QVBoxLayout()
+        self.name_section.setSpacing(5)
+        self.window.label_2.setParent(self.form_container_widget)
+        self.window.ed_name.setParent(self.form_container_widget)
+        self.window.lb_name_error.setParent(self.form_container_widget)
+        self.name_section.addWidget(self.window.label_2)
+        self.name_section.addWidget(self.window.ed_name)
+        self.name_section.addWidget(self.window.lb_name_error)
+        self.form_container_layout.addLayout(self.name_section)
+
+        # 3. Details Section (Cedula, Club, Dorsal, Categoria)
+        self.details_row = QtWidgets.QHBoxLayout()
+        self.details_row.setSpacing(20)
+
+        # Cedula
+        self.cedula_vbox = QtWidgets.QVBoxLayout()
+        self.window.label_8.setParent(self.form_container_widget)
+        self.window.ed_nit.setParent(self.form_container_widget)
+        self.window.lb_nit_error.setParent(self.form_container_widget)
+        self.cedula_vbox.addWidget(self.window.label_8)
+        self.cedula_vbox.addWidget(self.window.ed_nit)
+        self.cedula_vbox.addWidget(self.window.lb_nit_error)
+        self.details_row.addLayout(self.cedula_vbox)
+
+        # Club
+        self.club_vbox = QtWidgets.QVBoxLayout()
+        self.window.label_5.setParent(self.form_container_widget)
+        self.window.ed_club.setParent(self.form_container_widget)
+        self.window.lb_club_error.setParent(self.form_container_widget)
+        self.club_vbox.addWidget(self.window.label_5)
+        self.club_vbox.addWidget(self.window.ed_club)
+        self.club_vbox.addWidget(self.window.lb_club_error)
+        self.details_row.addLayout(self.club_vbox)
+
+        # Dorsal
+        self.dorsal_vbox = QtWidgets.QVBoxLayout()
+        self.window.label_11.setParent(self.form_container_widget)
+        self.window.ed_dorsal.setParent(self.form_container_widget)
+        self.window.lb_dorsal_error.setParent(self.form_container_widget)
+        self.dorsal_vbox.addWidget(self.window.label_11)
+        self.dorsal_vbox.addWidget(self.window.ed_dorsal)
+        self.dorsal_vbox.addWidget(self.window.lb_dorsal_error)
+        self.details_row.addLayout(self.dorsal_vbox)
+
+        # Categoria
+        self.cat_vbox = QtWidgets.QVBoxLayout()
+        self.window.label_6.setParent(self.form_container_widget)
+        self.window.cb_categories.setParent(self.form_container_widget)
+        self.cat_vbox.addWidget(self.window.label_6)
+        self.cat_vbox.addWidget(self.window.cb_categories)
+        self.cat_vbox.addStretch()
+        self.details_row.addLayout(self.cat_vbox)
+
+        self.form_container_layout.addLayout(self.details_row)
+
+        # 4. Agregar Button (Centered within form area)
+        self.btn_add_layout = QtWidgets.QHBoxLayout()
+        self.window.btn_add_atlete.setParent(self.form_container_widget)
+        self.window.btn_add_atlete.setMinimumSize(QtCore.QSize(181, 41))
+        self.btn_add_layout.addStretch()
+        self.btn_add_layout.addWidget(self.window.btn_add_atlete)
+        self.btn_add_layout.addStretch()
+        self.form_container_layout.addLayout(self.btn_add_layout)
+
+        # 5. Search and Filter Area
+        self.search_area = QtWidgets.QHBoxLayout()
+        
+        # Left: Consultar and Pagination
+        self.search_left = QtWidgets.QVBoxLayout()
+        self.window.btn_get_all_athletes.setParent(self.form_container_widget)
+        self.window.btn_get_all_athletes.setMinimumSize(QtCore.QSize(121, 41))
+        self.search_left.addWidget(self.window.btn_get_all_athletes)
+        
+        self.pagination_layout = QtWidgets.QHBoxLayout()
+        self.window.lb_pagination.setParent(self.form_container_widget)
+        self.window.cb_pagination.setParent(self.form_container_widget)
+        self.pagination_layout.addWidget(self.window.lb_pagination)
+        self.pagination_layout.addWidget(self.window.cb_pagination)
+        self.pagination_layout.addStretch()
+        self.search_left.addLayout(self.pagination_layout)
+        self.search_area.addLayout(self.search_left)
+
+        self.search_area.addStretch()
+
+        # Right: Filtrar
+        self.search_right = QtWidgets.QVBoxLayout()
+        self.search_right.setSpacing(2)
+        self.window.label_7.setParent(self.form_container_widget)
+        self.window.ed_filter.setParent(self.form_container_widget)
+        self.window.label_9.setParent(self.form_container_widget)
+        self.window.label_10.setParent(self.form_container_widget)
+        self.search_right.addWidget(self.window.label_7)
+        self.search_right.addWidget(self.window.ed_filter)
+        self.search_right.addWidget(self.window.label_9)
+        self.search_right.addWidget(self.window.label_10)
+        self.search_area.addLayout(self.search_right)
+        
+        self.form_container_layout.addLayout(self.search_area)
+
+        # Finalize and center the form container
+        self.centering_layout.addStretch()
+        self.centering_layout.addWidget(self.form_container_widget)
+        self.centering_layout.addStretch()
+        self.main_layout.addLayout(self.centering_layout)
+
+        # 6. Table Section (Full width below form)
+        self.window.athletes_table.setParent(self.centralwidget)
+        header = self.window.athletes_table.horizontalHeader()
+        # Set Nombres to stretch and others to interactive for a balanced, adjustable layout
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        for col in range(1, 7):
+            header.setSectionResizeMode(col, QtWidgets.QHeaderView.Interactive)
+            self.window.athletes_table.setColumnWidth(col, 120)
+        
+        # Increase width for Club column
+        self.window.athletes_table.setColumnWidth(2, 150)
+        self.main_layout.addWidget(self.window.athletes_table)
+
+        # 7. Footer
+        self.footer_layout = QtWidgets.QVBoxLayout()
+        self.window.lb_general_error.setParent(self.centralwidget)
+        self.window.lb_error_delete.setParent(self.centralwidget)
+        self.footer_layout.addWidget(self.window.lb_general_error)
+        self.footer_layout.addWidget(self.window.lb_error_delete)
+        self.main_layout.addLayout(self.footer_layout)
+
+        self.window.setCentralWidget(self.centralwidget)
 
     def handle_pagination(self):
         index = self.window.cb_pagination.currentIndex()
