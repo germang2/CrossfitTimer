@@ -35,6 +35,7 @@ class TakeTimeController:
         self.window.ed_filter.setText('')
         self.window.lb_competence_name.setText(self.competence.name)
         self.window.lb_competence_date.setText(self.competence.date.strftime('%d-%m-%Y'))
+        self.setup_resizable_layout()
         self.window.ed_filter.keyPressEvent = self.on_key_ed_filter
         self.window.ed_filter_2.keyPressEvent = self.on_key_ed_filter_2
         self.window.ed_filter_3.keyPressEvent = self.on_key_ed_filter_3
@@ -56,6 +57,150 @@ class TakeTimeController:
         self.pdf_configuration = {
             "name_max_length": 24
         }
+
+    def setup_resizable_layout(self):
+        # 1. Main Setup
+        self.centralwidget = QtWidgets.QWidget(self.window)
+        self.main_layout = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.main_layout.setContentsMargins(20, 10, 20, 20)
+        self.main_layout.setSpacing(10)
+
+        # 2. Header Section (Centered)
+        self.setup_header_section()
+
+        # 3. Filters Section (Centered)
+        self.setup_filters_section()
+
+        # 4. Table Section (Stretchable)
+        self.setup_table_section()
+
+        # 5. Footer Section (Left-aligned)
+        self.setup_footer_section()
+
+        self.window.setCentralWidget(self.centralwidget)
+        self.window.setMinimumSize(QtCore.QSize(1300, 850))
+
+    def setup_header_section(self):
+        self.header_layout = QtWidgets.QVBoxLayout()
+        
+        # Centering Wrapper for Title
+        self.title_centering = QtWidgets.QHBoxLayout()
+        self.window.lb_title.setParent(self.centralwidget)
+        self.window.lb_title.setMinimumSize(QtCore.QSize(1000, 50))
+        self.title_centering.addStretch()
+        self.title_centering.addWidget(self.window.lb_title)
+        self.title_centering.addStretch()
+        self.header_layout.addLayout(self.title_centering)
+
+        # Competence Info (Centered)
+        self.info_centering = QtWidgets.QHBoxLayout()
+        self.info_container = QtWidgets.QWidget()
+        self.info_container.setFixedWidth(500)
+        self.info_grid = QtWidgets.QGridLayout(self.info_container)
+        self.info_grid.setSpacing(5)
+
+        self.window.label_2.setParent(self.info_container)
+        self.window.lb_competence_name.setParent(self.info_container)
+        self.window.label_3.setParent(self.info_container)
+        self.window.lb_competence_date.setParent(self.info_container)
+
+        self.info_grid.addWidget(self.window.label_2, 0, 0, QtCore.Qt.AlignRight)
+        self.info_grid.addWidget(self.window.lb_competence_name, 0, 1, QtCore.Qt.AlignLeft)
+        self.info_grid.addWidget(self.window.label_3, 1, 0, QtCore.Qt.AlignRight)
+        self.info_grid.addWidget(self.window.lb_competence_date, 1, 1, QtCore.Qt.AlignLeft)
+
+        self.info_centering.addStretch()
+        self.info_centering.addWidget(self.info_container)
+        self.info_centering.addStretch()
+        self.header_layout.addLayout(self.info_centering)
+        
+        self.main_layout.addLayout(self.header_layout)
+
+    def setup_filters_section(self):
+        self.filters_centering = QtWidgets.QHBoxLayout()
+        self.filters_container = QtWidgets.QWidget()
+        self.filters_container.setFixedWidth(1000)
+        self.filters_grid = QtWidgets.QGridLayout(self.filters_container)
+        self.filters_grid.setSpacing(10)
+
+        # Column 0: Order and Group Filter
+        self.filters_grid.addWidget(self.window.label_7, 0, 0)
+        self.window.cb_order_table.setParent(self.filters_container)
+        self.filters_grid.addWidget(self.window.cb_order_table, 1, 0)
+        
+        self.filters_grid.addWidget(self.window.label_6, 0, 1)
+        self.window.ed_filter_group.setParent(self.filters_container)
+        self.filters_grid.addWidget(self.window.ed_filter_group, 1, 1)
+
+        # Column 2: Dorsal Filters
+        self.filters_grid.addWidget(self.window.label_5, 0, 2)
+        
+        # Row 1: Filter 3 (Top row of dorsal filters in original UI)
+        row1_h = QtWidgets.QHBoxLayout()
+        self.window.ed_filter_3.setParent(self.filters_container)
+        self.window.btn_update_final_time_3.setParent(self.filters_container)
+        row1_h.addWidget(self.window.ed_filter_3)
+        row1_h.addWidget(self.window.btn_update_final_time_3)
+        self.filters_grid.addLayout(row1_h, 1, 2)
+
+        # Row 2: Filter 2
+        row2_h = QtWidgets.QHBoxLayout()
+        self.window.ed_filter_2.setParent(self.filters_container)
+        self.window.btn_update_final_time_2.setParent(self.filters_container)
+        row2_h.addWidget(self.window.ed_filter_2)
+        row2_h.addWidget(self.window.btn_update_final_time_2)
+        self.filters_grid.addLayout(row2_h, 2, 2)
+
+        # Row 3: Filter 1 (Bottom row of dorsal filters)
+        row3_h = QtWidgets.QHBoxLayout()
+        self.window.ed_filter.setParent(self.filters_container)
+        self.window.btn_update_final_time.setParent(self.filters_container)
+        row3_h.addWidget(self.window.ed_filter)
+        row3_h.addWidget(self.window.btn_update_final_time)
+        self.filters_grid.addLayout(row3_h, 3, 2)
+
+        # Reset Section
+        reset_h = QtWidgets.QHBoxLayout()
+        self.window.ed_reset.setParent(self.filters_container)
+        self.window.btn_reset_time.setParent(self.filters_container)
+        reset_h.addWidget(self.window.ed_reset)
+        reset_h.addWidget(self.window.btn_reset_time)
+        self.filters_grid.addLayout(reset_h, 2, 3)
+
+        self.filters_centering.addStretch()
+        self.filters_centering.addWidget(self.filters_container)
+        self.filters_centering.addStretch()
+        self.main_layout.addLayout(self.filters_centering)
+
+    def setup_table_section(self):
+        self.window.table_times.setParent(self.centralwidget)
+        header = self.window.table_times.horizontalHeader()
+        
+        # Column 2 (Atleta) is index 2, should be biggest
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
+        
+        # Column 1 (Iniciar) should NOT be resizable as per user's "except by second column"
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Fixed)
+        self.window.table_times.setColumnWidth(1, 100)
+        
+        # All others must be re-size
+        for col in range(self.window.table_times.columnCount()):
+            if col not in [1, 2]:
+                header.setSectionResizeMode(col, QtWidgets.QHeaderView.Interactive)
+                self.window.table_times.setColumnWidth(col, 100)
+        
+        self.main_layout.addWidget(self.window.table_times)
+
+    def setup_footer_section(self):
+        self.footer_layout = QtWidgets.QHBoxLayout()
+        self.window.btn_pdf.setParent(self.centralwidget)
+        self.window.lb_pdf.setParent(self.centralwidget)
+        
+        self.footer_layout.addWidget(self.window.btn_pdf)
+        self.footer_layout.addWidget(self.window.lb_pdf)
+        self.footer_layout.addStretch() # Align to left
+        
+        self.main_layout.addLayout(self.footer_layout)
 
     def built_message_box(self):
         self.message_box = QtWidgets.QMessageBox(self.window)
