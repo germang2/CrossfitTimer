@@ -14,10 +14,57 @@ from utils.string_helper import get_edit_box_value, allow_only_unicode_chars
 class CategoryController:
     def __init__(self, main_window: CategoriesWindow, *args, **kwargs):
         self.window = main_window
-        self.window.categories_table.setFixedWidth(720)
-        self.window.categories_table.setColumnWidth(0, 380)
+        
+        # Setup Resizable Layout
+        from PyQt5 import QtCore
+        self.window.setMinimumSize(QtCore.QSize(803, 619))
+        
+        self.centralwidget = QtWidgets.QWidget(self.window)
+        self.centralwidget.setObjectName("centralwidget")
+        self.main_layout = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.main_layout.setContentsMargins(50, 20, 50, 20)
+        self.main_layout.setSpacing(20)
+        self.main_layout.setObjectName("main_layout")
+
+        # Reparent and add widgets to layouts
+        self.window.lb_title.setParent(self.centralwidget)
+        self.window.lb_title.setMinimumHeight(80)
+        self.main_layout.addWidget(self.window.lb_title)
+
+        self.controls_layout = QtWidgets.QHBoxLayout()
+        self.controls_layout.setSpacing(20)
+        self.controls_layout.setObjectName("controls_layout")
+
+        self.window.btn_get_all_categories.setParent(self.centralwidget)
+        self.window.btn_get_all_categories.setMinimumSize(QtCore.QSize(161, 35))
+        self.controls_layout.addWidget(self.window.btn_get_all_categories)
+        
+        self.controls_layout.addStretch()
+
+        self.window.ed_category.setParent(self.centralwidget)
+        self.window.ed_category.setMinimumSize(QtCore.QSize(231, 41))
+        self.controls_layout.addWidget(self.window.ed_category)
+
+        self.window.btn_create_category.setParent(self.centralwidget)
+        self.window.btn_create_category.setMinimumSize(QtCore.QSize(121, 35))
+        self.controls_layout.addWidget(self.window.btn_create_category)
+
+        self.main_layout.addLayout(self.controls_layout)
+
+        self.window.categories_table.setParent(self.centralwidget)
+        header = self.window.categories_table.horizontalHeader()
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Fixed)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.Fixed)
         self.window.categories_table.setColumnWidth(1, 150)
         self.window.categories_table.setColumnWidth(2, 150)
+        self.main_layout.addWidget(self.window.categories_table)
+
+        self.window.lb_error_delete.setParent(self.centralwidget)
+        self.main_layout.addWidget(self.window.lb_error_delete)
+
+        self.window.setCentralWidget(self.centralwidget)
+
         self.window.btn_create_category.clicked.connect(self.create_category)
         self.window.btn_get_all_categories.clicked.connect(self.get_all_categories)
         self.clear_table()
@@ -101,7 +148,6 @@ class CategoryController:
             self.window.categories_table.removeRow(i)
 
     def set_style_sheet(self):
-        self.window.setFixedWidth(self.window.geometry().width())
         self.window.lb_title.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.btn_get_all_categories.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)
         self.window.btn_create_category.setStyleSheet(ButtonStyleSheet.BUTTON_SUCCESS)

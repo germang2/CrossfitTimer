@@ -1,1 +1,2 @@
 - Do not add steps for manual verification. The user will handle all manual verification and review the implementation directly.
+- Never update the files within qt/ folder. In case we need to update some ui, edit the Controller related or create a new handler.
