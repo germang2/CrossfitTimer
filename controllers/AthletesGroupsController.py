@@ -25,11 +25,149 @@ class AthletesGroupsController:
         self.window = window
         self.competence = competence
         self.group = group
+        self.setup_resizable_layout()
         self.clear_tables()
         self.load_info()
         self.window.ed_filter_athlete.textChanged.connect(self.filter_athletes)
         self.window.btn_load_athletes.clicked.connect(self.load_all_athletes)
         self.window.btn_reload_assigned_athletes.clicked.connect(self.load_athletes_assigned)
+
+    def setup_resizable_layout(self):
+        # 1. Main Setup
+        self.centralwidget = QtWidgets.QWidget(self.window)
+        self.main_layout = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.main_layout.setContentsMargins(20, 10, 20, 20)
+        self.main_layout.setSpacing(10)
+
+        # 2. Top Info Section (Centered)
+        self.setup_top_info_section()
+
+        # 3. Grid for Tables and Controls (Aligns rows)
+        self.grid_layout = QtWidgets.QGridLayout()
+        self.grid_layout.setSpacing(20)
+        self.grid_layout.setColumnStretch(0, 1)
+        self.grid_layout.setColumnStretch(1, 1)
+
+        # 4. Available Athletes Section (Left)
+        # Filters Area container
+        self.avail_filters_container = QtWidgets.QWidget()
+        self.avail_filters_container.setFixedWidth(500)
+        self.avail_vbox = QtWidgets.QVBoxLayout(self.avail_filters_container)
+        self.avail_vbox.setContentsMargins(0, 0, 0, 0)
+        self.avail_vbox.setSpacing(2)
+
+        self.window.label_3.setParent(self.avail_filters_container)
+        self.window.ed_filter_athlete.setParent(self.avail_filters_container)
+        self.window.label_4.setParent(self.avail_filters_container)
+        self.window.btn_load_athletes.setParent(self.avail_filters_container)
+        
+        self.avail_vbox.addWidget(self.window.label_3)
+        self.avail_vbox.addWidget(self.window.ed_filter_athlete)
+        self.avail_vbox.addWidget(self.window.label_4)
+        self.avail_actions = QtWidgets.QHBoxLayout()
+        self.avail_actions.addStretch()
+        self.avail_actions.addWidget(self.window.btn_load_athletes)
+        self.avail_vbox.addLayout(self.avail_actions)
+
+        self.grid_layout.addWidget(self.avail_filters_container, 0, 0, QtCore.Qt.AlignLeft | QtCore.Qt.AlignBottom)
+
+        # Left Table
+        self.window.athletes_table.setParent(self.centralwidget)
+        header_left = self.window.athletes_table.horizontalHeader()
+        header_left.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        for col in range(1, 5):
+            header_left.setSectionResizeMode(col, QtWidgets.QHeaderView.Interactive)
+            if col == 1: # Categoria
+                self.window.athletes_table.setColumnWidth(col, 170)
+            else:
+                self.window.athletes_table.setColumnWidth(col, 100)
+        self.grid_layout.addWidget(self.window.athletes_table, 1, 0)
+
+        # Left Error label
+        self.window.lb_error_add_athlete.setParent(self.centralwidget)
+        self.grid_layout.addWidget(self.window.lb_error_add_athlete, 2, 0)
+
+        # 5. Assigned Athletes Section (Right)
+        # Header Area container
+        self.assigned_top_container = QtWidgets.QWidget()
+        self.assigned_top_container.setFixedWidth(500)
+        self.assigned_vbox = QtWidgets.QVBoxLayout(self.assigned_top_container)
+        self.assigned_vbox.setContentsMargins(0, 0, 0, 0)
+        self.assigned_vbox.setSpacing(10)
+
+        self.assigned_header = QtWidgets.QHBoxLayout()
+        self.window.btn_reload_assigned_athletes.setParent(self.assigned_top_container)
+        self.window.label_6.setParent(self.assigned_top_container)
+        self.window.lb_group_name_2.setParent(self.assigned_top_container)
+        
+        self.assigned_header.addWidget(self.window.btn_reload_assigned_athletes)
+        self.assigned_header.addWidget(self.window.label_6)
+        self.assigned_header.addWidget(self.window.lb_group_name_2)
+        self.assigned_header.addStretch()
+        self.assigned_vbox.addLayout(self.assigned_header)
+
+        self.grid_layout.addWidget(self.assigned_top_container, 0, 1, QtCore.Qt.AlignLeft | QtCore.Qt.AlignBottom)
+
+        # Right Table
+        self.window.table_athletes_assigned.setParent(self.centralwidget)
+        header_right = self.window.table_athletes_assigned.horizontalHeader()
+        header_right.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        for col in range(1, 6):
+            header_right.setSectionResizeMode(col, QtWidgets.QHeaderView.Interactive)
+            if col == 2: # Categoria
+                self.window.table_athletes_assigned.setColumnWidth(col, 170)
+            else:
+                self.window.table_athletes_assigned.setColumnWidth(col, 90)
+        self.grid_layout.addWidget(self.window.table_athletes_assigned, 1, 1)
+
+        # Right Alert label
+        self.window.lb_alert.setParent(self.centralwidget)
+        self.grid_layout.addWidget(self.window.lb_alert, 2, 1)
+
+        self.main_layout.addLayout(self.grid_layout)
+        
+        self.window.setCentralWidget(self.centralwidget)
+        self.window.setMinimumSize(QtCore.QSize(1300, 750))
+
+    def setup_top_info_section(self):
+        self.top_section_layout = QtWidgets.QVBoxLayout()
+        
+        # Centering Wrapper for Top Header
+        self.header_centering = QtWidgets.QHBoxLayout()
+        self.window.lb_title.setParent(self.centralwidget)
+        self.window.lb_title.setMinimumSize(QtCore.QSize(1000, 40))
+        self.header_centering.addStretch()
+        self.header_centering.addWidget(self.window.lb_title)
+        self.header_centering.addStretch()
+        self.top_section_layout.addLayout(self.header_centering)
+
+        # Form-like info Grid (Centered)
+        self.info_centering = QtWidgets.QHBoxLayout()
+        self.info_container = QtWidgets.QWidget()
+        self.info_container.setFixedWidth(600)
+        self.info_grid = QtWidgets.QGridLayout(self.info_container)
+        self.info_grid.setSpacing(5)
+
+        self.window.label.setParent(self.info_container)
+        self.window.lb_competence_name.setParent(self.info_container)
+        self.window.label_5.setParent(self.info_container)
+        self.window.lb_competence_date.setParent(self.info_container)
+        self.window.label_2.setParent(self.info_container)
+        self.window.lb_group_name.setParent(self.info_container)
+
+        self.info_grid.addWidget(self.window.label, 0, 0, QtCore.Qt.AlignRight)
+        self.info_grid.addWidget(self.window.lb_competence_name, 0, 1, QtCore.Qt.AlignLeft)
+        self.info_grid.addWidget(self.window.label_5, 1, 0, QtCore.Qt.AlignRight)
+        self.info_grid.addWidget(self.window.lb_competence_date, 1, 1, QtCore.Qt.AlignLeft)
+        self.info_grid.addWidget(self.window.label_2, 2, 0, QtCore.Qt.AlignRight)
+        self.info_grid.addWidget(self.window.lb_group_name, 2, 1, QtCore.Qt.AlignLeft)
+
+        self.info_centering.addStretch()
+        self.info_centering.addWidget(self.info_container)
+        self.info_centering.addStretch()
+        
+        self.top_section_layout.addLayout(self.info_centering)
+        self.main_layout.addLayout(self.top_section_layout)
 
     def load_info(self):
         """ loads the information about the competence and group """
