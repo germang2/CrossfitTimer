@@ -241,22 +241,37 @@ class TakeTimeController:
                 if group_athletes:
                     group_athlete = group_athletes[0]
                     # Determine old value based on column
-                    old_value = group_athlete.tasks_completed if index_column == 8 else group_athlete.penalty
-                    old_value_str = str(old_value) if old_value is not None else "0"
+                    if index_column == 8:
+                        old_value = group_athlete.tasks_completed
+                        old_value_str = str(old_value) if old_value is not None else "0"
+                    elif index_column == 9:
+                        old_value = group_athlete.penalty
+                        old_value_str = "00:00:00.000" if old_value is None else old_value.strftime('%H:%M:%S.%f')[:-3]
 
                     # Validate new value
-                    is_valid = is_positive_number(value_text)
-                    if is_valid:
-                        value_int = int(value_text)
-                        # Specific validation for penalty column
-                        if index_column == 9 and value_int > 1000:
-                            is_valid = False
+                    is_valid = False
+                    parsed_penalty = None
+                    if index_column == 8:
+                        is_valid = is_positive_number(value_text)
+                    elif index_column == 9:
+                        try:
+                            parsed_penalty = datetime.strptime(value_text, '%H:%M:%S.%f').time()
+                            is_valid = True
+                        except ValueError:
+                            try:
+                                parsed_penalty = datetime.strptime(value_text, '%H:%M:%S').time()
+                                is_valid = True
+                            except ValueError:
+                                is_valid = False
 
                     if is_valid:
                         if index_column == 8:
                             group_athlete.tasks_completed = int(value_text)
                         elif index_column == 9:
-                            group_athlete.penalty = int(value_text)
+                            group_athlete.penalty = parsed_penalty
+                            # ensure formatting matches
+                            self.window.table_times.item(index_row, index_column).setText(parsed_penalty.strftime('%H:%M:%S.%f')[:-3])
+
                         db.session.add(group_athlete)
                         db.session.commit()
                     else:
@@ -466,7 +481,7 @@ class TakeTimeController:
             tasks_completed = QtWidgets.QTableWidgetItem(tasks_completed_value)
             self.window.table_times.setItem(i, 8, tasks_completed)
 
-            penalty_value = str(athlete.penalty) if athlete.penalty is not None else "0"
+            penalty_value = "00:00:00.000" if athlete.penalty is None else athlete.penalty.strftime('%H:%M:%S.%f')[:-3]
             penalty = QtWidgets.QTableWidgetItem(penalty_value)
             self.window.table_times.setItem(i, 9, penalty)
 
@@ -630,8 +645,14 @@ class TakeTimeController:
     def generate_pdf(self):
 
         try:
-            groups = GroupManager.get_groups_by_filters({Group.competence_id == self.competence.id},
-                                                        order=Group.order.asc())
+            groups = (
+                GroupManager.get_groups_by_filters(
+                    {
+                        Group.competence_id == self.competence.id
+                    },
+                    order=Group.order.asc()
+                ).all()
+            )
             if groups:
                 athletes_dict = {}
                 for group in groups:

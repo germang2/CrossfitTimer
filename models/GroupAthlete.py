@@ -2,7 +2,7 @@ from ast import Str
 from engine import db
 from models.Athlete import Athlete
 from models.Group import Group
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Boolean, func, cast
+from sqlalchemy import Column, Integer, String, DateTime, Time, Text, ForeignKey, Boolean, func, cast
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import timedelta
@@ -22,19 +22,30 @@ class GroupAthlete(db.Base):
     athlete = relationship(Athlete, backref='athletes')
     group = relationship(Group, backref='groups')
     tasks_completed = Column(String(10), nullable=True)
-    penalty = Column(Integer, default=0)
+    penalty = Column(Time, nullable=True)
     status = Column(Boolean, default=True)
 
     @hybrid_property
     def adjusted_total_time(self):
         if self.total_time and self.penalty:
-            return self.total_time + timedelta(minutes=self.penalty)
+            penalty_delta = timedelta(
+                hours=self.penalty.hour,
+                minutes=self.penalty.minute,
+                seconds=self.penalty.second,
+                microseconds=self.penalty.microsecond
+            )
+            return self.total_time + penalty_delta
         return self.total_time
 
     @adjusted_total_time.expression
     def adjusted_total_time(cls):
-        # sqlite syntax for and adding minutes to a datetime
-        return func.datetime(cls.total_time, '+' + cast(func.coalesce(cls.penalty, 0), String) + ' minutes')
+        penalty_str = cast(func.coalesce(cls.penalty, '00:00:00'), String)
+        return func.datetime(
+            cls.total_time, 
+            '+' + func.substr(penalty_str, 1, 2) + ' hours',
+            '+' + func.substr(penalty_str, 4, 2) + ' minutes',
+            '+' + func.substr(penalty_str, 7, 2) + ' seconds'
+        )
 
     def __str__(self):
         return f'{self.athlete}, {self.dorsal}'
