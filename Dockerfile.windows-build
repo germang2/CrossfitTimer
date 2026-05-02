@@ -1,0 +1,46 @@
+FROM ubuntu:22.04
+
+# Avoid interactive prompts during apt installations
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Add 32-bit architecture for Wine and install dependencies
+RUN dpkg --add-architecture i386 && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        wine \
+        wine64 \
+        wine32 \
+        wget \
+        ca-certificates \
+        xvfb \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up Wine environment variables
+ENV WINEPREFIX=/wine
+ENV WINEARCH=win64
+ENV WINEDEBUG=-all
+
+# Initialize Wine
+RUN wineboot --init && \
+    # Wait for wineserver to finish setting up the prefix
+    while pgrep wineserver > /dev/null; do sleep 1; done
+
+# Download and install Python 3.8.2 for Windows (64-bit)
+RUN wget -q "https://www.python.org/ftp/python/3.8.2/python-3.8.2-amd64.exe" -O /tmp/python-installer.exe && \
+    # xvfb-run provides a virtual display which is sometimes required by Windows installers
+    xvfb-run wine /tmp/python-installer.exe /quiet InstallAllUsers=1 PrependPath=1 TargetDir="C:\Python38" && \
+    rm /tmp/python-installer.exe && \
+    while pgrep wineserver > /dev/null; do sleep 1; done
+
+# Upgrade pip and install PyInstaller
+RUN wine "C:\Python38\python.exe" -m pip install --upgrade pip && \
+    wine "C:\Python38\python.exe" -m pip install pyinstaller
+
+# Set workdir to /app and install project dependencies
+WORKDIR /app
+COPY requirements.txt ./
+RUN sed -E -i '/([pP]y[iI]nstaller|pefile|pywin32-ctypes)/d' requirements.txt && \
+    wine "C:\Python38\python.exe" -m pip install -r requirements.txt
+
+# When you run the container, it will act as the pyinstaller executable
+ENTRYPOINT ["wine", "C:\\Python38\\Scripts\\pyinstaller.exe"]

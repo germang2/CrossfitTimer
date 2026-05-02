@@ -8,3 +8,10 @@ alembic commands
 - alembic upgrade head
 - alembic downgrade -1
 - alembic revision -m ""
+
+
+## using docker
+docker build -t crossfittimer-win-builder -f Dockerfile.windows-build .
+docker run --rm -v "$(pwd):/app" crossfittimer-win-builder --onefile --windowed --icon=belicos-icon.ico CrossfitTimer.py
+
+
