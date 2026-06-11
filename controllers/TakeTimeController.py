@@ -676,35 +676,38 @@ class TakeTimeController:
                     # evenly across table and page
                     headers = [
                         'Tanda',
-                        'Posición',
+                        'Pos.',
                         'Nombre',
                         'Club',
                         'Dorsal',
                         'Hora Inicial',
                         'Hora Final',
-                        'Tiempo total',
-                        "# Manillas",
+                        'Amonest.',
+                        'Tiempo Total',
+                        "# Man.",
                     ]
                     col_width = epw / 4
                     column_width = {
                         # Group
-                        0: col_width * 0.3,
+                        0: col_width * 0.25,
                         # Position
-                        1: col_width * 0.3,
+                        1: col_width * 0.2,
                         # Name
-                        2: col_width * 1.2,
+                        2: col_width * 1.1,
                         # Club
-                        3: col_width * 0.45,
+                        3: col_width * 0.4,
                         # Dorsal
-                        4: col_width * 0.3,
+                        4: col_width * 0.25,
                         # Initial time
                         5: col_width * 0.4,
                         # Final time
                         6: col_width * 0.4,
-                        # Total time
+                        # Amonestaciones
                         7: col_width * 0.4,
+                        # Total time
+                        8: col_width * 0.4,
                         # Tasks_completed
-                        8: col_width * 0.3
+                        9: col_width * 0.2
                     }
                     pdf.set_font('Arial', 'B', 12)
                     pdf.add_page()
@@ -744,6 +747,7 @@ class TakeTimeController:
                             athlete.dorsal,
                             '' if athlete.initial_time is None else athlete.initial_time.strftime('%H:%M:%S.%f')[:-3],
                             '' if athlete.final_time is None else athlete.final_time.strftime('%H:%M:%S.%f')[:-3],
+                            "00:00:00.000" if athlete.penalty is None else athlete.penalty.strftime('%H:%M:%S.%f')[:-3],
                             '' if athlete.adjusted_total_time is None else athlete.adjusted_total_time.strftime('%H:%M:%S.%f')[:-3],
                             athlete.tasks_completed if athlete.tasks_completed else 0,
                         ]
