@@ -34,7 +34,19 @@ class AthletesGroupsController:
 
     def setup_resizable_layout(self):
         # 1. Main Setup
-        self.centralwidget = QtWidgets.QWidget(self.window)
+        # Keep default size as 1300x750 but allow user to reduce it
+        self.window.resize(1300, 750)
+        self.window.setMinimumSize(QtCore.QSize(500, 400))
+
+        # Wrap everything in a scroll area to allow resizing without breaking layout
+        self.scroll_area = QtWidgets.QScrollArea(self.window)
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+
+        self.centralwidget = QtWidgets.QWidget(self.scroll_area)
+        self.centralwidget.setObjectName("centralwidget")
+        self.centralwidget.setMinimumSize(QtCore.QSize(1300, 750))
         self.main_layout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.main_layout.setContentsMargins(20, 10, 20, 20)
         self.main_layout.setSpacing(10)
@@ -126,8 +138,8 @@ class AthletesGroupsController:
 
         self.main_layout.addLayout(self.grid_layout)
         
-        self.window.setCentralWidget(self.centralwidget)
-        self.window.setMinimumSize(QtCore.QSize(1300, 750))
+        self.scroll_area.setWidget(self.centralwidget)
+        self.window.setCentralWidget(self.scroll_area)
 
     def setup_top_info_section(self):
         self.top_section_layout = QtWidgets.QVBoxLayout()

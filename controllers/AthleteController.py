@@ -41,11 +41,19 @@ class AthletesController:
         Organizes the UI components into nested layouts to allow for resizing.
         This version centers the form elements above the table and fixes their width.
         """
-        # Set minimum window size to match the original design
-        self.window.setMinimumSize(QtCore.QSize(1140, 764))
+        # Keep default size as 1140x764 but allow user to reduce it
+        self.window.resize(1140, 764)
+        self.window.setMinimumSize(QtCore.QSize(500, 400))
         
-        self.centralwidget = QtWidgets.QWidget(self.window)
+        # Wrap everything in a scroll area to allow resizing without breaking layout
+        self.scroll_area = QtWidgets.QScrollArea(self.window)
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+
+        self.centralwidget = QtWidgets.QWidget(self.scroll_area)
         self.centralwidget.setObjectName("centralwidget")
+        self.centralwidget.setMinimumSize(QtCore.QSize(1140, 764))
         self.main_layout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.main_layout.setContentsMargins(50, 20, 50, 20)
         self.main_layout.setSpacing(20)
@@ -195,7 +203,8 @@ class AthletesController:
         self.footer_layout.addWidget(self.window.lb_error_delete)
         self.main_layout.addLayout(self.footer_layout)
 
-        self.window.setCentralWidget(self.centralwidget)
+        self.scroll_area.setWidget(self.centralwidget)
+        self.window.setCentralWidget(self.scroll_area)
 
     def handle_pagination(self):
         index = self.window.cb_pagination.currentIndex()
