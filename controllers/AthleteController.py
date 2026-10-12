@@ -53,7 +53,7 @@ class AthletesController:
 
         self.centralwidget = QtWidgets.QWidget(self.scroll_area)
         self.centralwidget.setObjectName("centralwidget")
-        self.centralwidget.setMinimumSize(QtCore.QSize(1140, 764))
+        self.centralwidget.setMinimumSize(QtCore.QSize(600, 600))
         self.main_layout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.main_layout.setContentsMargins(50, 20, 50, 20)
         self.main_layout.setSpacing(20)
@@ -66,7 +66,7 @@ class AthletesController:
         # Fix the width of the form area to match the "small screen" look (~1000px)
         # This will be centered horizontally by the stretches in centering_layout
         self.form_container_widget = QtWidgets.QWidget()
-        self.form_container_widget.setFixedWidth(1040)
+        self.form_container_widget.setMinimumWidth(500)
         self.form_container_layout = QtWidgets.QVBoxLayout(self.form_container_widget)
         self.form_container_layout.setContentsMargins(0, 0, 0, 0)
         self.form_container_layout.setSpacing(15)

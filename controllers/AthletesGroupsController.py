@@ -46,7 +46,7 @@ class AthletesGroupsController:
 
         self.centralwidget = QtWidgets.QWidget(self.scroll_area)
         self.centralwidget.setObjectName("centralwidget")
-        self.centralwidget.setMinimumSize(QtCore.QSize(1300, 750))
+        self.centralwidget.setMinimumSize(QtCore.QSize(750, 600))
         self.main_layout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.main_layout.setContentsMargins(20, 10, 20, 20)
         self.main_layout.setSpacing(10)
@@ -63,7 +63,7 @@ class AthletesGroupsController:
         # 4. Available Athletes Section (Left)
         # Filters Area container
         self.avail_filters_container = QtWidgets.QWidget()
-        self.avail_filters_container.setFixedWidth(500)
+        self.avail_filters_container.setMinimumWidth(300)
         self.avail_vbox = QtWidgets.QVBoxLayout(self.avail_filters_container)
         self.avail_vbox.setContentsMargins(0, 0, 0, 0)
         self.avail_vbox.setSpacing(2)
@@ -102,7 +102,7 @@ class AthletesGroupsController:
         # 5. Assigned Athletes Section (Right)
         # Header Area container
         self.assigned_top_container = QtWidgets.QWidget()
-        self.assigned_top_container.setFixedWidth(500)
+        self.assigned_top_container.setMinimumWidth(300)
         self.assigned_vbox = QtWidgets.QVBoxLayout(self.assigned_top_container)
         self.assigned_vbox.setContentsMargins(0, 0, 0, 0)
         self.assigned_vbox.setSpacing(10)

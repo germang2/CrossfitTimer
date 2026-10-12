@@ -11,7 +11,22 @@ alembic commands
 
 
 ## using docker
+# build container (only if docker file is updated)
 docker build -t crossfittimer-win-builder -f Dockerfile.windows-build .
+# create windows executable
 docker run --rm -v "$(pwd):/app" crossfittimer-win-builder --onefile --windowed --icon=belicos-icon.ico CrossfitTimer.py
 
 
+# to test windows executable in linux with docker 
+xhost +
+# then
+docker run --rm \
+  --net=host \
+  -e DISPLAY=$DISPLAY \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v "$(pwd):/app" \
+  --entrypoint wine \
+  crossfittimer-win-builder \
+  /app/dist/CrossfitTimer.exe
+# finally and IMPORTANT
+xhost -
