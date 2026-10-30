@@ -642,7 +642,46 @@ class TakeTimeController:
     def clear_pdf_label(self):
         self.window.lb_pdf.setText('')
 
+    @staticmethod
+    def write_data_to_pdf(pdf, data_row, column_width, row_h, lines, fill):
+        for i, val in enumerate(data_row):
+            try:
+                width = column_width[i]
+                if i == 2:
+                    # Nombre column with wrapping
+                    x = pdf.get_x()
+                    y = pdf.get_y()
+                    pdf.multi_cell(width, row_h / lines, str(val), border=1, fill=fill)
+                    pdf.set_xy(x + width, y)
+                else:
+                    pdf.cell(width, row_h, str(val), border=1, fill=fill)
+            except Exception as e:
+                print("Error writing data to PDF. Error details: ", e)
+
     def generate_pdf(self):
+
+        def get_athlete_data_to_row(athlete_row):
+            try:
+                data_row = [
+                    athlete_row.group.name[:10],
+                    # index + 1 = position
+                    position + 1,
+                    allow_only_unicode_chars(athlete_row.athlete.full_name),
+                    allow_only_unicode_chars(athlete_row.athlete.club[:11]),
+
+                    athlete_row.dorsal,
+                    '' if athlete_row.initial_time is None else athlete_row.initial_time.strftime('%H:%M:%S.%f')[:-3],
+                    '' if athlete_row.final_time is None else athlete_row.final_time.strftime('%H:%M:%S.%f')[:-3],
+                    "00:00:00.000" if athlete_row.penalty is None else athlete_row.penalty.strftime('%H:%M:%S.%f')[:-3],
+                    '' if athlete_row.adjusted_total_time is None else athlete_row.adjusted_total_time.strftime('%H:%M:%S.%f')[
+                        :-3],
+                    athlete_row.tasks_completed if athlete_row.tasks_completed else 0,
+                ]
+                return data_row
+            except Exception as exception:
+                print("Error getting athlete data to row. Error details: {}".format(exception))
+                return None
+
 
         try:
             groups = (
@@ -737,20 +776,9 @@ class TakeTimeController:
                     for position, athlete in enumerate(sorted_list):
                         if not athlete:
                             continue
-                        data = [
-                            athlete.group.name[:10],
-                            # index + 1 = position
-                            position + 1,
-                            allow_only_unicode_chars(athlete.athlete.full_name),
-                            allow_only_unicode_chars(athlete.athlete.club[:11]),
-
-                            athlete.dorsal,
-                            '' if athlete.initial_time is None else athlete.initial_time.strftime('%H:%M:%S.%f')[:-3],
-                            '' if athlete.final_time is None else athlete.final_time.strftime('%H:%M:%S.%f')[:-3],
-                            "00:00:00.000" if athlete.penalty is None else athlete.penalty.strftime('%H:%M:%S.%f')[:-3],
-                            '' if athlete.adjusted_total_time is None else athlete.adjusted_total_time.strftime('%H:%M:%S.%f')[:-3],
-                            athlete.tasks_completed if athlete.tasks_completed else 0,
-                        ]
+                        data = get_athlete_data_to_row(athlete)
+                        if not data:
+                            continue
                         # Calculate row height based on Name wrapping
                         name_text = str(data[2])
                         name_w = column_width[2]
@@ -772,20 +800,13 @@ class TakeTimeController:
                         else:
                             pdf.set_fill_color(255, 255, 255)
 
-                        for i, val in enumerate(data):
-                            width = column_width[i]
-                            if i == 2:
-                                # Nombre column with wrapping
-                                x = pdf.get_x()
-                                y = pdf.get_y()
-                                pdf.multi_cell(width, row_h / lines, str(val), border=1, fill=fill)
-                                pdf.set_xy(x + width, y)
-                            else:
-                                pdf.cell(width, row_h, str(val), border=1, fill=fill)
+                        self.write_data_to_pdf(pdf, data, column_width, row_h, lines, fill)
 
                         pdf.set_y(y_start + row_h)
 
-                    pdf.output(f'{self.competence.name}_{category_name}.pdf', 'F')
+                    competence_name_to_save = allow_only_unicode_chars(self.competence.name)
+                    category_name_to_save = allow_only_unicode_chars(category_name)
+                    pdf.output(f'{competence_name_to_save}_{category_name_to_save}.pdf', 'F')
                     self.window.lb_pdf.setText('PDF generados con exito')
         except Exception as e:
             print(e)

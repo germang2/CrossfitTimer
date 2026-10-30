@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import unicodedata
 import regex
 
 
@@ -38,8 +39,20 @@ def remove_special_chars(text):
 
 def allow_only_unicode_chars(text):
     """
-    Allow only Unicode letters, numbers, punctuation, symbols and spaces
+    Allow only Unicode letters (including Spanish characters like ñ, accented vowels, etc.),
+    combining marks, numbers, punctuation, symbols and spaces.
     :param text: Text to filter
-    :return: str, filtered text
+    :return: str or None, filtered text
     """
-    return regex.sub(r'[^\p{L}\p{N}\p{P}\p{S}\s]', '', text) if text else ""
+    if text is None:
+        return None
+    if isinstance(text, bytes):
+        text = text.decode('utf-8', errors='replace')
+    elif not isinstance(text, str):
+        text = str(text)
+
+    # Normalize to NFC to compose decomposed characters (e.g. n + ~ -> ñ, a + ´ -> á)
+    text = unicodedata.normalize('NFC', text)
+    # Allow letters (\p{L}), marks/accents (\p{M}), numbers (\p{N}), punctuation (\p{P}), symbols (\p{S}), and whitespace (\s)
+    filtered_text = regex.sub(r'[^\p{L}\p{M}\p{N}\p{P}\p{S}\s]', '', text)
+    return unicodedata.normalize('NFKD', filtered_text).encode('ascii', errors='ignore').decode('utf-8')
